@@ -3,9 +3,8 @@ import torch
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
-from src.network import Network, MLP, BYOL_mlp, VAE_linear
-from train_utils import yaml_loader, train_supcon, train_triplet, train_simsiam, \
-                        train_byol, train_barlow_twins, train_DARe, train_DiAl, model_optimizer, \
+from src.network import Network, MLP, CARL_mlp
+from train_utils import yaml_loader, train_nodel, train_carl, model_optimizer, \
                         loss_function, \
                         load_dataset
 
@@ -22,21 +21,10 @@ def ddp_setup(rank, world_size):
 def train_network(**kwargs):
     train_algo = kwargs['train_algo']
     kwargs.pop("train_algo")
-    if train_algo == "supcon" or train_algo == "simclr":
-        kwargs["train_algo"] = train_algo
-        train_supcon(**kwargs)
-    elif train_algo == "triplet":
-        train_triplet(**kwargs)
-    elif train_algo == "simsiam":
-        train_simsiam(**kwargs)
-    elif train_algo == 'byol':
-        train_byol(**kwargs)
-    elif train_algo == "barlow_twins":
-        train_barlow_twins(**kwargs)
-    elif train_algo == "dare":
-        train_DARe(**kwargs)
-    elif train_algo == "dial":
-        train_DiAl(**kwargs)
+    if train_algo == "nodel":
+        train_nodel(**kwargs)
+    elif train_algo == 'carl':
+        train_carl(**kwargs)
 
 def main_single():
     train_algo = config['train_algo']
@@ -46,9 +34,7 @@ def main_single():
 
     pred_net = None 
     if train_algo == "byol":
-        pred_net = BYOL_mlp(**config["byol_pred_params"])
-    elif train_algo == "dare":
-        pred_net = VAE_linear(input_dim = model.classifier_infeatures, output_dim = config['vae_linear_out'])
+        pred_net = CARL_mlp(**config["carl_pred_params"])
 
     optimizer = model_optimizer(model, config['opt'], pred_net, **config['opt_params'])
     mlp_optimizer = model_optimizer(mlp, config['mlp_opt'], **config['mlp_opt_params'])
@@ -96,8 +82,6 @@ def main_single():
         param_config["target_model"] = target_net 
         param_config["online_pred_model"] = pred_net 
         param_config["ema_beta"] = ema_tau
-    elif train_algo == "dare":
-        param_config["vae_linear"] = pred_net 
 
     train_network(**param_config)
 

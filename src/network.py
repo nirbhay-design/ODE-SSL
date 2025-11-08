@@ -2,8 +2,10 @@ import torch
 import torchvision 
 import torch.nn as nn 
 import torch.nn.functional as F
+from torchdiffeq import odeint
+import warnings; warnings.filterwarnings("ignore")
 
-class MLP(nn.Module):
+class MLP(nn.Module): # MLP for linear protocol
     def __init__(self, in_features, num_classes, mlp_type="linear"):
         super().__init__()
         if mlp_type == "linear":
@@ -22,7 +24,7 @@ class MLP(nn.Module):
     def forward(self, x):
         return self.mlp(x)
 
-class BYOL_mlp(nn.Module):
+class CARL_mlp(nn.Module): # pred and proj net for carl
     def __init__(self, in_features, hidden_dim, out_features):
         super().__init__()
         self.mlp = nn.Sequential(
@@ -34,9 +36,39 @@ class BYOL_mlp(nn.Module):
 
     def forward(self, x):
         return self.mlp(x)
+    
+class ODENetwork(nn.Module):
+    def __init__(self, input_dim):
+        super().__init__()
+        hidden_dim = 2*input_dim
+        self.odenet = nn.Sequential(
+            nn.Linear(input_dim + 1, hidden_dim),
+            nn.GroupNorm(32, hidden_dim),
+            nn.SiLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.GroupNorm(32, hidden_dim),
+            nn.SiLU(),
+            nn.utils.parametrizations.spectral_norm(nn.Linear(hidden_dim, input_dim))
+        )
+
+    def forward(self, t, x):
+        t = torch.tensor(t).repeat((x.shape[0],1))
+        return self.odenet(torch.cat([x,t], dim = -1))
+    
+class ODEBlock(nn.Module):
+    def __init__(self, odefun, T=1.0, steps=10, method='rk4'):
+        super().__init__()
+        self.odefun = odefun
+        self.t_grid = torch.linspace(0.0, T, steps)
+        self.method = method
+
+    def forward(self, x):
+        self.t_grid = self.t_grid.to(x.device)
+        output = odeint(self.odefun, x, self.t_grid, method=self.method)
+        return output
 
 class Network(nn.Module):
-    def __init__(self, model_name = 'resnet18', pretrained = False, proj_dim = 128, algo_type="supcon", pred_dim = 512, byol_hidden = 4096, barlow_hidden = 8192):
+    def __init__(self, model_name = 'resnet18', pretrained = False, proj_dim = 128, algo_type="nodel", carl_hidden = 4096):
         super().__init__()
         if model_name == 'resnet50':
             model = torchvision.models.resnet50(
@@ -62,37 +94,13 @@ class Network(nn.Module):
             self.feat_extractor.conv1 = nn.Conv2d(in_feat, out_feat, kernel_size=3, stride=1, bias=False)
 
         self.classifier_infeatures = model._modules.get(module_keys[-1], nn.Identity()).in_features
-        
-        if algo_type == "simsiam":
-            prev_dim = self.classifier_infeatures
-            self.proj = nn.Sequential(
-                nn.Linear(prev_dim, prev_dim, bias=False),
-                nn.BatchNorm1d(prev_dim),
-                nn.ReLU(),
-                nn.Linear(prev_dim, prev_dim, bias=False),
-                nn.BatchNorm1d(prev_dim),
-                nn.ReLU(),
-                nn.Linear(prev_dim, prev_dim, bias=False),
-                nn.BatchNorm1d(prev_dim)
-            )
-            self.pred = nn.Sequential(
-                nn.Linear(prev_dim, pred_dim, bias=False),
-                nn.BatchNorm1d(pred_dim),
-                nn.ReLU(),
-                nn.Linear(pred_dim, prev_dim)
-            )
-        elif algo_type == 'byol':
-            self.proj = BYOL_mlp(in_features = self.classifier_infeatures, hidden_dim = byol_hidden, out_features = proj_dim)
-        elif algo_type == "barlow_twins":
-            self.proj = nn.Sequential(
-                nn.Linear(self.classifier_infeatures, barlow_hidden, bias=False),
-                nn.BatchNorm1d(barlow_hidden, bias=False),
-                nn.ReLU(),
-                nn.Linear(barlow_hidden, barlow_hidden, bias=False),
-                nn.BatchNorm1d(barlow_hidden),
-                nn.ReLU(),
-                nn.Linear(barlow_hidden, proj_dim)
-            )
+
+        # so far general feature extractor ($h_{\theta}$)
+        self.ode_block = ODEBlock(ODENetwork(self.classifier_infeatures))
+
+        # This is projection head
+        if algo_type == 'carl':
+            self.proj = CARL_mlp(in_features = self.classifier_infeatures, hidden_dim = carl_hidden, out_features = proj_dim)
         else:
             self.proj = nn.Linear(self.classifier_infeatures, proj_dim)
 
@@ -100,32 +108,35 @@ class Network(nn.Module):
 
     def forward(self, x):
         features = self.feat_extractor(x).flatten(1)
-        proj_features = self.proj(features)
-
-        if self.algo_type == 'simsiam':
-            pred_features = self.pred(proj_features)
-            return features, proj_features, pred_features # features, proj - z, pred - p
-        return features, proj_features # 2048/512, 128 proj
+        cont_dynamics = self.ode_block(features)
+        # proj_features = self.proj(features)
+        return features, cont_dynamics # 2048/512, embedding dynamics
     
-class ODENetwork(nn.Module):
-    def __init__(self, hidden_dim):
-        super().__init__()
-        
 
-    def forward(self, x):
-        pass 
 
 if __name__ == "__main__":
-    network = Network(model_name = 'resnet50', pretrained=False, algo_type='byol', byol_hidden = 4096, proj_dim = 256)
-    mlp = MLP(network.classifier_infeatures, num_classes=10, mlp_type='hidden')
-    x = torch.rand(2,3,224,224)
-    feat, proj_feat = network(x)
-    print(feat.shape, proj_feat.shape)
-    score = mlp(feat)
-    print(score.shape)
+    # network = Network(model_name = 'resnet50', pretrained=False, algo_type='byol', carl_hidden = 4096, proj_dim = 256)
+    # mlp = MLP(network.classifier_infeatures, num_classes=10, mlp_type='hidden')
+    # x = torch.rand(2,3,224,224)
+    # feat, proj_feat = network(x)
+    # print(feat.shape, proj_feat.shape)
+    # score = mlp(feat)
+    # print(score.shape)
 
-    print(network)
+    # print(network)
 
-    print(network.proj.mlp[-1].out_features)
+    # print(network.proj.mlp[-1].out_features)
 
     # contrastive loss on proj_feat, representations are feat, MLP on feat 
+
+    device = torch.device("cuda:0")
+    odenet = ODENetwork(128)
+    odeblock = ODEBlock(odenet)
+    odeblock = odeblock.to(device)
+    x = torch.rand(11,128, device=device)
+    print(odeblock)
+    print(x)
+    output = odeblock(x)
+    # print(output)
+    print(output.shape)
+    print(type(output))

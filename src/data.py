@@ -33,7 +33,7 @@ def get_transforms(image_size, data_name = "cifar10", algo='supcon'):
         # transforms.Normalize(mean = mean, std = std)
     ])
 
-    if algo == 'simsiam' or algo == 'byol':
+    if algo == 'carl':
         train_transforms = transforms.Compose([
             train_transforms,
             transforms.Normalize(mean = mean, std = std)
@@ -52,7 +52,7 @@ def get_transforms(image_size, data_name = "cifar10", algo='supcon'):
     return train_transforms, train_transforms_mlp, test_transforms
 
 class DataCifar():
-    def __init__(self, algo = "supcon", data_name = "cifar10", data_dir = "datasets/cifar10", target_transform = transforms.ToTensor()):
+    def __init__(self, algo = "nodel", data_name = "cifar10", data_dir = "datasets/cifar10", target_transform = transforms.ToTensor()):
         if data_name == "cifar10":
             self.data = torchvision.datasets.CIFAR10(data_dir, train = True, download = True)
         elif data_name == "cifar100":
@@ -95,7 +95,7 @@ class DataCifar():
             
         image, label = self.data[idx]
 
-        if self.algo in ["simclr", "supcon", "simsiam", "byol", "moco", "barlow_twins"]:
+        if self.algo in ["nodel", "carl"]:
             img1 = self.target_transform(image)
             img2 = self.target_transform(image)
             return img1, img2, label 
