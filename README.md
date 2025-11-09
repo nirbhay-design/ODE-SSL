@@ -1,7 +1,7 @@
 ## **NODEL: Neural ODE based SSL framework**
 
 - We model representation space as continuous dynamical system
-- The baselines follow from the previous ![repository](https://github.com/nirbhay-design/RepresentationLearningAlgorithms) 
+- The baselines follow from the previous [repository](https://github.com/nirbhay-design/RepresentationLearningAlgorithms) 
 
 ## **Results**
 
@@ -15,8 +15,6 @@
 |SimSiam|76.5|34.5|88.6|62.3|
 
 ## **Reproducing the results**
-
-Run the following command
 
 ```
 python train.py --config configs/nodel.c10.yaml --gpu 0 --model resnet50 --epochs 500 --epochs_lin 100 --save_path nodel.c10.r50.pth
