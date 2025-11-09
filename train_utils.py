@@ -42,10 +42,8 @@ def make_tsne_for_dataset(model, loader, device, algo, return_logs = False, tsne
             x = x.to(device)
             y = y.to(device)
 
-            if algo == 'simsiam':
-                feats, _, _ = model(x)
-            else:
-                feats, _ = model(x)
+            output = model(x)
+            feats = output["features"]
 
             all_features.append(feats)
             all_labels.append(y)
@@ -68,10 +66,8 @@ def evaluate(model, mlp, loader, device, return_logs=False, algo=None):
             x = x.to(device)
             y = y.to(device)
 
-            if algo == 'simsiam':
-                feats, _, _ = model(x)
-            else:
-                feats, _ = model(x)
+            output = model(x)
+            feats = output["features"]
             scores = mlp(feats)
 
             predict_prob = F.softmax(scores,dim=1)
@@ -106,10 +102,8 @@ def train_mlp(
             target = target.to(device)
             
             with torch.no_grad():
-                if algo == "simsiam":
-                    feats, _, _ = model(data)
-                else:
-                    feats, proj_feat = model(data)
+                output = model(data)
+                feats = output["features"]
             scores = mlp(feats.detach())      
             
             loss_sup = lossfunction(scores, target)
@@ -146,7 +140,7 @@ def train_mlp(
 
     return mlp, tval
 
-def train_supcon(
+def train_nodel( # simclr version of NODE
         train_algo, model, mlp, train_loader, train_loader_mlp,
         test_loader, lossfunction, lossfunction_mlp, 
         optimizer, mlp_optimizer, opt_lr_schedular, 
@@ -160,21 +154,24 @@ def train_supcon(
         model.train()
         cur_loss = 0
         len_train = len(train_loader)
-        for idx , (data, data_cap, target) in enumerate(train_loader):
+        for idx , (data, data_cap, _) in enumerate(train_loader):
             data = data.to(device)
             data_cap = data_cap.to(device)
-            if train_algo == "supcon":
-                target = target.to(device)
+
+
+            t_idx = torch.randint(0, model.ode_steps, size=(data.shape[0],), device=device)
+            output = model(data, t=t_idx)
+            output_cap = model(data_cap, t=t_idx)
+
+            proj_feat = output["proj_features"]
+            proj_feat_cap = output_cap["proj_features"]
+
+            ode_traj = output["cont_dyn"]
+            ode_traj_cap = output["cont_dyn"]
+
+            dyn_reg = dynamics_regularizer(ode_traj) + dynamics_regularizer(ode_traj_cap)
             
-            feats, proj_feat = model(data)
-            feats_cap, proj_feat_cap = model(data_cap)
-            
-            if train_algo == "supcon":
-                x_full = torch.cat([proj_feat,proj_feat_cap], dim = 0)
-                target_full = torch.cat([target, target])
-                loss_con = lossfunction(x_full, target_full)
-            else:
-                loss_con = lossfunction(proj_feat, proj_feat_cap)
+            loss_con = lossfunction(proj_feat, proj_feat_cap) + 0.3 * dyn_reg
             
             optimizer.zero_grad()
             loss_con.backward()
@@ -197,54 +194,6 @@ def train_supcon(
         model, mlp, train_loader_mlp, test_loader, 
         lossfunction_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
         device_id, eval_id, return_logs = return_logs)
-
-    return model
-
-def train_simsiam(
-        model, mlp, train_loader, train_loader_mlp,
-        test_loader, lossfunction, lossfunction_mlp, 
-        optimizer, mlp_optimizer, opt_lr_schedular, 
-        eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, return_logs=False): 
-    
-
-    print(f"### simsiam Training begins")
-    device = torch.device(f"cuda:{device_id}")
-    model = model.to(device)
-    for epochs in range(n_epochs):
-        model.train()
-        cur_loss = 0
-        len_train = len(train_loader)
-        for idx , (data, data_cap, target) in enumerate(train_loader):
-            data = data.to(device)
-            data_cap = data_cap.to(device)
-            
-            _, feats, pred_feat = model(data) # z, p
-            _, feats_cap, pred_feat_cap = model(data_cap)
-            
-            loss_con = 0.5 * (lossfunction(pred_feat, feats_cap.detach()) + lossfunction(pred_feat_cap, feats.detach()))
-            
-            optimizer.zero_grad()
-            loss_con.backward()
-            optimizer.step()
-
-            cur_loss += loss_con.item() / (len_train)
-            
-            if return_logs:
-                progress(idx+1,len(train_loader), loss_con=loss_con.item(), GPU = device_id)
-        
-        opt_lr_schedular.step()
-            
-        print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f}")
-
-    print("### TSNE starts")
-    make_tsne_for_dataset(model, test_loader, device_id, 'simsiam', return_logs = return_logs, tsne_name = tsne_name)
-
-    print("### MLP training begins")
-
-    train_mlp(
-        model, mlp, train_loader_mlp, test_loader, 
-        lossfunction_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
-        device_id, eval_id, return_logs = return_logs, algo='simsiam')
 
     return model
 
@@ -310,225 +259,13 @@ def train_byol(
 
     return online_model
 
-def train_triplet(
-        model, mlp, train_loader, train_loader_mlp,
-        test_loader, lossfunction, lossfunction_mlp, 
-        optimizer, mlp_optimizer, opt_lr_schedular, 
-        eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, return_logs=False): 
-    
-    print(f"### Triplet Training begins")
-
-    device = torch.device(f"cuda:{device_id}")
-    model = model.to(device)
-    for epochs in range(n_epochs):
-        model.train()
-        cur_loss = 0
-        len_train = len(train_loader)
-        for idx , (a, a_t, p, p_t, n, n_t) in enumerate(train_loader):
-            a = a.to(device)
-            p = p.to(device)
-            n = n.to(device)
-            
-            af, apf = model(a)
-            pf, ppf = model(p)
-            nf, npf = model(n)
-            
-            loss_con = lossfunction(
-                z_a = apf, z_p = ppf, z_n=npf)
-            
-            optimizer.zero_grad()
-            loss_con.backward()
-            optimizer.step()
-
-            cur_loss += loss_con.item() / (len_train)
-            
-            if return_logs:
-                progress(idx+1,len(train_loader), loss_con=loss_con.item(), GPU = device_id)
-        
-        opt_lr_schedular.step()
-              
-        print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f}")
-
-    print("### TSNE starts")
-    make_tsne_for_dataset(model, test_loader, device_id, 'triplet', return_logs = return_logs, tsne_name = tsne_name)
-
-    print("### MLP training begins")
-
-    train_mlp(
-        model, mlp, train_loader_mlp, test_loader, 
-        lossfunction_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
-        device_id, eval_id, return_logs = return_logs)
-
-    return model
-
-def train_barlow_twins(
-        model, mlp, train_loader, train_loader_mlp,
-        test_loader, lossfunction, lossfunction_mlp, 
-        optimizer, mlp_optimizer, opt_lr_schedular, 
-        eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, return_logs=False): 
-    
-    print(f"### Barlow Twins Training begins")
-
-    device = torch.device(f"cuda:{device_id}")
-    model = model.to(device)
-    for epochs in range(n_epochs):
-        model.train()
-        cur_loss = 0
-        len_train = len(train_loader)
-        for idx , (data, data_cap, target) in enumerate(train_loader):
-            data = data.to(device)
-            data_cap = data_cap.to(device)
-            
-            feats, proj_feat = model(data)
-            feats_cap, proj_feat_cap = model(data_cap)
-
-            loss_con = lossfunction(proj_feat, proj_feat_cap)
-            
-            optimizer.zero_grad()
-            loss_con.backward()
-            optimizer.step()
-
-            cur_loss += loss_con.item() / (len_train)
-            
-            if return_logs:
-                progress(idx+1,len(train_loader), loss_con=loss_con.item(), GPU = device_id)
-        
-        opt_lr_schedular.step()
-              
-        print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f}")
-
-    print("### TSNE starts")
-    make_tsne_for_dataset(model, test_loader, device_id, 'barlow_twins', return_logs = return_logs, tsne_name = tsne_name)
-
-    print("### MLP training begins")
-
-    train_mlp(
-        model, mlp, train_loader_mlp, test_loader, 
-        lossfunction_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
-        device_id, eval_id, return_logs = return_logs)
-
-    return model
-
-def train_DiAl(
-        model, mlp, train_loader, train_loader_mlp,
-        test_loader, lossfunction, lossfunction_mlp, 
-        optimizer, mlp_optimizer, opt_lr_schedular, 
-        eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, return_logs=False): 
-    
-    print(f"### DiAl Training begins")
-
-    device = torch.device(f"cuda:{device_id}")
-    model = model.to(device)
-    for epochs in range(n_epochs):
-        model.train()
-        cur_loss = 0
-        len_train = len(train_loader)
-        for idx , (data, data_cap, target) in enumerate(train_loader):
-            data = data.to(device)
-            data_cap = data_cap.to(device)
-            
-            feats, proj_feat = model(data)
-            feats_cap, proj_feat_cap = model(data_cap)
-
-            loss_con = lossfunction(proj_feat, proj_feat_cap)
-            
-            optimizer.zero_grad()
-            loss_con.backward()
-            optimizer.step()
-
-            cur_loss += loss_con.item() / (len_train)
-            
-            if return_logs:
-                progress(idx+1,len(train_loader), loss_con=loss_con.item(), GPU = device_id)
-        
-        opt_lr_schedular.step()
-              
-        print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f}")
-
-    print("### TSNE starts")
-    make_tsne_for_dataset(model, test_loader, device_id, 'barlow_twins', return_logs = return_logs, tsne_name = tsne_name)
-
-    print("### MLP training begins")
-
-    train_mlp(
-        model, mlp, train_loader_mlp, test_loader, 
-        lossfunction_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
-        device_id, eval_id, return_logs = return_logs)
-
-    return model
-
-def train_DARe(
-        model, mlp, vae_linear, train_loader, train_loader_mlp,
-        test_loader, lossfunction, lossfunction_mlp, 
-        optimizer, mlp_optimizer, opt_lr_schedular, 
-        eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, return_logs=False): 
-    
-    print(f"### DARe Training begins")
-
-    device = torch.device(f"cuda:{device_id}")
-    model = model.to(device)
-    vae_linear = vae_linear.to(device)
-    for epochs in range(n_epochs):
-        model.train()
-        vae_linear.train()
-        cur_loss = 0
-        len_train = len(train_loader)
-        for idx , (data, data_cap, target) in enumerate(train_loader):
-            data = data.to(device)
-            data_cap = data_cap.to(device)
-            
-            feats, proj_feat = model(data)
-            feats_cap, proj_feat_cap = model(data_cap)
-
-            mu, log_var = vae_linear(feats)
-            mu_cap, log_var_cap = vae_linear(feats_cap)
-
-            loss_con = lossfunction(mu, mu_cap, log_var, log_var_cap)
-            
-            optimizer.zero_grad()
-            loss_con.backward()
-            optimizer.step()
-
-            cur_loss += loss_con.item() / (len_train)
-            
-            if return_logs:
-                progress(idx+1,len(train_loader), loss_con=loss_con.item(), GPU = device_id)
-        
-        opt_lr_schedular.step()
-              
-        print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f}")
-
-    print("### TSNE starts")
-    make_tsne_for_dataset(model, test_loader, device_id, 'DARe', return_logs = return_logs, tsne_name = tsne_name)
-
-    print("### MLP training begins")
-
-    train_mlp(
-        model, mlp, train_loader_mlp, test_loader, 
-        lossfunction_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
-        device_id, eval_id, return_logs = return_logs)
-
-    return model
-
-def loss_function(loss_type = 'supcon', **kwargs):
+def loss_function(loss_type = 'nodel', **kwargs):
     print(f"loss function: {loss_type}")
     loss_mlp = nn.CrossEntropyLoss()
-    if loss_type == "simclr":
+    if loss_type == "nodel":
         return SimCLR(**kwargs), loss_mlp
-    elif loss_type == 'supcon':
-        return SupConLoss(**kwargs), loss_mlp
-    elif loss_type == "triplet":
-        return TripletMarginLoss(**kwargs), loss_mlp
-    elif loss_type == "simsiam":
-        return SimSiamLoss(), loss_mlp
-    elif loss_type == 'byol':
+    elif loss_type == 'carl':
         return BYOLLoss(), loss_mlp
-    elif loss_type == "barlow_twins":
-        return BarlowTwinLoss(**kwargs), loss_mlp
-    elif loss_type == "dare":
-        return DAReLoss(**kwargs), loss_mlp
-    elif loss_type == "dial":
-        return DiALLoss(**kwargs), loss_mlp
     else:
         print("{loss_type} Loss is Not Supported")
         return None 

@@ -28,10 +28,13 @@ mlp_opt_params:
   lr: !!float 0.01
   momentum: 0.9
   nesterov: True
+
 model_params:
   model_name: 'resnet18' 
   pretrained: False 
   proj_dim: 128
+  ode_steps: 10
+
 mlp_type: "hidden"
 loss: nodel
 loss_params: 

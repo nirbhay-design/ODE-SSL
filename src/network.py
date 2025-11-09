@@ -68,7 +68,7 @@ class ODEBlock(nn.Module):
         return output
 
 class Network(nn.Module):
-    def __init__(self, model_name = 'resnet18', pretrained = False, proj_dim = 128, algo_type="nodel", carl_hidden = 4096):
+    def __init__(self, model_name = 'resnet18', pretrained = False, proj_dim = 128, ode_steps = 10, algo_type="nodel", carl_hidden = 4096):
         super().__init__()
         if model_name == 'resnet50':
             model = torchvision.models.resnet50(
@@ -96,47 +96,43 @@ class Network(nn.Module):
         self.classifier_infeatures = model._modules.get(module_keys[-1], nn.Identity()).in_features
 
         # so far general feature extractor ($h_{\theta}$)
-        self.ode_block = ODEBlock(ODENetwork(self.classifier_infeatures))
+        self.ode_steps = ode_steps
+        self.ode_block = ODEBlock(ODENetwork(self.classifier_infeatures), steps=self.ode_steps)
 
         # This is projection head
         if algo_type == 'carl':
             self.proj = CARL_mlp(in_features = self.classifier_infeatures, hidden_dim = carl_hidden, out_features = proj_dim)
         else:
-            self.proj = nn.Linear(self.classifier_infeatures, proj_dim)
+            self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
 
         self.algo_type = algo_type
 
-    def forward(self, x):
+    def forward(self, x, t = None):
         features = self.feat_extractor(x).flatten(1)
         cont_dynamics = self.ode_block(features)
-        # proj_features = self.proj(features)
-        return features, cont_dynamics # 2048/512, embedding dynamics
+        if t is None:
+            proj_features = self.proj(cont_dynamics[-1])
+        else:
+            proj_features = self.proj(cont_dynamics[t,torch.arange(x.shape[0],device=x.device)])
+        return {"features": features, 
+                "cont_dyn": cont_dynamics, 
+                "proj_features": proj_features} # 2048/512, embedding dynamics
     
 
 
 if __name__ == "__main__":
-    # network = Network(model_name = 'resnet50', pretrained=False, algo_type='byol', carl_hidden = 4096, proj_dim = 256)
+    device=torch.device('cuda:0')
+    network = Network(model_name = 'resnet50', pretrained=False, algo_type='byol', ode_steps=10, carl_hidden = 4096, proj_dim = 256)
     # mlp = MLP(network.classifier_infeatures, num_classes=10, mlp_type='hidden')
-    # x = torch.rand(2,3,224,224)
-    # feat, proj_feat = network(x)
-    # print(feat.shape, proj_feat.shape)
-    # score = mlp(feat)
-    # print(score.shape)
-
-    # print(network)
-
-    # print(network.proj.mlp[-1].out_features)
+    network = network.to(device)
+    x = torch.rand(2,3,224,224,device=device)
+    t = torch.randint(0, 10, size=(x.shape[0],))
+    t = t.to(device)
+    output = network(x,t)
+    print(output["features"].shape)
+    print(output["cont_dyn"].shape)
+    print(output["proj_features"].shape)
 
     # contrastive loss on proj_feat, representations are feat, MLP on feat 
 
-    device = torch.device("cuda:0")
-    odenet = ODENetwork(128)
-    odeblock = ODEBlock(odenet)
-    odeblock = odeblock.to(device)
-    x = torch.rand(11,128, device=device)
-    print(odeblock)
-    print(x)
-    output = odeblock(x)
-    # print(output)
-    print(output.shape)
-    print(type(output))
+    

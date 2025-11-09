@@ -188,6 +188,12 @@ class BarlowTwinLoss(nn.Module):
 
         return diag_elem.sum() + self.lambd * diff.sum()
 
+def dynamics_regularizer(dynamics):
+    # dynamics has shape [ode_steps, B, D]
+    dynamics = F.normalize(dynamics,dim=-1)
+    diff = dynamics[1:] - dynamics[:-1]
+    dyn_reg = diff.pow(2).sum(-1).mean()
+    return dyn_reg
 
 if __name__ == "__main__":
     scl = SupConClsLoss()
