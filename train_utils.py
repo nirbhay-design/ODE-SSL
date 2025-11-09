@@ -187,7 +187,7 @@ def train_nodel( # simclr version of NODE
         print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f}")
 
     print("### TSNE starts")
-    make_tsne_for_dataset(model, test_loader, device_id, train_algo, return_logs = return_logs, tsne_name = tsne_name)
+    make_tsne_for_dataset(model, test_loader, device_id, "nodel", return_logs = return_logs, tsne_name = tsne_name)
 
     print("### MLP training begins")
     train_mlp(
@@ -222,7 +222,7 @@ def train_carl(
 
             data_all = torch.cat([data, data_cap], dim = 0)
 
-            t_idx = torch.randint(0, online_model.ode_steps, size=(data.shape[0],), device=device)
+            t_idx = torch.randint(0, online_model.ode_steps, size=(2*data.shape[0],), device=device)
             online_proj = online_model(data_all, t=t_idx)["proj_features"] # y, z
             online_pred = online_pred_model(online_proj) # q
             with torch.no_grad():

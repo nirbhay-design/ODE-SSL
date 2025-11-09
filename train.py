@@ -75,7 +75,7 @@ def main_single():
     n_epochs_mlp = config['n_epochs_mlp']
     device = config['gpu_id']
 
-    tsne_name = "_".join(sys.argv[1].split('/')[-1].split('.')[:-1]) + f"_{config['model_params']['model_name']}.png"
+    tsne_name = "_".join(config["config"].split('/')[-1].split('.')[:-1]) + f"_{config['model_params']['model_name']}.png"
 
     ## defining parameter configs for each training algorithm
 
@@ -99,9 +99,9 @@ def main_single():
     torch.save(final_model.state_dict(), config["model_save_path"])
     print("Model weights saved")
 
-    weights = torch.load(config["model_save_path"])
-    print(model.load_state_dict(weights))
-    print("weights load")
+    # weights = torch.load(config["model_save_path"])
+    # print(model.load_state_dict(weights))
+    # print("weights load")
 
 
 if __name__ == "__main__":
@@ -110,6 +110,7 @@ if __name__ == "__main__":
     args = get_args()
     config = yaml_loader(args.config)
 
+    config["config"] = args.config
     config['gpu_id'] = args.gpu
     config['model_params']['model_name'] = args.model
     config["return_logs"] = args.verbose
@@ -132,7 +133,7 @@ if __name__ == "__main__":
     torch.backends.cudnn.allow_tf32 = True
 
     print("environment: ")
-    print(f"YAML: {sys.argv[1]}")
+    print(f"YAML: {args.config}")
     for key, value in config.items():
         print(f"==> {key}: {value}")
 
