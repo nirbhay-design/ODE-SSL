@@ -12,6 +12,22 @@ import torch.multiprocessing as mp
 from torch.nn.parallel import DistributedDataParallel as DDP 
 from torch.distributed import init_process_group, destroy_process_group
 import os 
+import argparse
+
+def get_args():
+    parser = argparse.ArgumentParser(description="Training script")
+
+    # basic experiment settings
+    parser.add_argument("--config", type=str, default = "configs/nodel.c10.yaml", required=True, help="config file")
+    parser.add_argument("--save_path", type=str, default="model.pth", required=True, help="path to save model")
+    parser.add_argument("--gpu", type=int, default = 0, help="gpu_id")
+    parser.add_argument("--model", type=str, default="resnet50", help="resnet18/resnet50")
+    parser.add_argument("--verbose", action="store_true", help="verbose or not")
+    parser.add_argument("--epochs", type=int, default = None, help="epochs for SSL pretraining")
+    parser.add_argument("--epochs_lin", type=int, default = None, help="epochs for linear probing")
+
+    args = parser.parse_args()
+    return args
 
 def ddp_setup(rank, world_size):
     os.environ['MASTER_ADDR'] = 'localhost'
@@ -22,9 +38,10 @@ def train_network(**kwargs):
     train_algo = kwargs['train_algo']
     kwargs.pop("train_algo")
     if train_algo == "nodel":
-        train_nodel(**kwargs)
+        return train_nodel(**kwargs)
     elif train_algo == 'carl':
-        train_carl(**kwargs)
+        return train_carl(**kwargs)
+    return None
 
 def main_single():
     train_algo = config['train_algo']
@@ -33,7 +50,7 @@ def main_single():
     mlp = MLP(model.classifier_infeatures, config['num_classes'], config['mlp_type'])
 
     pred_net = None 
-    if train_algo == "byol":
+    if train_algo == "carl":
         pred_net = CARL_mlp(**config["carl_pred_params"])
 
     optimizer = model_optimizer(model, config['opt'], pred_net, **config['opt_params'])
@@ -61,19 +78,13 @@ def main_single():
     tsne_name = "_".join(sys.argv[1].split('/')[-1].split('.')[:-1]) + f"_{config['model_params']['model_name']}.png"
 
     ## defining parameter configs for each training algorithm
+
     param_config = {"train_algo": train_algo, "model": model, "mlp": mlp, "train_loader": train_dl, "train_loader_mlp": train_dl_mlp,
         "test_loader": test_dl, "lossfunction": loss, "lossfunction_mlp": loss_mlp, "optimizer": optimizer, 
         "mlp_optimizer": mlp_optimizer, "opt_lr_schedular": opt_lr_schedular, "eval_every": eval_every, 
         "n_epochs": n_epochs, "n_epochs_mlp": n_epochs_mlp, "device_id": device, "eval_id": device, "tsne_name": tsne_name, "return_logs": return_logs}
     
-    if train_algo == 'simclr' or train_algo == 'supcon':
-        pass # no need to add anything
-    elif train_algo == 'triplet' or train_algo == "barlow_twins" or train_algo == "simsiam":
-        pass # no change for triplet margin loss 
-    # elif train_algo == 'simsiam':
-    #     mlp_opt_lr_schedular = optim.lr_scheduler.StepLR(mlp_optimizer, **config['mlp_schedular_params'])
-    #     param_config["mlp_opt_lr_schedular"] = mlp_opt_lr_schedular
-    elif train_algo == 'byol':
+    if train_algo == 'carl':
         target_net = Network(**config['model_params'])
         ema_tau = config['ema_tau']
 
@@ -83,11 +94,34 @@ def main_single():
         param_config["online_pred_model"] = pred_net 
         param_config["ema_beta"] = ema_tau
 
-    train_network(**param_config)
+    final_model = train_network(**param_config)
+
+    torch.save(final_model.state_dict(), config["model_save_path"])
+    print("Model weights saved")
+
+    weights = torch.load(config["model_save_path"])
+    print(model.load_state_dict(weights))
+    print("weights load")
+
 
 if __name__ == "__main__":
-    config = yaml_loader(sys.argv[1])
+    # editing config based on arguments 
+
+    args = get_args()
+    config = yaml_loader(args.config)
+
+    config['gpu_id'] = args.gpu
+    config['model_params']['model_name'] = args.model
+    config["return_logs"] = args.verbose
+    config["model_save_path"] = os.path.join(config.get("model_save_path", "saved_models"), args.save_path)
+
+    if args.epochs:
+        config["n_epochs"] = args.epochs
+    if args.epochs_lin:
+        config["n_epochs_mlp"] = args.epochs_lin
     
+    # setting seeds 
+
     random.seed(config["SEED"])
     np.random.seed(config["SEED"])
     torch.manual_seed(config["SEED"])
@@ -96,14 +130,6 @@ if __name__ == "__main__":
     torch.backends.cudnn.deterministic = True
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
-
-    args = sys.argv
-    if '--gpu' in args:
-        idx = args.index('--gpu')
-        config['gpu_id'] = int(args[idx+1])
-    if '--model' in args:
-        idx = args.index('--model')
-        config['model_params']['model_name'] = args[idx+1]
 
     print("environment: ")
     print(f"YAML: {sys.argv[1]}")

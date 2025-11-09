@@ -3,3 +3,5 @@
 *.ckpt 
 .ipynb_checkpoints/
 __pycache__/
+cifar10/
+cifar100/
