@@ -17,7 +17,7 @@ def get_transforms(image_size, data_name = "cifar10", algo='supcon'):
     s = 0.5
 
     train_transforms = transforms.Compose([
-        transforms.RandomResizedCrop(image_size),
+        # transforms.RandomResizedCrop(image_size),
         transforms.RandomHorizontalFlip(p=0.5),
         transforms.RandomApply([transforms.ColorJitter(0.8*s, 0.8*s, 0.8*s, 0.2*s)], p=0.8),
         transforms.RandomGrayscale(p = 0.2),

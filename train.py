@@ -25,6 +25,8 @@ def get_args():
     parser.add_argument("--verbose", action="store_true", help="verbose or not")
     parser.add_argument("--epochs", type=int, default = None, help="epochs for SSL pretraining")
     parser.add_argument("--epochs_lin", type=int, default = None, help="epochs for linear probing")
+    parser.add_argument("--opt", type=str, default=None, help="SGD/ADAM/AdamW")
+    parser.add_argument("--lr", type=float, default = None, help="lr for SSL")
 
     args = parser.parse_args()
     return args
@@ -75,8 +77,7 @@ def main_single():
     n_epochs_mlp = config['n_epochs_mlp']
     device = config['gpu_id']
 
-    tsne_name = "_".join(config["config"].split('/')[-1].split('.')[:-1]) + f"_{config['model_params']['model_name']}.png"
-
+    tsne_name = "_".join(config["model_save_path"].split('/')[-1].split('.')[:-1]) + ".png"
     ## defining parameter configs for each training algorithm
 
     param_config = {"train_algo": train_algo, "model": model, "mlp": mlp, "train_loader": train_dl, "train_loader_mlp": train_dl_mlp,
@@ -116,6 +117,13 @@ if __name__ == "__main__":
     config["return_logs"] = args.verbose
     config["model_save_path"] = os.path.join(config.get("model_save_path", "saved_models"), args.save_path)
 
+    if args.opt:
+        config["opt"] = args.opt
+        if args.opt in ["ADAM", "AdamW"]:
+            config["opt_params"].pop("momentum", -1)
+            config["opt_params"].pop("nesterov", -1)
+    if args.lr:
+        config["opt_params"]["lr"] = args.lr 
     if args.epochs:
         config["n_epochs"] = args.epochs
     if args.epochs_lin:

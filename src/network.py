@@ -45,7 +45,7 @@ class ODENetwork(nn.Module):
             nn.Linear(input_dim + 1, hidden_dim),
             nn.GroupNorm(32, hidden_dim),
             nn.SiLU(),
-            nn.Linear(hidden_dim, hidden_dim),
+            nn.utils.parametrizations.spectral_norm(nn.Linear(hidden_dim, hidden_dim)),
             nn.GroupNorm(32, hidden_dim),
             nn.SiLU(),
             nn.utils.parametrizations.spectral_norm(nn.Linear(hidden_dim, input_dim))
@@ -103,8 +103,9 @@ class Network(nn.Module):
         if algo_type == 'carl':
             self.proj = CARL_mlp(in_features = self.classifier_infeatures, hidden_dim = carl_hidden, out_features = proj_dim)
         else:
-            self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
-
+            # self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
+            self.proj = nn.Linear(self.classifier_infeatures, proj_dim)
+            
         self.algo_type = algo_type
 
     def forward(self, x, t = None):
