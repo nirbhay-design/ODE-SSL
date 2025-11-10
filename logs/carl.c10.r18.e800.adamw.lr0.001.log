@@ -34,3 +34,7 @@ Files already downloaded and verified
 # of Training Images: 50000
 # of Testing Images: 10000
 ### CARL Training begins
+[GPU0] epochs: [1/800] train_loss_con: -2.433
+[GPU0] epochs: [2/800] train_loss_con: -3.036
+[GPU0] epochs: [3/800] train_loss_con: -3.422
+[GPU0] epochs: [4/800] train_loss_con: -3.632
