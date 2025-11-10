@@ -13,10 +13,16 @@
 # - using liner layer for projection
 # - removing random resized crop augmentation
 
-nohup python train.py --config configs/nodel.c10.yaml --gpu 0 --model resnet18 --epochs 350 --epochs_lin 100 --save_path nodel.c10.r18.e350.pth > logs/nodel.c10.r18.e350.log &
+# nohup python train.py --config configs/nodel.c10.yaml --gpu 0 --model resnet18 --epochs 350 --epochs_lin 100 --save_path nodel.c10.r18.e350.pth > logs/nodel.c10.r18.e350.log &
 
-nohup python train.py --config configs/carl.c10.yaml --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --save_path carl.c10.r18.e800.pth > logs/carl.c10.r18.e800.log &
+# nohup python train.py --config configs/carl.c10.yaml --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --save_path carl.c10.r18.e800.pth > logs/carl.c10.r18.e800.log &
 
-nohup python train.py --config configs/nodel.c10.yaml --gpu 0 --model resnet18 --epochs 350 --epochs_lin 100 --save_path nodel.c10.r18.e350.adamw.lr0.001.pth --opt AdamW --lr 0.001 > logs/nodel.c10.r18.e350.adamw.lr0.001.log &
+# nohup python train.py --config configs/nodel.c10.yaml --gpu 0 --model resnet18 --epochs 350 --epochs_lin 100 --save_path nodel.c10.r18.e350.adamw.lr0.001.pth --opt AdamW --lr 0.001 > logs/nodel.c10.r18.e350.adamw.lr0.001.log &
 
-nohup python train.py --config configs/carl.c10.yaml --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --save_path carl.c10.r18.e800.adamw.lr0.001.pth --opt AdamW --lr 0.001 > logs/carl.c10.r18.e800.adamw.lr0.001.log  &
+# nohup python train.py --config configs/carl.c10.yaml --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --save_path carl.c10.r18.e800.adamw.lr0.001.pth --opt AdamW --lr 0.001 > logs/carl.c10.r18.e800.adamw.lr0.001.log  &
+
+nohup python train.py --config configs/nodel.c10.yaml --gpu 1 --model resnet18 --epochs 500 --epochs_lin 100 --save_path nodel.c10.r18.e500.adamw.lr0.001.pth --opt AdamW --lr 0.001 > logs/nodel.c10.r18.e500.adamw.lr0.001.log &
+
+nohup python train.py --config configs/nodel.c10.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path nodel.c10.r18.e350.adamw.lr0.01.pth --opt AdamW --lr 0.01 > logs/nodel.c10.r18.e350.adamw.lr0.01.log &
+
+nohup python train.py --config configs/carl.c10.yaml --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --save_path carl.c10.r18.e800.adamw.lr0.01.pth --opt AdamW --lr 0.01 > logs/carl.c10.r18.e800.adamw.lr0.01.log  &
