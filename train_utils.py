@@ -166,12 +166,12 @@ def train_nodel( # simclr version of NODE
             proj_feat = output["proj_features"]
             proj_feat_cap = output_cap["proj_features"]
 
-            ode_traj = output["cont_dyn"]
-            ode_traj_cap = output["cont_dyn"]
+            # ode_traj = output["cont_dyn"]
+            # ode_traj_cap = output["cont_dyn"]
 
-            dyn_reg = dynamics_regularizer(ode_traj) + dynamics_regularizer(ode_traj_cap)
+            # dyn_reg = dynamics_regularizer(ode_traj) + dynamics_regularizer(ode_traj_cap)
             
-            loss_con = lossfunction(proj_feat, proj_feat_cap) + 0.3 * dyn_reg
+            loss_con = lossfunction(proj_feat, proj_feat_cap) #+ 0.3 * dyn_reg
             
             optimizer.zero_grad()
             loss_con.backward()

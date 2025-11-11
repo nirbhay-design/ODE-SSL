@@ -14,6 +14,14 @@
 |BYOL|83.0|47.0|84.8|54.8|
 |SimSiam|76.5|34.5|88.6|62.3|
 
+
+## **Experiments**
+
+|Algorithm|CIFAR10 (r18)|CIFAR (r50)|optimizer|lr|Additional|
+|---|---|---|---|---|---|
+|NODEL|83.3|76.4|SGD|0.5|proj mlp is CARL mlp, spectral norm only at last layer in NODE|
+|CARL|82.4|87.4||SGD|0.4|spectral norm only at last layer of NODE|
+
 ## **Reproducing the results**
 
 ```

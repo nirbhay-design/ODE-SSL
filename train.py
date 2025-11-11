@@ -49,6 +49,7 @@ def main_single():
     train_algo = config['train_algo']
 
     model = Network(**config['model_params'])
+    # print(model.load_state_dict(torch.load(config["model_save_path"], map_location="cpu")))
     mlp = MLP(model.classifier_infeatures, config['num_classes'], config['mlp_type'])
 
     pred_net = None 
