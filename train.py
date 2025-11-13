@@ -27,6 +27,7 @@ def get_args():
     parser.add_argument("--epochs_lin", type=int, default = None, help="epochs for linear probing")
     parser.add_argument("--opt", type=str, default=None, help="SGD/ADAM/AdamW")
     parser.add_argument("--lr", type=float, default = None, help="lr for SSL")
+    parser.add_argument("--ode_steps", type=int, default = None, help="steps for ODE solver")
 
     args = parser.parse_args()
     return args
@@ -129,6 +130,8 @@ if __name__ == "__main__":
         config["n_epochs"] = args.epochs
     if args.epochs_lin:
         config["n_epochs_mlp"] = args.epochs_lin
+    if args.ode_steps:
+        config["model_params"]["ode_steps"] = args.ode_steps
     
     # setting seeds 
 
