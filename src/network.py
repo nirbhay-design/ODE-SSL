@@ -67,6 +67,66 @@ class ODEBlock(nn.Module):
         output = odeint(self.odefun, x, self.t_grid, method=self.method)
         return output
 
+class FloReLproj(nn.Module):
+    def __init__(self, input_dim):
+        super().__init__()
+        hidden_dim = 2 * input_dim
+        self.odenet = nn.Sequential(
+            nn.Linear(input_dim + 1, hidden_dim),
+            nn.GroupNorm(32, hidden_dim),
+            nn.SiLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.GroupNorm(32, hidden_dim),
+            nn.SiLU(),
+            nn.utils.parametrizations.spectral_norm(nn.Linear(hidden_dim, input_dim))
+        )
+    
+    def forward(self, t, x):
+        t = torch.tensor(t).repeat((x.shape[0],1))
+        return self.odenet(torch.cat([x,t], dim = -1))
+
+class FloReLBlock(nn.Module):
+    def __init__(self, odefun, T=1.0, steps=10, trace_steps=10, method='rk4'):
+        super().__init__()
+        self.odefun = odefun
+        self.t_grid = torch.tensor([0.0, T])
+        self.method = method
+        self.trace_steps = 10
+
+    def divergence_estimate(self, t, z, e = None):
+        if e is None:
+            e = torch.randint(0, 2, z.shape, device=z.device, dtype=z.dtype) * 2.0 - 1.0 # -1/1 rademacher
+        
+        z.requires_grad_(True)
+        f = self.odefun(t, z)
+        etf = torch.autograd.grad((f * e).sum(), z, create_graph=True)[0]
+        div_est = (etf*e).sum(dim = -1)  
+
+        z.requires_grad_(False)
+        return f, div_est
+
+    def augmented_dynamics(self, t, state): # state is [z, logp]
+        z = state[:,:-1]
+        logp = state[:, -1:]
+        
+        f_z = None 
+        div_est = torch.zeros(z.shape[0], device=z.device)
+        for _ in range(self.trace_steps):
+            f_z, div = self.divergence_estimate(t, z)
+            div_est += div
+        div_est /= self.trace_steps
+
+        augmented_state = torch.cat([f_z, -div_est.unsqueeze(1)], dim = -1)
+        return augmented_state 
+
+    def forward(self, x):
+        self.t_grid = self.t_grid.to(x.device)
+        inital_state = torch.cat([x, torch.zeros(x.shape[0], 1, device=x.device)], dim = -1)
+        output = odeint(self.augmented_dynamics, initial_state, self.t_grid, method=self.method)
+        final_output = output[-1]
+        
+        return output
+
 class Network(nn.Module):
     def __init__(self, model_name = 'resnet18', pretrained = False, proj_dim = 128, ode_steps = 10, algo_type="nodel", carl_hidden = 4096):
         super().__init__()
