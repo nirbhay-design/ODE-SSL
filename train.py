@@ -27,7 +27,7 @@ def get_args():
     parser.add_argument("--epochs_lin", type=int, default = None, help="epochs for linear probing")
     parser.add_argument("--opt", type=str, default=None, help="SGD/ADAM/AdamW")
     parser.add_argument("--lr", type=float, default = None, help="lr for SSL")
-    parser.add_argument("--ode_steps", type=int, default = None, help="steps for ODE solver")
+    parser.add_argument("--ode_steps", type=int, default = None, help="steps to return from ODE solver")
 
     args = parser.parse_args()
     return args

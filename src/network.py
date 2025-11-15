@@ -86,12 +86,12 @@ class FloReLproj(nn.Module):
         return self.odenet(torch.cat([x,t], dim = -1))
 
 class FloReLBlock(nn.Module):
-    def __init__(self, odefun, T=1.0, steps=10, trace_steps=10, method='rk4'):
+    def __init__(self, odefun, T=1.0, steps=10, trace_steps=1, method='rk4'):
         super().__init__()
         self.odefun = odefun
-        self.t_grid = torch.tensor([0.0, T])
+        self.t_grid = torch.linspace(0, T, steps)
         self.method = method
-        self.trace_steps = 10
+        self.trace_steps = trace_steps
 
     def divergence_estimate(self, t, z, e = None):
         if e is None:
@@ -102,12 +102,13 @@ class FloReLBlock(nn.Module):
         etf = torch.autograd.grad((f * e).sum(), z, create_graph=True)[0]
         div_est = (etf*e).sum(dim = -1)  
 
-        z.requires_grad_(False)
+        # z.requires_grad_(False)
+        z = z.detach()
         return f, div_est
 
     def augmented_dynamics(self, t, state): # state is [z, logp]
         z = state[:,:-1]
-        logp = state[:, -1:]
+        # logp = state[:, -1:]
         
         f_z = None 
         div_est = torch.zeros(z.shape[0], device=z.device)
@@ -121,11 +122,17 @@ class FloReLBlock(nn.Module):
 
     def forward(self, x):
         self.t_grid = self.t_grid.to(x.device)
-        inital_state = torch.cat([x, torch.zeros(x.shape[0], 1, device=x.device)], dim = -1)
+        initial_state = torch.cat([x, torch.zeros(x.shape[0], 1, device=x.device)], dim = -1)
         output = odeint(self.augmented_dynamics, initial_state, self.t_grid, method=self.method)
         final_output = output[-1]
-        
-        return output
+        rep, probsolve = final_output[:,:-1], final_output[:, -1]
+
+        base_log_prob = torch.distributions.MultivariateNormal(
+            torch.zeros(x.shape[1], device=x.device),
+            torch.eye(x.shape[1], device=x.device)
+        ).log_prob(rep)
+
+        return {"output": rep, "logprob": base_log_prob + probsolve}
 
 class Network(nn.Module):
     def __init__(self, model_name = 'resnet18', pretrained = False, proj_dim = 128, ode_steps = 10, algo_type="nodel", carl_hidden = 4096):
@@ -155,43 +162,60 @@ class Network(nn.Module):
 
         self.classifier_infeatures = model._modules.get(module_keys[-1], nn.Identity()).in_features
 
-        # so far general feature extractor ($h_{\theta}$)
-        self.ode_steps = ode_steps
-        self.ode_block = ODEBlock(ODENetwork(self.classifier_infeatures), steps=self.ode_steps)
-
-        # This is projection head
-        if algo_type == 'carl':
-            self.proj = CARL_mlp(in_features = self.classifier_infeatures, hidden_dim = carl_hidden, out_features = proj_dim)
-        else:
-            self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
-            # self.proj = nn.Linear(self.classifier_infeatures, proj_dim)
-            
         self.algo_type = algo_type
 
+        # so far general feature extractor ($h_{\theta}$)
+        if self.algo_type in ["nodel", "carl"]:
+            self.ode_steps = ode_steps
+            self.ode_block = ODEBlock(ODENetwork(self.classifier_infeatures), steps=self.ode_steps)
+
+            # This is projection head
+            if algo_type == 'carl':
+                self.proj = CARL_mlp(in_features = self.classifier_infeatures, hidden_dim = carl_hidden, out_features = proj_dim)
+            else:
+                self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
+                # self.proj = nn.Linear(self.classifier_infeatures, proj_dim)
+        elif self.algo_type in ["florel"]:
+            self.proj = nn.Sequential(nn.Linear(self.classifier_infeatures, proj_dim),
+                                      FloReLBlock(
+                                          FloReLproj(proj_dim),
+                                          steps = ode_steps
+                                        )
+                                    )
+                                        
     def forward(self, x, t = None):
         features = self.feat_extractor(x).flatten(1)
-        cont_dynamics = self.ode_block(features)
-        if t is None:
-            proj_features = self.proj(cont_dynamics[-1])
-        else:
-            proj_features = self.proj(cont_dynamics[t,torch.arange(x.shape[0],device=x.device)])
-        return {"features": features, 
-                "cont_dyn": cont_dynamics, 
-                "proj_features": proj_features} # 2048/512, embedding dynamics
+
+        if self.algo_type in ["nodel", "carl"]:
+            cont_dynamics = self.ode_block(features)
+            if t is None:
+                proj_features = self.proj(cont_dynamics[-1])
+            else:
+                proj_features = self.proj(cont_dynamics[t,torch.arange(x.shape[0],device=x.device)])
+            return {"features": features, 
+                    "cont_dyn": cont_dynamics, 
+                    "proj_features": proj_features} # 2048/512, embedding dynamics
+        
+        elif self.algo_type in ["florel"]:
+            proj = self.proj(features)
+            return {"features": features,
+                    "proj_features": proj["output"],
+                    "logprob": proj["logprob"]}
     
 
 
 if __name__ == "__main__":
     device=torch.device('cuda:0')
-    network = Network(model_name = 'resnet50', pretrained=False, algo_type='byol', ode_steps=10, carl_hidden = 4096, proj_dim = 256)
+    network = Network(model_name = 'resnet50', pretrained=False, algo_type='florel', ode_steps=2, carl_hidden = 4096, proj_dim = 256)
     # mlp = MLP(network.classifier_infeatures, num_classes=10, mlp_type='hidden')
     network = network.to(device)
     x = torch.rand(2,3,224,224,device=device)
-    t = torch.randint(0, 10, size=(x.shape[0],))
-    t = t.to(device)
-    output = network(x,t)
+    # t = torch.randint(0, 10, size=(x.shape[0],))
+    # t = t.to(device)
+    output = network(x)
     print(output["features"].shape)
-    print(output["cont_dyn"].shape)
+    # print(output["cont_dyn"].shape)
+    print(output["logprob"].shape)
     print(output["proj_features"].shape)
 
     # contrastive loss on proj_feat, representations are feat, MLP on feat 
