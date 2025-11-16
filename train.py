@@ -5,7 +5,7 @@ import torch.optim as optim
 import numpy as np
 from src.network import Network, MLP, CARL_mlp
 from train_utils import yaml_loader, train_nodel, train_carl, model_optimizer, \
-                        loss_function, \
+                        loss_function, train_florel, \
                         load_dataset
 
 import torch.multiprocessing as mp 
@@ -44,6 +44,8 @@ def train_network(**kwargs):
         return train_nodel(**kwargs)
     elif train_algo == 'carl':
         return train_carl(**kwargs)
+    elif train_algo == "florel":
+        return train_florel(**kwargs)
     return None
 
 def main_single():

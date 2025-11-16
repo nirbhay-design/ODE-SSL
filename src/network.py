@@ -177,6 +177,7 @@ class Network(nn.Module):
                 # self.proj = nn.Linear(self.classifier_infeatures, proj_dim)
         elif self.algo_type in ["florel"]:
             self.proj = nn.Sequential(nn.Linear(self.classifier_infeatures, proj_dim),
+                                      nn.LayerNorm(proj_dim),
                                       FloReLBlock(
                                           FloReLproj(proj_dim),
                                           steps = ode_steps

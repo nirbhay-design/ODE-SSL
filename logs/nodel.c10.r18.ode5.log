@@ -1,0 +1,77 @@
+environment: 
+YAML: configs/nodel.c10.yaml
+==> SEED: 42
+==> num_classes: 10
+==> data_name: cifar10
+==> data_params: {'algo': 'nodel', 'data_dir': 'datasets/cifar10', 'batch_size': 512, 'num_workers': 3, 'image_size': 32}
+==> return_logs: False
+==> eval_every: 10
+==> n_epochs: 600
+==> n_epochs_mlp: 100
+==> gpu_id: 3
+==> opt: SGD
+==> opt_params: {'lr': 0.5, 'momentum': 0.9, 'nesterov': True}
+==> schedular_params: {'T_max': 600, 'eta_min': 0.001}
+==> mlp_opt: SGD
+==> mlp_opt_params: {'lr': 0.01, 'momentum': 0.9, 'nesterov': True}
+==> model_params: {'model_name': 'resnet18', 'pretrained': False, 'proj_dim': 128, 'ode_steps': 5}
+==> mlp_type: hidden
+==> loss: nodel
+==> loss_params: {'sim': 'cosine', 'tau': 0.5}
+==> distributed: False
+==> train_algo: nodel
+==> model_save_path: saved_models/nodel.c10.r18.ode5.pth
+==> config: configs/nodel.c10.yaml
+--------------------------------------------------
+===> using hiddin mlp
+using optimizer: SGD
+using optimizer: SGD
+loss function: nodel
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+# of Training Images: 50000
+# of Testing Images: 10000
+### NODEL Training begins
+[GPU3] epochs: [1/600] train_loss_con: 5.767
+[GPU3] epochs: [2/600] train_loss_con: 5.641
+[GPU3] epochs: [3/600] train_loss_con: 5.612
+[GPU3] epochs: [4/600] train_loss_con: 5.559
+[GPU3] epochs: [5/600] train_loss_con: 5.491
+[GPU3] epochs: [6/600] train_loss_con: 5.460
+[GPU3] epochs: [7/600] train_loss_con: 5.434
+[GPU3] epochs: [8/600] train_loss_con: 5.421
+[GPU3] epochs: [9/600] train_loss_con: 5.414
+[GPU3] epochs: [10/600] train_loss_con: 5.404
+[GPU3] epochs: [11/600] train_loss_con: 5.398
+[GPU3] epochs: [12/600] train_loss_con: 5.387
+[GPU3] epochs: [13/600] train_loss_con: 5.380
+[GPU3] epochs: [14/600] train_loss_con: 5.375
+[GPU3] epochs: [15/600] train_loss_con: 5.367
+[GPU3] epochs: [16/600] train_loss_con: 5.358
+[GPU3] epochs: [17/600] train_loss_con: 5.354
+[GPU3] epochs: [18/600] train_loss_con: 5.349
+[GPU3] epochs: [19/600] train_loss_con: 5.344
+[GPU3] epochs: [20/600] train_loss_con: 5.342
+[GPU3] epochs: [21/600] train_loss_con: 5.336
+[GPU3] epochs: [22/600] train_loss_con: 5.334
+[GPU3] epochs: [23/600] train_loss_con: 5.329
+[GPU3] epochs: [24/600] train_loss_con: 5.323
+[GPU3] epochs: [25/600] train_loss_con: 5.319
+[GPU3] epochs: [26/600] train_loss_con: 5.316
+[GPU3] epochs: [27/600] train_loss_con: 5.311
+[GPU3] epochs: [28/600] train_loss_con: 5.310
+[GPU3] epochs: [29/600] train_loss_con: 5.306
+[GPU3] epochs: [30/600] train_loss_con: 5.306
+[GPU3] epochs: [31/600] train_loss_con: 5.302
+[GPU3] epochs: [32/600] train_loss_con: 5.300
+[GPU3] epochs: [33/600] train_loss_con: 5.297
+[GPU3] epochs: [34/600] train_loss_con: 5.293
+[GPU3] epochs: [35/600] train_loss_con: 5.292
+[GPU3] epochs: [36/600] train_loss_con: 5.289
+[GPU3] epochs: [37/600] train_loss_con: 5.289
+[GPU3] epochs: [38/600] train_loss_con: 5.286
+[GPU3] epochs: [39/600] train_loss_con: 5.286
+[GPU3] epochs: [40/600] train_loss_con: 5.283
+[GPU3] epochs: [41/600] train_loss_con: 5.283
+[GPU3] epochs: [42/600] train_loss_con: 5.281

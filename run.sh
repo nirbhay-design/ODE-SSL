@@ -16,9 +16,12 @@
 
 # nohup python train.py --config configs/carl.c100.yaml --gpu 1 --model resnet18 --epochs 1000 --epochs_lin 100 --save_path carl.c100.r18.pth > logs/carl.c100.r18.log &
 
-# nohup python train.py --config configs/nodel.c10.yaml --gpu 1 --model resnet50 --epochs 800 --epochs_lin 100 --save_path nodel.c10.r50.ode25.pth --ode_steps 25 > logs/nodel.c10.r50.ode25.log &
+# nohup python train.py --config configs/nodel.c10.yaml --gpu 2 --model resnet50 --epochs 600 --epochs_lin 100 --save_path nodel.c10.r50.ode5.pth --ode_steps 5 > logs/nodel.c10.r50.ode5.log &
 
-# nohup python train.py --config configs/nodel.c10.yaml --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --save_path nodel.c10.r18.ode25.pth --ode_steps 25 > logs/nodel.c10.r18.ode25.log &
+# nohup python train.py --config configs/nodel.c10.yaml --gpu 3 --model resnet18 --epochs 600 --epochs_lin 100 --save_path nodel.c10.r18.ode5.pth --ode_steps 5 > logs/nodel.c10.r18.ode5.log &
+
+
+python train.py --config configs/florel.c10.yaml --gpu 3 --model resnet18 --epochs 2 --epochs_lin 2 --save_path florel.c10.r18.pth --verbose
 
 
 # ran these experiments after 

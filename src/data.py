@@ -95,7 +95,7 @@ class DataCifar():
             
         image, label = self.data[idx]
 
-        if self.algo in ["nodel", "carl"]:
+        if self.algo in ["nodel", "carl", "florel"]:
             img1 = self.target_transform(image)
             img2 = self.target_transform(image)
             return img1, img2, label 
