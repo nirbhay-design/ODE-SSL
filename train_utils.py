@@ -284,7 +284,7 @@ def train_florel( # simclr version Flow models
             proj_feat = output["proj_features"]
             proj_feat_cap = output_cap["proj_features"]
 
-            loss_con = lossfunction(proj_feat, proj_feat_cap) + output["logprob"].mean() + output_cap["logprob"].mean()
+            loss_con = lossfunction(proj_feat, proj_feat_cap) - output["logprob"].mean() - output_cap["logprob"].mean()
             
             optimizer.zero_grad()
             loss_con.backward()

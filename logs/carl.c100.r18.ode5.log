@@ -1,0 +1,50 @@
+environment: 
+YAML: configs/carl.c100.yaml
+==> SEED: 42
+==> num_classes: 100
+==> data_name: cifar100
+==> data_params: {'algo': 'carl', 'data_dir': 'datasets/cifar100', 'batch_size': 512, 'num_workers': 3, 'image_size': 32}
+==> return_logs: False
+==> eval_every: 10
+==> n_epochs: 1000
+==> n_epochs_mlp: 100
+==> gpu_id: 6
+==> opt: SGD
+==> opt_params: {'lr': 0.4, 'momentum': 0.9, 'weight_decay': 1e-06}
+==> schedular_params: {'T_max': 1000, 'eta_min': 0.001}
+==> mlp_opt: SGD
+==> mlp_opt_params: {'lr': 0.01, 'momentum': 0.9}
+==> model_params: {'model_name': 'resnet18', 'pretrained': False, 'proj_dim': 256, 'algo_type': 'carl', 'carl_hidden': 4096, 'ode_steps': 5}
+==> carl_pred_params: {'in_features': 256, 'hidden_dim': 4096, 'out_features': 256}
+==> ema_tau: 0.996
+==> mlp_type: hidden
+==> loss: carl
+==> distributed: False
+==> train_algo: carl
+==> model_save_path: saved_models/carl.c100.r18.ode5.pth
+==> config: configs/carl.c100.yaml
+--------------------------------------------------
+===> using hiddin mlp
+using optimizer: SGD
+using optimizer: SGD
+loss function: carl
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+# of Training Images: 50000
+# of Testing Images: 10000
+### CARL Training begins
+[GPU6] epochs: [1/1000] train_loss_con: -2.420
+[GPU6] epochs: [2/1000] train_loss_con: -2.909
+[GPU6] epochs: [3/1000] train_loss_con: -3.737
+[GPU6] epochs: [4/1000] train_loss_con: -3.858
+[GPU6] epochs: [5/1000] train_loss_con: -3.791
+[GPU6] epochs: [6/1000] train_loss_con: -3.649
+[GPU6] epochs: [7/1000] train_loss_con: -3.370
+[GPU6] epochs: [8/1000] train_loss_con: -3.244
+[GPU6] epochs: [9/1000] train_loss_con: -3.285
+[GPU6] epochs: [10/1000] train_loss_con: -3.254
+[GPU6] epochs: [11/1000] train_loss_con: -3.223
+[GPU6] epochs: [12/1000] train_loss_con: -3.317
+[GPU6] epochs: [13/1000] train_loss_con: -3.262
+[GPU6] epochs: [14/1000] train_loss_con: -3.207
