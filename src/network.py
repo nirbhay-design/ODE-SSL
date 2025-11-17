@@ -127,10 +127,12 @@ class FloReLBlock(nn.Module):
         final_output = output[-1]
         rep, probsolve = final_output[:,:-1], final_output[:, -1]
 
-        base_log_prob = torch.distributions.MultivariateNormal(
-            torch.zeros(x.shape[1], device=x.device),
-            torch.eye(x.shape[1], device=x.device)
-        ).log_prob(F.normalize(rep, dim = -1))
+        # base_log_prob = torch.distributions.MultivariateNormal(
+        #     torch.zeros(x.shape[1], device=x.device),
+        #     torch.eye(x.shape[1], device=x.device)
+        # ).log_prob(rep)
+
+        base_log_prob = -0.5 * rep.norm(dim = -1).pow(2) # sufficient for training 
 
         return {"output": rep, "logprob": base_log_prob + probsolve}
 
