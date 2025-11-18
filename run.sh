@@ -40,7 +40,7 @@
 
 ###############################################
 
-python train.py --config configs/florel.c10.yaml --gpu 6 --model resnet18 --epochs 2 --epochs_lin 2 --save_path florel.c10.r18.pth --verbose
+# nohup python train.py --config configs/florel.c10.yaml --gpu 6 --model resnet18 --epochs 600 --epochs_lin 100 --save_path florel.c10.r18.pth > logs/florel.c10.r18.log &
 
 
 # ran these experiments after 

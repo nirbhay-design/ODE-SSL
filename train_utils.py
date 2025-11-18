@@ -42,7 +42,7 @@ def make_tsne_for_dataset(model, loader, device, algo, return_logs = False, tsne
             x = x.to(device)
             y = y.to(device)
 
-            output = model(x)
+            output = model(x, test=True)
             feats = output["features"]
 
             all_features.append(feats)
@@ -66,7 +66,7 @@ def evaluate(model, mlp, loader, device, return_logs=False, algo=None):
             x = x.to(device)
             y = y.to(device)
 
-            output = model(x)
+            output = model(x, test=True)
             feats = output["features"]
             scores = mlp(feats)
 
@@ -102,7 +102,7 @@ def train_mlp(
             target = target.to(device)
             
             with torch.no_grad():
-                output = model(data)
+                output = model(data, test=True)
                 feats = output["features"]
             scores = mlp(feats.detach())      
             
@@ -283,17 +283,22 @@ def train_florel( # simclr version Flow models
 
             proj_feat = output["proj_features"]
             proj_feat_cap = output_cap["proj_features"]
-
-            loss_con = lossfunction(proj_feat, proj_feat_cap) - output["logprob"].mean() - output_cap["logprob"].mean()
             
+            loss_clr = lossfunction(proj_feat, proj_feat_cap) 
+            log_pz = -output["logprob"].mean() 
+            log_pz_cap = -output_cap["logprob"].mean()
+            
+            loss_con = loss_clr + log_pz + log_pz_cap
+
             optimizer.zero_grad()
             loss_con.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
 
             cur_loss += loss_con.item() / (len_train)
             
             if return_logs:
-                progress(idx+1,len(train_loader), loss_con=loss_con.item(), GPU = device_id)
+                progress(idx+1,len(train_loader), loss_con=loss_con.item(), loss_clr=loss_clr.item(), log_pz = log_pz.item(), GPU = device_id)
         
         opt_lr_schedular.step()
             

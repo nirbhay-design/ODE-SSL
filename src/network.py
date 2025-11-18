@@ -86,7 +86,7 @@ class FloReLproj(nn.Module):
         return self.odenet(torch.cat([x,t], dim = -1))
 
 class FloReLBlock(nn.Module):
-    def __init__(self, odefun, T=1.0, steps=10, trace_steps=1, method='rk4'):
+    def __init__(self, odefun, T=1.0, steps=10, trace_steps=2, method='rk4'):
         super().__init__()
         self.odefun = odefun
         self.t_grid = torch.linspace(0, T, steps)
@@ -131,9 +131,9 @@ class FloReLBlock(nn.Module):
         #     torch.zeros(x.shape[1], device=x.device),
         #     torch.eye(x.shape[1], device=x.device)
         # ).log_prob(rep)
+        # probsolve is -\int_{0}^{1} tr(f')
 
         base_log_prob = -0.5 * rep.norm(dim = -1).pow(2) # sufficient for training 
-
         return {"output": rep, "logprob": base_log_prob + probsolve}
 
 class Network(nn.Module):
@@ -179,16 +179,17 @@ class Network(nn.Module):
                 # self.proj = nn.Linear(self.classifier_infeatures, proj_dim)
         elif self.algo_type in ["florel"]:
             self.proj = nn.Sequential(nn.Linear(self.classifier_infeatures, proj_dim),
-                                      nn.LayerNorm(proj_dim),
                                       FloReLBlock(
                                           FloReLproj(proj_dim),
                                           steps = ode_steps
                                         )
                                     )
                                         
-    def forward(self, x, t = None):
+    def forward(self, x, t = None, test=None):
         features = self.feat_extractor(x).flatten(1)
-
+        if test:
+            return {"features": features}
+        
         if self.algo_type in ["nodel", "carl"]:
             cont_dynamics = self.ode_block(features)
             if t is None:
