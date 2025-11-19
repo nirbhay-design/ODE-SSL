@@ -72,17 +72,17 @@ class FloReLproj(nn.Module):
         super().__init__()
         hidden_dim = 2 * input_dim
         self.odenet = nn.Sequential(
-            nn.Linear(input_dim + 1, hidden_dim),
+            nn.utils.parametrizations.spectral_norm(nn.Linear(input_dim + 1, hidden_dim)),
             nn.GroupNorm(32, hidden_dim),
             nn.SiLU(),
-            nn.Linear(hidden_dim, hidden_dim),
+            nn.utils.parametrizations.spectral_norm(nn.Linear(hidden_dim, hidden_dim)),
             nn.GroupNorm(32, hidden_dim),
             nn.SiLU(),
             nn.utils.parametrizations.spectral_norm(nn.Linear(hidden_dim, input_dim))
         )
     
     def forward(self, t, x):
-        t = torch.tensor(t).repeat((x.shape[0],1))
+        t = torch.tensor(t, device=x.device, dtype=x.dtype).repeat((x.shape[0],1))
         return self.odenet(torch.cat([x,t], dim = -1))
 
 class FloReLBlock(nn.Module):
@@ -97,7 +97,7 @@ class FloReLBlock(nn.Module):
         if e is None:
             e = torch.randint(0, 2, z.shape, device=z.device, dtype=z.dtype) * 2.0 - 1.0 # -1/1 rademacher
         
-        z.requires_grad_(True)
+        z = z.clone().detach().requires_grad_(True)
         f = self.odefun(t, z)
         etf = torch.autograd.grad((f * e).sum(), z, create_graph=True)[0]
         div_est = (etf*e).sum(dim = -1)  
@@ -116,6 +116,7 @@ class FloReLBlock(nn.Module):
             f_z, div = self.divergence_estimate(t, z)
             div_est += div
         div_est /= self.trace_steps
+        div_est = torch.clamp(div_est, -100.0, 100.0)
 
         augmented_state = torch.cat([f_z, -div_est.unsqueeze(1)], dim = -1)
         return augmented_state 
@@ -123,7 +124,7 @@ class FloReLBlock(nn.Module):
     def forward(self, x):
         self.t_grid = self.t_grid.to(x.device)
         initial_state = torch.cat([x, torch.zeros(x.shape[0], 1, device=x.device)], dim = -1)
-        output = odeint(self.augmented_dynamics, initial_state, self.t_grid, method=self.method)
+        output = odeint(self.augmented_dynamics, initial_state, self.t_grid, method=self.method, rtol = 1e-6, atol = 1e-6)
         final_output = output[-1]
         rep, probsolve = final_output[:,:-1], final_output[:, -1]
 
