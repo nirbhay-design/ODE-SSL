@@ -3,9 +3,9 @@ import torch
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
-from src.network import Network, MLP, CARL_mlp
+from src.network import Network, MLP, CARL_mlp, EnergyNet
 from train_utils import yaml_loader, train_nodel, train_carl, model_optimizer, \
-                        loss_function, train_florel, \
+                        loss_function, train_florel, train_lema, \
                         load_dataset
 
 import torch.multiprocessing as mp 
@@ -46,6 +46,8 @@ def train_network(**kwargs):
         return train_carl(**kwargs)
     elif train_algo == "florel":
         return train_florel(**kwargs)
+    elif train_algo == "lema":
+        return train_lema(**kwargs)
     return None
 
 def main_single():
@@ -98,6 +100,12 @@ def main_single():
         param_config["target_model"] = target_net 
         param_config["online_pred_model"] = pred_net 
         param_config["ema_beta"] = ema_tau
+    elif train_algo == "lema":
+        energy_model = EnergyNet(model.classifier_infeatures, **config["energy_model_params"])
+        energy_optimizer = model_optimizer(energy_model, config["energy_opt"], **config["energy_model_opt_params"])
+        
+        param_config["energy_model"] = energy_model
+        param_config["energy_optimizer"] = energy_optimizer
 
     final_model = train_network(**param_config)
 

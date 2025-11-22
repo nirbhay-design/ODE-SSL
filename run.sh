@@ -61,3 +61,12 @@
 # nohup python train.py --config configs/nodel.c10.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path nodel.c10.r18.e350.adamw.lr0.01.pth --opt AdamW --lr 0.01 > logs/nodel.c10.r18.e350.adamw.lr0.01.log &
 
 # nohup python train.py --config configs/carl.c10.yaml --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --save_path carl.c10.r18.e800.adamw.lr0.01.pth --opt AdamW --lr 0.01 > logs/carl.c10.r18.e800.adamw.lr0.01.log  &
+
+
+# nohup python train.py --config configs/lema.c10.yaml --gpu 0 --model resnet50 --epochs 350 --epochs_lin 100 --save_path lema.c10.r50.pth > logs/lema.c10.r50.log &
+
+# nohup python train.py --config configs/lema.c10.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path lema.c10.r18.pth > logs/lema.c10.r18.log &
+
+# nohup python train.py --config configs/lema.c100.yaml --gpu 2 --model resnet50 --epochs 350 --epochs_lin 100 --save_path lema.c100.r50.pth > logs/lema.c100.r50.log &
+
+# nohup python train.py --config configs/lema.c100.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path lema.c100.r18.pth > logs/lema.c100.r18.log &

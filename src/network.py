@@ -1,4 +1,5 @@
-import torch 
+import math
+import torch
 import torchvision 
 import torch.nn as nn 
 import torch.nn.functional as F
@@ -136,6 +137,46 @@ class FloReLBlock(nn.Module):
 
         base_log_prob = -0.5 * rep.norm(dim = -1).pow(2) # sufficient for training 
         return {"output": rep, "logprob": base_log_prob + probsolve}
+    
+class EnergyNet(nn.Module):
+    def __init__(self, z_dim, eta = 1e-4, steps = 30):
+        super().__init__()
+        hidden = z_dim * 2
+        self.enet = nn.Sequential(
+            nn.utils.parametrizations.spectral_norm(nn.Linear(2 * z_dim, hidden)),
+            nn.LayerNorm(hidden),
+            nn.LeakyReLU(0.1),
+            nn.utils.parametrizations.spectral_norm(nn.Linear(hidden, hidden)),
+            nn.LayerNorm(hidden),
+            nn.LeakyReLU(0.1),
+            nn.utils.parametrizations.spectral_norm(nn.Linear(hidden, 1)),
+        )
+
+        # parameters for langevin sampling 
+        self.eta = eta
+        self.steps = steps 
+
+    def forward(self, z1, z2):
+        # returns energy between z1 and z2
+        z = torch.cat([z1,z2], dim = -1)
+        return self.enet(z)
+
+    def langevin_sampling(self, z_cond, z_0 = None):
+        self.eval()
+        z_cond = z_cond.clone().detach()
+        if z_0 is None:
+            z = torch.randn_like(z_cond)
+        else:
+            z = z_0.clone().detach()
+        z.requires_grad_(True)
+        for _ in range(self.steps):
+            e = self(z, z_cond).squeeze().sum()
+            grad = torch.autograd.grad(e, z, create_graph=False)[0]
+            z = z - self.eta * torch.clamp(grad, -self.eta, self.eta) + math.sqrt(2 * self.eta) * torch.randn_like(z_cond) # langevin dynamics
+            z = z.detach()
+            z.requires_grad_(True)
+        self.train()
+        return z.detach()
 
 class Network(nn.Module):
     def __init__(self, model_name = 'resnet18', pretrained = False, proj_dim = 128, ode_steps = 10, algo_type="nodel", carl_hidden = 4096):
@@ -185,6 +226,9 @@ class Network(nn.Module):
                                           steps = ode_steps
                                         )
                                     )
+        elif self.algo_type in ["lema"]:
+                self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
+
                                         
     def forward(self, x, t = None, test=None):
         features = self.feat_extractor(x).flatten(1)
@@ -206,23 +250,34 @@ class Network(nn.Module):
             return {"features": features,
                     "proj_features": proj["output"],
                     "logprob": proj["logprob"]}
+        
+        elif self.algo_type in ["lema"]:
+            proj = self.proj(features)
+            return {"features": features,
+                    "proj_features": proj}
     
 
 
 if __name__ == "__main__":
     device=torch.device('cuda:0')
-    network = Network(model_name = 'resnet50', pretrained=False, algo_type='florel', ode_steps=2, carl_hidden = 4096, proj_dim = 256)
-    # mlp = MLP(network.classifier_infeatures, num_classes=10, mlp_type='hidden')
-    network = network.to(device)
-    x = torch.rand(2,3,224,224,device=device)
-    # t = torch.randint(0, 10, size=(x.shape[0],))
-    # t = t.to(device)
-    output = network(x)
-    print(output["features"].shape)
-    # print(output["cont_dyn"].shape)
-    print(output["logprob"].shape)
-    print(output["proj_features"].shape)
+    # network = Network(model_name = 'resnet50', pretrained=False, algo_type='florel', ode_steps=2, carl_hidden = 4096, proj_dim = 256)
+    # # mlp = MLP(network.classifier_infeatures, num_classes=10, mlp_type='hidden')
+    # network = network.to(device)
+    # x = torch.rand(2,3,224,224,device=device)
+    # # t = torch.randint(0, 10, size=(x.shape[0],))
+    # # t = t.to(device)
+    # output = network(x)
+    # print(output["features"].shape)
+    # # print(output["cont_dyn"].shape)
+    # print(output["logprob"].shape)
+    # print(output["proj_features"].shape)
 
     # contrastive loss on proj_feat, representations are feat, MLP on feat 
-
+    energynet = EnergyNet(128)
+    energynet = energynet.to(device)
+    a = torch.rand(10,128, device=device)
+    out = energynet.langevin_sampling(a, a)
+    print(out.shape)
+    print(out.isnan().sum())
+    print(out.min(), out.max())
     
