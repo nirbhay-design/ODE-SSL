@@ -22,7 +22,15 @@
 
 **DARe**
 
-![dare](workflows/DARe.pdf)
+![dare](workflows/DARe.svg)
+
+**NODEL**
+
+![nodel](workflows/NODEL.svg)
+
+**CARL**
+
+![odessl](workflows/ODESSL.svg)
 
 <!-- ## **Experiments**
 
