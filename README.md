@@ -1,6 +1,7 @@
 ## **Leveraging Generative Modelling for Rich Representations**
 
-- We model representation space as continuous dynamical system
+- We model representation space as continuous dynamical system (NODEL, CARL)
+- We model representation space as distribution (DARe)
 - The baselines follow from [nirbhay-design/RepresentationLearningAlgorithms](https://github.com/nirbhay-design/RepresentationLearningAlgorithms) 
 
 ## **Results**
@@ -12,23 +13,23 @@
 |BYOL|83.0|47.0|84.8|54.8|
 |SimSiam|76.5|34.5|88.6|62.3|
 |DARe|89.4|62.3|87.3|61.6|
-|NODEL|||||
-|CARL|||||
+|NODEL|86.3|52.2|86.0|50.9|
+|CARL|87.4|54.2|84.1|53.4|
 |SupCon|**94.0**|74.7|**93.5**|**70.4**|
 |Triplet|83.4|**76.3**|86.0|64.5|
 
 
 ## **Workflows**
 
-**DARe**
+**DARe (Distribution Alignment Regularizer)**
 
 ![dare](workflows/DARe.svg)
 
-**NODEL**
+**NODEL (Neural ODE Based SSL)**
 
 ![nodel](workflows/NODEL.svg)
 
-**CARL**
+**CARL (Continuous Time Adaptive SSL)**
 
 ![odessl](workflows/ODESSL.svg)
 
@@ -42,5 +43,9 @@
 ## **Reproducing the results**
 
 ```
-python train.py --config configs/nodel.c10.yaml --gpu 0 --model resnet50 --epochs 500 --epochs_lin 100 --save_path nodel.c10.r50.pth
+python train.py --config configs/nodel.c10.yaml --gpu 0 --model resnet50 --epochs 600 --epochs_lin 100 --save_path nodel.c10.r50.pth
+```
+
+```
+python train.py --config configs/carl.c10.yaml --gpu 0 --model resnet50 --epochs 600 --epochs_lin 100 --save_path carl.c10.r50.pth
 ```
