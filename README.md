@@ -15,6 +15,7 @@
 |DARe|89.4|62.3|87.3|61.6|
 |NODEL|86.3|52.2|86.0|50.9|
 |CARL|87.4|54.2|84.1|53.4|
+|LEMa|89.7|63.5|87.8|58.8|
 |SupCon|**94.0**|74.7|**93.5**|**70.4**|
 |Triplet|83.4|**76.3**|86.0|64.5|
 
@@ -32,6 +33,10 @@
 **CARL (Continuous Time Adaptive SSL)**
 
 ![odessl](workflows/ODESSL.svg)
+
+**LEMa (Low Energy Manifolds for Representation Learning)**
+
+![lema](workflows/LEMa.svg)
 
 <!-- ## **Experiments**
 
