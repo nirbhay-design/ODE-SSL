@@ -2,6 +2,7 @@
 
 - We model representation space as continuous dynamical system (NODEL, CARL)
 - We model representation space as distribution (DARe)
+- We leverage EBMs for rich representations (LEMa)
 - The baselines follow from [nirbhay-design/RepresentationLearningAlgorithms](https://github.com/nirbhay-design/RepresentationLearningAlgorithms) 
 
 ## **Results**

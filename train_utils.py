@@ -344,7 +344,7 @@ def train_lema( # low energy manifolds based representation learning
             proj_feat_cap = output_cap["proj_features"]
 
             feat = output["features"]
-            feat_cap = output["features"]
+            feat_cap = output_cap["features"]
 
             esample = energy_model.langevin_sampling(feat, z_0 = feat_cap)
             esample_cap = energy_model.langevin_sampling(feat_cap, z_0 = feat)
