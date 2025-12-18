@@ -1,0 +1,34 @@
+environment: 
+YAML: configs/lema.c100.yaml
+==> SEED: 42
+==> num_classes: 100
+==> data_name: cifar100
+==> data_params: {'algo': 'lema', 'data_dir': 'datasets/cifar100', 'batch_size': 512, 'num_workers': 3, 'image_size': 32}
+==> return_logs: False
+==> eval_every: 10
+==> n_epochs: 500
+==> n_epochs_mlp: 100
+==> gpu_id: 1
+==> opt: SGD
+==> opt_params: {'lr': 0.5, 'momentum': 0.9, 'nesterov': True}
+==> schedular_params: {'T_max': 600, 'eta_min': 0.001}
+==> mlp_opt: SGD
+==> mlp_opt_params: {'lr': 0.01, 'momentum': 0.9, 'nesterov': True}
+==> model_params: {'model_name': 'resnet18', 'pretrained': False, 'proj_dim': 128, 'algo_type': 'lema'}
+==> energy_model_params: {'eta': 0.01, 'steps': 5}
+==> energy_opt: AdamW
+==> energy_model_opt_params: {'lr': 0.001}
+==> mlp_type: hidden
+==> loss: lema
+==> loss_params: {'sim': 'cosine', 'tau': 0.5}
+==> distributed: False
+==> train_algo: lema
+==> model_save_path: saved_models/lema.c100.r18.e500.pth
+==> config: configs/lema.c100.yaml
+--------------------------------------------------
+===> using hiddin mlp
+using optimizer: SGD
+using optimizer: SGD
+loss function: lema
+Downloading https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz to datasets/cifar100/cifar-100-python.tar.gz
+  0%|          | 0/169001437 [00:00<?, ?it/s]  0%|          | 32768/169001437 [00:00<42:37, 66065.11it/s]  0%|          | 98304/169001437 [00:00<18:59, 148278.60it/s]  0%|          | 163840/169001437 [00:00<14:43, 191120.55it/s]  0%|          | 294912/169001437 [00:01<09:07, 308085.76it/s]  0%|          | 589824/169001437 [00:01<04:41, 598578.01it/s]  1%|          | 1146880/169001437 [00:01<02:29, 1126038.03it/s]  1%|▏         | 2260992/169001437 [00:01<01:16, 2181402.53it/s]  3%|▎         | 4456448/169001437 [00:02<00:38, 4241418.08it/s]  4%|▍         | 7503872/169001437 [00:02<00:24, 6664059.71it/s]  6%|▋         | 10649600/169001437 [00:02<00:18, 8467321.83it/s]  8%|▊         | 13762560/169001437 [00:02<00:16, 9685153.44it/s] 10%|█         | 16908288/169001437 [00:03<00:14, 10511445.06it/s] 12%|█▏        | 20021248/169001437 [00:03<00:13, 11195127.74it/s] 14%|█▎        | 23166976/169001437 [00:03<00:12, 11480784.12it/s] 16%|█▌        | 26279936/169001437 [00:04<00:12, 11510250.92it/s] 17%|█▋        | 29392896/169001437 [00:04<00:11, 11726373.61it/s] 19%|█▉        | 32538624/169001437 [00:04<00:11, 11982601.38it/s] 21%|██        | 35553280/169001437 [00:04<00:11, 11855361.67it/s] 23%|██▎       | 38666240/169001437 [00:05<00:10, 11943527.86it/s] 25%|██▍       | 41811968/169001437 [00:05<00:10, 12120335.66it/s] 27%|██▋       | 44924928/169001437 [00:05<00:10, 12058083.32it/s] 28%|██▊       | 47906816/169001437 [00:05<00:10, 11979296.13it/s]

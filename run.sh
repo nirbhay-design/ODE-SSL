@@ -72,20 +72,20 @@
 # nohup python train.py --config configs/lema.c100.yaml --gpu 6 --model resnet18 --epochs 350 --epochs_lin 100 --save_path lema.c100.r18.v2.pth > logs/lema.c100.r18.v2.log &
 
 
-# nohup python train.py --config configs/lema.c10.yaml --gpu 0 --model resnet50 --epochs 250 --epochs_lin 100 --save_path lema.c10.r50.e250.pth > logs/lema.c10.r50.e250.log &
+nohup python train.py --config configs/lema.c10.yaml --gpu 0 --model resnet50 --epochs 500 --epochs_lin 100 --save_path lema.c10.r50.e500.pth > logs/lema.c10.r50.e500.log &
 
-# nohup python train.py --config configs/lema.c10.yaml --gpu 6 --model resnet18 --epochs 250 --epochs_lin 100 --save_path lema.c10.r18.e250.pth > logs/lema.c10.r18.e250.log &
+nohup python train.py --config configs/lema.c10.yaml --gpu 1 --model resnet18 --epochs 500 --epochs_lin 100 --save_path lema.c10.r18.e500.pth > logs/lema.c10.r18.e500.log &
 
-# nohup python train.py --config configs/lema.c100.yaml --gpu 1 --model resnet50 --epochs 250 --epochs_lin 100 --save_path lema.c100.r50.e250.pth > logs/lema.c100.r50.e250.log &
+# nohup python train.py --config configs/lema.c100.yaml --gpu 1 --model resnet50 --epochs 500 --epochs_lin 100 --save_path lema.c100.r50.e500.pth > logs/lema.c100.r50.e500.log &
 
-# nohup python train.py --config configs/lema.c100.yaml --gpu 6 --model resnet18 --epochs 250 --epochs_lin 100 --save_path lema.c100.r18.e250.pth > logs/lema.c100.r18.e250.log &
+nohup python train.py --config configs/lema.c100.yaml --gpu 1 --model resnet18 --epochs 500 --epochs_lin 100 --save_path lema.c100.r18.e500.pth > logs/lema.c100.r18.e500.log &
 
 
 #### Running for modification in CARL
 
-nohup python train.py --config configs/carl.c10.yaml --gpu 6 --model resnet50 --epochs 1000 --epochs_lin 100 --save_path carl.c10.r50.ode5.v2.pth --ode_steps 5 > logs/carl.c10.r50.ode5.v2.log &
+# nohup python train.py --config configs/carl.c10.yaml --gpu 6 --model resnet50 --epochs 1000 --epochs_lin 100 --save_path carl.c10.r50.ode5.v2.pth --ode_steps 5 > logs/carl.c10.r50.ode5.v2.log &
 
-nohup python train.py --config configs/carl.c10.yaml --gpu 7 --model resnet18 --epochs 1000 --epochs_lin 100 --save_path carl.c10.r18.ode5.v2.pth --ode_steps 5 > logs/carl.c10.r18.ode5.v2.log &
+# nohup python train.py --config configs/carl.c10.yaml --gpu 7 --model resnet18 --epochs 1000 --epochs_lin 100 --save_path carl.c10.r18.ode5.v2.pth --ode_steps 5 > logs/carl.c10.r18.ode5.v2.log &
 
 # nohup python train.py --config configs/carl.c100.yaml --gpu 5 --model resnet50 --epochs 1000 --epochs_lin 100 --save_path carl.c100.r50.ode5.v2.pth --ode_steps 5 > logs/carl.c100.r50.ode5.v2.log &
 
