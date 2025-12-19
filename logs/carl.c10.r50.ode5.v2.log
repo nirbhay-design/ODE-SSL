@@ -829,3 +829,23 @@ Files already downloaded and verified
 [GPU6] epochs: [793/1000] train_loss_con: -3.967
 [GPU6] epochs: [794/1000] train_loss_con: -3.966
 [GPU6] epochs: [795/1000] train_loss_con: -3.963
+[GPU6] epochs: [796/1000] train_loss_con: -3.960
+[GPU6] epochs: [797/1000] train_loss_con: -3.960
+Traceback (most recent call last):
+  File "/home/nirbhays/ODE-SSL/train.py", line 164, in <module>
+    main_single()
+  File "/home/nirbhays/ODE-SSL/train.py", line 110, in main_single
+    final_model = train_network(**param_config)
+  File "/home/nirbhays/ODE-SSL/train.py", line 46, in train_network
+    return train_carl(**kwargs)
+  File "/home/nirbhays/ODE-SSL/train_utils.py", line 238, in train_carl
+    loss_con.backward()
+  File "/home/nirbhays/.conda/envs/mlenv/lib/python3.10/site-packages/torch/_tensor.py", line 581, in backward
+    torch.autograd.backward(
+  File "/home/nirbhays/.conda/envs/mlenv/lib/python3.10/site-packages/torch/autograd/__init__.py", line 347, in backward
+    _engine_run_backward(
+  File "/home/nirbhays/.conda/envs/mlenv/lib/python3.10/site-packages/torch/autograd/graph.py", line 825, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+  File "/home/nirbhays/.conda/envs/mlenv/lib/python3.10/site-packages/torch/utils/data/_utils/signal_handling.py", line 73, in handler
+    _error_if_any_worker_fails()
+RuntimeError: DataLoader worker (pid 242334) is killed by signal: Killed. 
