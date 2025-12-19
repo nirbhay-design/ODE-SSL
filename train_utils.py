@@ -237,7 +237,6 @@ def train_carl(
             optimizer.zero_grad()
             loss_con.backward()
             optimizer.step()
-            target_model = ema(online_model, target_model, epochs)
 
             cur_loss += loss_con.item() / (len_train)
             
@@ -245,6 +244,7 @@ def train_carl(
                 progress(idx+1,len(train_loader), loss_con=loss_con.item(), GPU = device_id)
         
         opt_lr_schedular.step()
+        target_model = ema(online_model, target_model, epochs)
             
         print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f}")
 
