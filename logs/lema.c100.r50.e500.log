@@ -1,0 +1,80 @@
+environment: 
+YAML: configs/lema.c100.yaml
+==> SEED: 42
+==> num_classes: 100
+==> data_name: cifar100
+==> data_params: {'algo': 'lema', 'data_dir': 'datasets/cifar100', 'batch_size': 512, 'num_workers': 3, 'image_size': 32}
+==> return_logs: False
+==> eval_every: 10
+==> n_epochs: 500
+==> n_epochs_mlp: 100
+==> gpu_id: 0
+==> opt: SGD
+==> opt_params: {'lr': 0.5, 'momentum': 0.9, 'nesterov': True}
+==> schedular_params: {'T_max': 600, 'eta_min': 0.001}
+==> mlp_opt: SGD
+==> mlp_opt_params: {'lr': 0.01, 'momentum': 0.9, 'nesterov': True}
+==> model_params: {'model_name': 'resnet50', 'pretrained': False, 'proj_dim': 128, 'algo_type': 'lema'}
+==> energy_model_params: {'eta': 0.01, 'steps': 5}
+==> energy_opt: AdamW
+==> energy_model_opt_params: {'lr': 0.001}
+==> mlp_type: hidden
+==> loss: lema
+==> loss_params: {'sim': 'cosine', 'tau': 0.5}
+==> distributed: False
+==> train_algo: lema
+==> model_save_path: saved_models/lema.c100.r50.e500.pth
+==> config: configs/lema.c100.yaml
+--------------------------------------------------
+===> using hiddin mlp
+using optimizer: SGD
+using optimizer: SGD
+loss function: lema
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+# of Training Images: 50000
+# of Testing Images: 10000
+using optimizer: AdamW
+### LEMa Training begins
+[GPU0] epochs: [1/500] train_loss_con: 6.594 energy_loss: 0.002
+[GPU0] epochs: [2/500] train_loss_con: 6.248 energy_loss: 0.000
+[GPU0] epochs: [3/500] train_loss_con: 6.139 energy_loss: 0.000
+[GPU0] epochs: [4/500] train_loss_con: 6.069 energy_loss: 0.000
+[GPU0] epochs: [5/500] train_loss_con: 6.016 energy_loss: 0.000
+[GPU0] epochs: [6/500] train_loss_con: 5.971 energy_loss: 0.000
+[GPU0] epochs: [7/500] train_loss_con: 5.931 energy_loss: -0.000
+[GPU0] epochs: [8/500] train_loss_con: 5.903 energy_loss: 0.000
+[GPU0] epochs: [9/500] train_loss_con: 5.876 energy_loss: 0.000
+[GPU0] epochs: [10/500] train_loss_con: 5.855 energy_loss: 0.000
+[GPU0] epochs: [11/500] train_loss_con: 5.841 energy_loss: 0.000
+[GPU0] epochs: [12/500] train_loss_con: 5.825 energy_loss: 0.000
+[GPU0] epochs: [13/500] train_loss_con: 5.814 energy_loss: 0.000
+[GPU0] epochs: [14/500] train_loss_con: 5.800 energy_loss: 0.000
+[GPU0] epochs: [15/500] train_loss_con: 5.790 energy_loss: -0.000
+[GPU0] epochs: [16/500] train_loss_con: 5.780 energy_loss: -0.000
+[GPU0] epochs: [17/500] train_loss_con: 5.774 energy_loss: -0.000
+[GPU0] epochs: [18/500] train_loss_con: 5.768 energy_loss: -0.000
+[GPU0] epochs: [19/500] train_loss_con: 5.762 energy_loss: -0.000
+[GPU0] epochs: [20/500] train_loss_con: 5.757 energy_loss: -0.001
+[GPU0] epochs: [21/500] train_loss_con: 5.750 energy_loss: -0.006
+[GPU0] epochs: [22/500] train_loss_con: 5.744 energy_loss: -0.011
+[GPU0] epochs: [23/500] train_loss_con: 5.740 energy_loss: -0.021
+[GPU0] epochs: [24/500] train_loss_con: 5.731 energy_loss: -0.019
+[GPU0] epochs: [25/500] train_loss_con: 5.730 energy_loss: -0.001
+[GPU0] epochs: [26/500] train_loss_con: 5.723 energy_loss: -0.002
+[GPU0] epochs: [27/500] train_loss_con: 5.724 energy_loss: -0.002
+[GPU0] epochs: [28/500] train_loss_con: 5.720 energy_loss: -0.002
+[GPU0] epochs: [29/500] train_loss_con: 5.711 energy_loss: -0.003
+[GPU0] epochs: [30/500] train_loss_con: 5.712 energy_loss: -0.002
+[GPU0] epochs: [31/500] train_loss_con: 5.710 energy_loss: -0.004
+[GPU0] epochs: [32/500] train_loss_con: 5.707 energy_loss: -0.014
+[GPU0] epochs: [33/500] train_loss_con: 5.702 energy_loss: -0.022
+[GPU0] epochs: [34/500] train_loss_con: 5.701 energy_loss: -0.005
+[GPU0] epochs: [35/500] train_loss_con: 5.697 energy_loss: -0.013
+[GPU0] epochs: [36/500] train_loss_con: 5.693 energy_loss: -0.050
+[GPU0] epochs: [37/500] train_loss_con: 5.693 energy_loss: -0.000
+[GPU0] epochs: [38/500] train_loss_con: 5.689 energy_loss: -0.001
+[GPU0] epochs: [39/500] train_loss_con: 5.686 energy_loss: -0.001
+[GPU0] epochs: [40/500] train_loss_con: 5.686 energy_loss: -0.001
+[GPU0] epochs: [41/500] train_loss_con: 5.684 energy_loss: -0.002

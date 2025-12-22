@@ -195,6 +195,72 @@ def dynamics_regularizer(dynamics):
     dyn_reg = diff.pow(2).sum(-1).mean()
     return dyn_reg
 
+class DAReLoss(nn.Module):
+    def __init__(self, lambd=1.0, **kwargs):
+        super().__init__()
+        self.base_loss = SimCLR(**kwargs)
+        self.lam = lambd
+
+    def forward(self, mu, mu_cap, log_var, log_var_cap):
+        log_var = torch.clamp(log_var, min=-10.0, max=10.0)
+        log_var_cap = torch.clamp(log_var_cap, min=-10.0, max=10.0)
+
+        mu = torch.clamp(mu, min=-20.0, max=20.0)
+        mu_cap = torch.clamp(mu_cap, min=-20.0, max=20.0)
+
+        x = self.reparameterization(mu, log_var)
+        x_cap = self.reparameterization(mu_cap, log_var_cap)
+
+        base_loss = self.base_loss(x, x_cap)
+
+        mu = F.normalize(mu, dim=1, p=2)
+        mu_cap = F.normalize(mu_cap, dim=1, p=2)
+
+        distribution_align = self.dist_align(mu, mu_cap, log_var, log_var_cap)
+
+        return base_loss + self.lam * distribution_align
+
+    def reparameterization(self, mu, log_var):
+        std = torch.exp(0.5 * log_var)
+        std = torch.clamp(std, min=1e-3, max=1e3)  # Clamp std after exp
+        eps = torch.randn_like(std)
+        return mu + eps * std
+
+    def dist_align(self, mu1, mu2, log_var1, log_var2):
+        var1 = torch.exp(log_var1)
+        var2 = torch.exp(log_var2)
+
+        var1 = torch.clamp(var1, min=1e-4, max=1e4)
+        var2 = torch.clamp(var2, min=1e-4, max=1e4)
+
+        mu_m = 0.5 * (mu1 + mu2)
+        var_m = 0.5 * (var1 + var2)
+
+        log_varm = torch.log(var_m + 1e-8)
+
+        kl1 = self.kl_div(mu1, mu_m, log_var1, log_varm)
+        kl2 = self.kl_div(mu2, mu_m, log_var2, log_varm)
+
+        jsd = 0.5 * (kl1 + kl2)
+        return jsd.mean()
+
+    def kl_div(self, mu1, mu2, logvar1, logvar2):
+        var1 = torch.exp(logvar1)
+        var2 = torch.exp(logvar2)
+
+        var1 = torch.clamp(var1, min=1e-4, max=1e4)
+        var2 = torch.clamp(var2, min=1e-4, max=1e4)
+
+        var_div = torch.div(var1, var2)
+        part1 = var_div
+        part2 = (logvar2 - logvar1)
+        part3 = ((mu1 - mu2).pow(2)) / (var2 + 1e-8)
+
+        kl = 0.5 * (part1 + part2 + part3 - 1)
+
+        return kl.mean(dim=1)
+
+
 if __name__ == "__main__":
     scl = SupConClsLoss()
     tml = TripletMarginCELoss()

@@ -388,6 +388,79 @@ def train_lema( # low energy manifolds based representation learning
 
     return model
 
+def train_dailema( # low energy manifolds based representation learning 
+        model, mlp, energy_model, train_loader, train_loader_mlp,
+        test_loader, lossfunction, lossfunction_mlp, 
+        optimizer, mlp_optimizer, energy_optimizer, opt_lr_schedular, 
+        eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, return_logs=False): 
+    
+
+    print(f"### DAiLEMa Training begins")
+    device = torch.device(f"cuda:{device_id}")
+    model = model.to(device)
+    energy_model = energy_model.to(device)
+    for epochs in range(n_epochs):
+        model.train()
+        energy_model.train()
+        cur_loss = 0
+        en_loss = 0
+        len_train = len(train_loader)
+        for idx , (data, data_cap, _) in enumerate(train_loader):
+            data = data.to(device)
+            data_cap = data_cap.to(device)
+
+
+            output = model(data)
+            output_cap = model(data_cap)
+
+            feat = output["features"]
+            feat_cap = output_cap["features"]
+
+            mu1, mu2 = output["mu"], output_cap["mu"]
+            log_var1, log_var2 = output["log_var"], output_cap["log_var"] 
+
+            esample = energy_model.langevin_sampling(feat, z_0 = feat)
+            esample_cap = energy_model.langevin_sampling(feat_cap, z_0 = feat_cap)
+            
+            loss_con = lossfunction(mu1, mu2, log_var1, log_var2) + F.mse_loss(feat, esample.detach()) + F.mse_loss(feat_cap, esample_cap.detach())
+            
+            optimizer.zero_grad()
+            loss_con.backward()
+            optimizer.step()
+
+            # training energy model
+            # pos_energy = energy_model(feat.detach(), feat_cap.detach())
+            # neg_energy = energy_model(esample.detach(), esample_cap.detach())
+
+            pos_energy = energy_model(feat.detach(), feat.detach()) + energy_model(feat_cap.detach(), feat_cap.detach())
+            neg_energy = energy_model(esample.detach(), feat.detach()) + energy_model(esample_cap.detach(), feat_cap.detach())
+            energy_loss = pos_energy.mean() - neg_energy.mean()
+
+            energy_optimizer.zero_grad()
+            energy_loss.backward()
+            energy_optimizer.step()
+            
+            cur_loss += loss_con.item() / (len_train)
+            en_loss += energy_loss.item() / len_train
+            
+            if return_logs:
+                progress(idx+1,len(train_loader), loss_con=loss_con.item(), en_loss = energy_loss.item(), GPU = device_id)
+        
+        opt_lr_schedular.step()
+            
+        print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f} energy_loss: {en_loss:.3f}")
+
+    print("### TSNE starts")
+    make_tsne_for_dataset(model, test_loader, device_id, "dailema", return_logs = return_logs, tsne_name = tsne_name)
+
+    print("### MLP training begins")
+    train_mlp(
+        model, mlp, train_loader_mlp, test_loader, 
+        lossfunction_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
+        device_id, eval_id, return_logs = return_logs)
+
+    return model
+
 def loss_function(loss_type = 'nodel', **kwargs):
     print(f"loss function: {loss_type}")
     loss_mlp = nn.CrossEntropyLoss()
@@ -395,6 +468,8 @@ def loss_function(loss_type = 'nodel', **kwargs):
         return SimCLR(**kwargs), loss_mlp
     elif loss_type == 'carl':
         return BYOLLoss(), loss_mlp
+    elif loss_type == "dailema":
+        return DAReLoss(**kwargs), loss_mlp
     else:
         print("{loss_type} Loss is Not Supported")
         return None 

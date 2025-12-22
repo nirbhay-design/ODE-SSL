@@ -177,9 +177,22 @@ class EnergyNet(nn.Module):
             z.requires_grad_(True)
         self.train()
         return z.detach()
+    
+class VAE_linear(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super().__init__()
+        self.ip = input_dim
+        self.out = output_dim
+        self.linear_mu = nn.Linear(self.ip, self.out)
+        self.linear_var = nn.Linear(self.ip, self.out)
+
+    def forward(self, x):
+        mu =  self.linear_mu(x)
+        log_var = self.linear_var(x)
+        return {"mu": mu, "log_var": log_var}
 
 class Network(nn.Module):
-    def __init__(self, model_name = 'resnet18', pretrained = False, proj_dim = 128, ode_steps = 10, algo_type="nodel", carl_hidden = 4096):
+    def __init__(self, model_name = 'resnet18', pretrained = False, proj_dim = 128, ode_steps = 10, algo_type="nodel", carl_hidden = 4096, vae_out = 256):
         super().__init__()
         if model_name == 'resnet50':
             model = torchvision.models.resnet50(
@@ -227,8 +240,10 @@ class Network(nn.Module):
                                         )
                                     )
         elif self.algo_type in ["lema"]:
-                self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
+            self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
 
+        elif self.algo_type in ["dailema"]:
+            self.proj = VAE_linear(self.classifier_infeatures, vae_out)
                                         
     def forward(self, x, t = None, test=None):
         features = self.feat_extractor(x).flatten(1)
@@ -255,7 +270,12 @@ class Network(nn.Module):
             proj = self.proj(features)
             return {"features": features,
                     "proj_features": proj}
-    
+        
+        elif self.algo_type in ["dailema"]:
+            proj = self.proj(features)
+            return {"features": features,
+                    "mu": proj["mu"],
+                    "log_var": proj["log_var"]}
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ import torch.optim as optim
 import numpy as np
 from src.network import Network, MLP, CARL_mlp, EnergyNet
 from train_utils import yaml_loader, train_nodel, train_carl, model_optimizer, \
-                        loss_function, train_florel, train_lema, \
+                        loss_function, train_florel, train_lema, train_dailema, \
                         load_dataset
 
 import torch.multiprocessing as mp 
@@ -28,6 +28,7 @@ def get_args():
     parser.add_argument("--opt", type=str, default=None, help="SGD/ADAM/AdamW")
     parser.add_argument("--lr", type=float, default = None, help="lr for SSL")
     parser.add_argument("--ode_steps", type=int, default = None, help="steps to return from ODE solver")
+    parser.add_argument("--vae_out", type=int, default = None, help="out dimension for vae for DAiLEMa")
 
     args = parser.parse_args()
     return args
@@ -48,6 +49,8 @@ def train_network(**kwargs):
         return train_florel(**kwargs)
     elif train_algo == "lema":
         return train_lema(**kwargs)
+    elif train_algo == "dailema":
+        return train_dailema(**kwargs)
     return None
 
 def main_single():
@@ -100,7 +103,7 @@ def main_single():
         param_config["target_model"] = target_net 
         param_config["online_pred_model"] = pred_net 
         param_config["ema_beta"] = ema_tau
-    elif train_algo == "lema":
+    elif train_algo == "lema" or train_algo == "dailema":
         energy_model = EnergyNet(model.classifier_infeatures, **config["energy_model_params"])
         energy_optimizer = model_optimizer(energy_model, config["energy_opt"], **config["energy_model_opt_params"])
         
@@ -142,6 +145,8 @@ if __name__ == "__main__":
         config["n_epochs_mlp"] = args.epochs_lin
     if args.ode_steps:
         config["model_params"]["ode_steps"] = args.ode_steps
+    if args.vae_out:
+        config["model_params"]["vae_out"] = args.vae_out
     
     # setting seeds 
 
