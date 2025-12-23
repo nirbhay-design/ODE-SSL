@@ -641,3 +641,13 @@ using optimizer: AdamW
 [GPU5] Test Accuracy at epoch: 90: 0.892
 [GPU5] epochs: [91/100] train_acc: 0.895 train_loss_sup: 0.298
 [GPU5] epochs: [92/100] train_acc: 0.895 train_loss_sup: 0.299
+[GPU5] epochs: [93/100] train_acc: 0.896 train_loss_sup: 0.293
+[GPU5] epochs: [94/100] train_acc: 0.896 train_loss_sup: 0.296
+[GPU5] epochs: [95/100] train_acc: 0.894 train_loss_sup: 0.297
+[GPU5] epochs: [96/100] train_acc: 0.897 train_loss_sup: 0.293
+[GPU5] epochs: [97/100] train_acc: 0.895 train_loss_sup: 0.297
+[GPU5] epochs: [98/100] train_acc: 0.899 train_loss_sup: 0.288
+[GPU5] epochs: [99/100] train_acc: 0.897 train_loss_sup: 0.292
+[GPU5] epochs: [100/100] train_acc: 0.898 train_loss_sup: 0.289
+[GPU5] Final Test Accuracy: 0.893
+Model weights saved
