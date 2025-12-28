@@ -191,6 +191,69 @@ class VAE_linear(nn.Module):
         log_var = self.linear_var(x)
         return {"mu": mu, "log_var": log_var}
 
+class EnergyScoreNet(nn.Module):
+    def __init__(self, z_dim, eta = 1e-4, steps = 30, sigma = 1e-3, net_type = "score"):
+        """
+        net_type: score / energy
+        """
+        super().__init__()
+        hidden = z_dim * 2
+        self.snet = nn.Sequential(
+            nn.utils.parametrizations.spectral_norm(nn.Linear(z_dim, hidden)),
+            nn.LayerNorm(hidden),
+            nn.LeakyReLU(0.1),
+            nn.utils.parametrizations.spectral_norm(nn.Linear(hidden, hidden)),
+            nn.LayerNorm(hidden),
+            nn.LeakyReLU(0.1)
+        )
+
+        self.net_type = net_type 
+        self.sigma = sigma 
+
+        if self.net_type == "score":
+            self.snet.append(nn.utils.parametrizations.spectral_norm(nn.Linear(hidden, z_dim)))
+        else:
+            self.snet.append(nn.utils.parametrizations.spectral_norm(nn.Linear(hidden, 1)))
+
+        # parameters for langevin sampling 
+        self.eta = eta
+        self.steps = steps 
+
+    def forward(self, z):
+        return self.snet(z)
+
+    def langevin_sampling(self, z = None):
+        self.eval()
+        if z is None:
+            z = torch.randn_like(z)
+        else:
+            z = z.clone().detach()
+        z.requires_grad_(True)
+        for _ in range(self.steps):
+            if self.net_type == "score":
+                grad = self(z)
+            else:
+                e = self(z).squeeze().sum()
+                grad = -torch.autograd.grad(e, z, create_graph=False)[0] # -\nabla_{z} E(z)
+            z = z + self.eta * torch.clamp(grad, -self.eta, self.eta) + math.sqrt(2 * self.eta) * torch.randn_like(z) # langevin dynamics
+            z = z.detach()
+            z.requires_grad_(True)
+        self.train()
+        return z.detach()
+    
+    def dsm_loss(self, z):
+        epsilon = torch.randn_like(z)
+        z_hat = z + self.sigma * epsilon
+        if self.net_type == "score":
+            s = self(z_hat)
+            loss = (s + epsilon / self.sigma).pow(2).sum(dim = -1).mean()
+        elif self.net_type == "energy":
+            e = self(z_hat).sum()
+            s = torch.autograd.grad(e, z_hat, create_graph=True)[0]
+            loss = (s - epsilon / self.sigma).pow(2).sum(dim = -1).mean()
+        return loss 
+
+
 class Network(nn.Module):
     def __init__(self, model_name = 'resnet18', pretrained = False, proj_dim = 128, ode_steps = 10, algo_type="nodel", carl_hidden = 4096, vae_out = 256):
         super().__init__()
@@ -293,11 +356,14 @@ if __name__ == "__main__":
     # print(output["proj_features"].shape)
 
     # contrastive loss on proj_feat, representations are feat, MLP on feat 
-    energynet = EnergyNet(128)
-    energynet = energynet.to(device)
+    # energynet = EnergyNet(128)
+    # energynet = energynet.to(device)
+    
+
+    energy_score_net = EnergyScoreNet(z_dim = 128, net_type = "score").to(device)
+
     a = torch.rand(10,128, device=device)
-    out = energynet.langevin_sampling(a, a)
+    out = energy_score_net.langevin_sampling(a)
     print(out.shape)
     print(out.isnan().sum())
     print(out.min(), out.max())
-    
