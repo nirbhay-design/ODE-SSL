@@ -80,13 +80,13 @@
 
 # nohup python train.py --config configs/lema.c100.yaml --gpu 1 --model resnet18 --epochs 500 --epochs_lin 100 --save_path lema.c100.r18.e500.pth > logs/lema.c100.r18.e500.log &
 
-nohup python train.py --config configs/lema.c10.yaml --gpu 0 --model resnet50 --epochs 350 --epochs_lin 100 --save_path lema.c10.r50.v3.pth > logs/lema.c10.r50.v3.log &
+# nohup python train.py --config configs/lema.c10.yaml --gpu 0 --model resnet50 --epochs 350 --epochs_lin 100 --save_path lema.c10.r50.v3.pth > logs/lema.c10.r50.v3.log &
 
-nohup python train.py --config configs/lema.c10.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path lema.c10.r18.v3.pth > logs/lema.c10.r18.v3.log &
+# nohup python train.py --config configs/lema.c10.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path lema.c10.r18.v3.pth > logs/lema.c10.r18.v3.log &
 
-nohup python train.py --config configs/lema.c100.yaml --gpu 2 --model resnet50 --epochs 350 --epochs_lin 100 --save_path lema.c100.r50.v3.pth > logs/lema.c100.r50.v3.log &
+# nohup python train.py --config configs/lema.c100.yaml --gpu 2 --model resnet50 --epochs 350 --epochs_lin 100 --save_path lema.c100.r50.v3.pth > logs/lema.c100.r50.v3.log &
 
-nohup python train.py --config configs/lema.c100.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path lema.c100.r18.v3.pth > logs/lema.c100.r18.v3.log &
+# nohup python train.py --config configs/lema.c100.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path lema.c100.r18.v3.pth > logs/lema.c100.r18.v3.log &
 
 
 #### Running for modification in CARL
@@ -117,3 +117,12 @@ nohup python train.py --config configs/lema.c100.yaml --gpu 1 --model resnet18 -
 # nohup python train.py --config configs/dailema.c100.yaml --gpu 6 --model resnet50 --epochs 500 --epochs_lin 100 --vae_out 256 --save_path dailema.c100.r50.e500.pth > logs/dailema.c100.r50.e500.log &
 
 # nohup python train.py --config configs/dailema.c100.yaml --gpu 2 --model resnet18 --epochs 500 --epochs_lin 100 --vae_out 256 --save_path dailema.c100.r18.e500.pth > logs/dailema.c100.r18.e500.log &
+
+
+nohup python train.py --config configs/scalre.c10.yaml --gpu 0 --model resnet50 --epochs 350 --epochs_lin 100 --save_path scalre.c10.r50.pth --net_type energy > logs/scalre.c10.r50.log &
+
+nohup python train.py --config configs/scalre.c10.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path scalre.c10.r18.pth --net_type energy > logs/scalre.c10.r18.log &
+
+# nohup python train.py --config configs/scalre.c100.yaml --gpu 2 --model resnet50 --epochs 350 --epochs_lin 100 --save_path scalre.c100.r50.pth > logs/scalre.c100.r50.log &
+
+nohup python train.py --config configs/scalre.c100.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path scalre.c100.r18.pth --net_type energy > logs/scalre.c100.r18.log &

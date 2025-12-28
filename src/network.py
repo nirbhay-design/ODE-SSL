@@ -192,7 +192,7 @@ class VAE_linear(nn.Module):
         return {"mu": mu, "log_var": log_var}
 
 class EnergyScoreNet(nn.Module):
-    def __init__(self, z_dim, eta = 1e-4, steps = 30, sigma = 1e-3, net_type = "score"):
+    def __init__(self, z_dim, eta = 1e-4, steps = 30, sigma = 1e-3, delta = 0.1, net_type = "score"):
         """
         net_type: score / energy
         """
@@ -209,6 +209,7 @@ class EnergyScoreNet(nn.Module):
 
         self.net_type = net_type 
         self.sigma = sigma 
+        self.delta = delta 
 
         if self.net_type == "score":
             self.snet.append(nn.utils.parametrizations.spectral_norm(nn.Linear(hidden, z_dim)))
@@ -235,7 +236,7 @@ class EnergyScoreNet(nn.Module):
             else:
                 e = self(z).squeeze().sum()
                 grad = -torch.autograd.grad(e, z, create_graph=False)[0] # -\nabla_{z} E(z)
-            z = z + self.eta * torch.clamp(grad, -self.eta, self.eta) + math.sqrt(2 * self.eta) * torch.randn_like(z) # langevin dynamics
+            z = z + self.eta * torch.clamp(grad, -self.delta, self.delta) + math.sqrt(2 * self.eta) * torch.randn_like(z) # langevin dynamics
             z = z.detach()
             z.requires_grad_(True)
         self.train()
@@ -246,11 +247,12 @@ class EnergyScoreNet(nn.Module):
         z_hat = z + self.sigma * epsilon
         if self.net_type == "score":
             s = self(z_hat)
-            loss = (s + epsilon / self.sigma).pow(2).sum(dim = -1).mean()
+            loss = 0.5 * (self.sigma * s + epsilon).pow(2).sum(dim = -1).mean()
         elif self.net_type == "energy":
+            z_hat.requires_grad_(True)
             e = self(z_hat).sum()
             s = torch.autograd.grad(e, z_hat, create_graph=True)[0]
-            loss = (s - epsilon / self.sigma).pow(2).sum(dim = -1).mean()
+            loss = 0.5 * (self.sigma * s - epsilon).pow(2).sum(dim = -1).mean()
         return loss 
 
 
@@ -307,6 +309,9 @@ class Network(nn.Module):
 
         elif self.algo_type in ["dailema"]:
             self.proj = VAE_linear(self.classifier_infeatures, vae_out)
+
+        elif self.algo_type in ["scalre"]: # Score Alignment for representation learning 
+            self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
                                         
     def forward(self, x, t = None, test=None):
         features = self.feat_extractor(x).flatten(1)
@@ -329,7 +334,7 @@ class Network(nn.Module):
                     "proj_features": proj["output"],
                     "logprob": proj["logprob"]}
         
-        elif self.algo_type in ["lema"]:
+        elif self.algo_type in ["lema", "scalre"]:
             proj = self.proj(features)
             return {"features": features,
                     "proj_features": proj}
