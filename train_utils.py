@@ -359,8 +359,8 @@ def train_lema( # low energy manifolds based representation learning
             # pos_energy = energy_model(feat.detach(), feat_cap.detach())
             # neg_energy = energy_model(esample.detach(), esample_cap.detach())
 
-            pos_energy = energy_model(feat.detach(), feat.detach()) + energy_model(feat_cap.detach(), feat_cap.detach())
-            neg_energy = energy_model(esample.detach(), feat.detach()) + energy_model(esample_cap.detach(), feat_cap.detach())
+            pos_energy = energy_model(feat_cap.detach(), feat.detach()) + energy_model(feat.detach(), feat_cap.detach())
+            neg_energy = energy_model(esample_cap.detach(), feat.detach()) + energy_model(esample.detach(), feat_cap.detach())
             energy_loss = pos_energy.mean() - neg_energy.mean()
 
             energy_optimizer.zero_grad()

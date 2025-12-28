@@ -80,6 +80,14 @@
 
 # nohup python train.py --config configs/lema.c100.yaml --gpu 1 --model resnet18 --epochs 500 --epochs_lin 100 --save_path lema.c100.r18.e500.pth > logs/lema.c100.r18.e500.log &
 
+nohup python train.py --config configs/lema.c10.yaml --gpu 0 --model resnet50 --epochs 350 --epochs_lin 100 --save_path lema.c10.r50.v3.pth > logs/lema.c10.r50.v3.log &
+
+nohup python train.py --config configs/lema.c10.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path lema.c10.r18.v3.pth > logs/lema.c10.r18.v3.log &
+
+nohup python train.py --config configs/lema.c100.yaml --gpu 2 --model resnet50 --epochs 350 --epochs_lin 100 --save_path lema.c100.r50.v3.pth > logs/lema.c100.r50.v3.log &
+
+nohup python train.py --config configs/lema.c100.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path lema.c100.r18.v3.pth > logs/lema.c100.r18.v3.log &
+
 
 #### Running for modification in CARL
 
