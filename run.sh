@@ -123,14 +123,31 @@
 
 # nohup python train.py --config configs/scalre.c10.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path scalre.c10.r18.pth --net_type energy > logs/scalre.c10.r18.log &
 
-nohup python train.py --config configs/scalre.c100.yaml --gpu 3 --model resnet50 --epochs 350 --epochs_lin 100 --save_path scalre.c100.r50.pth --net_type energy > logs/scalre.c100.r50.log &
+# nohup python train.py --config configs/scalre.c100.yaml --gpu 3 --model resnet50 --epochs 350 --epochs_lin 100 --save_path scalre.c100.r50.pth --net_type energy > logs/scalre.c100.r50.log &
 
 # nohup python train.py --config configs/scalre.c100.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path scalre.c100.r18.pth --net_type energy > logs/scalre.c100.r18.log &
 
-nohup python train.py --config configs/scalre.c10.yaml --gpu 4 --model resnet50 --epochs 350 --epochs_lin 100 --save_path scalre.c10.r50.sc.pth --net_type score > logs/scalre.c10.r50.sc.log &
+# nohup python train.py --config configs/scalre.c10.yaml --gpu 4 --model resnet50 --epochs 350 --epochs_lin 100 --save_path scalre.c10.r50.sc.pth --net_type score > logs/scalre.c10.r50.sc.log &
 
-nohup python train.py --config configs/scalre.c10.yaml --gpu 6 --model resnet18 --epochs 350 --epochs_lin 100 --save_path scalre.c10.r18.sc.pth --net_type score > logs/scalre.c10.r18.sc.log &
+# nohup python train.py --config configs/scalre.c10.yaml --gpu 6 --model resnet18 --epochs 350 --epochs_lin 100 --save_path scalre.c10.r18.sc.pth --net_type score > logs/scalre.c10.r18.sc.log &
 
-nohup python train.py --config configs/scalre.c100.yaml --gpu 5 --model resnet50 --epochs 350 --epochs_lin 100 --save_path scalre.c100.r50.sc.pth --net_type score > logs/scalre.c100.r50.sc.log &
+# nohup python train.py --config configs/scalre.c100.yaml --gpu 5 --model resnet50 --epochs 350 --epochs_lin 100 --save_path scalre.c100.r50.sc.pth --net_type score > logs/scalre.c100.r50.sc.log &
 
-nohup python train.py --config configs/scalre.c100.yaml --gpu 6 --model resnet18 --epochs 350 --epochs_lin 100 --save_path scalre.c100.r18.sc.pth --net_type score > logs/scalre.c100.r18.sc.log &
+# nohup python train.py --config configs/scalre.c100.yaml --gpu 6 --model resnet18 --epochs 350 --epochs_lin 100 --save_path scalre.c100.r18.sc.pth --net_type score > logs/scalre.c100.r18.sc.log &
+
+
+nohup python train.py --config configs/scalre.c10.yaml --gpu 0 --model resnet50 --epochs 350 --epochs_lin 100 --save_path scalre.c10.r50.ls.pth --langevin_steps 10 --net_type energy > logs/scalre.c10.r50.ls.log &
+
+nohup python train.py --config configs/scalre.c10.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path scalre.c10.r18.ls.pth --langevin_steps 10 --net_type energy > logs/scalre.c10.r18.ls.log &
+
+nohup python train.py --config configs/scalre.c100.yaml --gpu 3 --model resnet50 --epochs 350 --epochs_lin 100 --save_path scalre.c100.r50.ls.pth --langevin_steps 10 --net_type energy > logs/scalre.c100.r50.ls.log &
+
+nohup python train.py --config configs/scalre.c100.yaml --gpu 1 --model resnet18 --epochs 350 --epochs_lin 100 --save_path scalre.c100.r18.ls.pth --langevin_steps 10 --net_type energy > logs/scalre.c100.r18.ls.log &
+
+nohup python train.py --config configs/scalre.c10.yaml --gpu 4 --model resnet50 --epochs 350 --epochs_lin 100 --save_path scalre.c10.r50.sc.ls.pth --langevin_steps 10 --net_type score > logs/scalre.c10.r50.sc.ls.log &
+
+nohup python train.py --config configs/scalre.c10.yaml --gpu 6 --model resnet18 --epochs 350 --epochs_lin 100 --save_path scalre.c10.r18.sc.ls.pth --langevin_steps 10 --net_type score > logs/scalre.c10.r18.sc.ls.log &
+
+nohup python train.py --config configs/scalre.c100.yaml --gpu 5 --model resnet50 --epochs 350 --epochs_lin 100 --save_path scalre.c100.r50.sc.ls.pth --langevin_steps 10 --net_type score > logs/scalre.c100.r50.sc.ls.log &
+
+nohup python train.py --config configs/scalre.c100.yaml --gpu 6 --model resnet18 --epochs 350 --epochs_lin 100 --save_path scalre.c100.r18.sc.ls.pth --langevin_steps 10 --net_type score > logs/scalre.c100.r18.sc.ls.log &

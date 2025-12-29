@@ -30,6 +30,7 @@ def get_args():
     parser.add_argument("--ode_steps", type=int, default = None, help="steps to return from ODE solver")
     parser.add_argument("--vae_out", type=int, default = None, help="out dimension for vae for DAiLEMa")
     parser.add_argument("--net_type", type=str, default = None, help="net type: score / energy")
+    parser.add_argument("--langevin_steps", type=int, default = None, help="steps for Langevin dynamics for ScAlRe")
 
     args = parser.parse_args()
     return args
@@ -160,6 +161,8 @@ if __name__ == "__main__":
         config["model_params"]["vae_out"] = args.vae_out
     if args.net_type:
         config["energy_model_params"]["net_type"] = args.net_type
+    if args.langevin_steps:
+        config["energy_model_params"]["steps"] = args.langevin_steps
     
     # setting seeds 
 
