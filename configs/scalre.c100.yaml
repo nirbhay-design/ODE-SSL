@@ -54,3 +54,4 @@ distributed: False
 train_algo: scalre
 
 model_save_path: saved_models
+warmup_epochs: 50

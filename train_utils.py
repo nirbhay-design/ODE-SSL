@@ -465,7 +465,7 @@ def train_scalre( # Score Alignment for Representation Learning
         model, mlp, energy_model, train_loader, train_loader_mlp,
         test_loader, lossfunction, lossfunction_mlp, 
         optimizer, mlp_optimizer, energy_optimizer, opt_lr_schedular, 
-        eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, return_logs=False): 
+        eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, warmup_epochs, return_logs=False): 
     
 
     print(f"### ScAlRe Training begins")
@@ -492,31 +492,45 @@ def train_scalre( # Score Alignment for Representation Learning
             feat = output["features"]
             feat_cap = output_cap["features"] 
 
-            esample = energy_model.langevin_sampling(feat)
-            esample_cap = energy_model.langevin_sampling(feat_cap)
-            
-            loss_con = lossfunction(proj_feat, proj_feat_cap) + F.mse_loss(feat, esample.detach()) + F.mse_loss(feat_cap, esample_cap.detach())
-            
-            optimizer.zero_grad()
-            loss_con.backward()
-            optimizer.step()
+            if epochs >= warmup_epochs:
+                esample = energy_model.langevin_sampling(feat)
+                esample_cap = energy_model.langevin_sampling(feat_cap)
+                
+                loss_con = lossfunction(proj_feat, proj_feat_cap) + F.mse_loss(feat, esample.detach()) + F.mse_loss(feat_cap, esample_cap.detach())
+                
+                optimizer.zero_grad()
+                loss_con.backward()
+                optimizer.step()
 
-            # training energy model
-            # pos_energy = energy_model(feat.detach(), feat_cap.detach())
-            # neg_energy = energy_model(esample.detach(), esample_cap.detach())
+                # training energy model
+                # pos_energy = energy_model(feat.detach(), feat_cap.detach())
+                # neg_energy = energy_model(esample.detach(), esample_cap.detach())
 
-            energy_loss = 0.5 * (energy_model.dsm_loss(feat.detach()) + energy_model.dsm_loss(feat_cap.detach()))
+                energy_loss = 0.5 * (energy_model.dsm_loss(feat.detach()) + energy_model.dsm_loss(feat_cap.detach()))
 
-            energy_optimizer.zero_grad()
-            energy_loss.backward()
-            energy_optimizer.step()
-            
-            cur_loss += loss_con.item() / (len_train)
-            en_loss += energy_loss.item() / len_train
-            
-            if return_logs:
-                progress(idx+1,len(train_loader), loss_con=loss_con.item(), en_loss = energy_loss.item(), GPU = device_id)
-        
+                energy_optimizer.zero_grad()
+                energy_loss.backward()
+                energy_optimizer.step()
+                
+                cur_loss += loss_con.item() / (len_train)
+                en_loss += energy_loss.item() / len_train
+
+                if return_logs:
+                    progress(idx+1,len(train_loader), loss_con=loss_con.item(), en_loss = energy_loss.item(), GPU = device_id)
+
+            else:
+                
+                loss_con = lossfunction(proj_feat, proj_feat_cap)
+                
+                optimizer.zero_grad()
+                loss_con.backward()
+                optimizer.step()
+                
+                cur_loss += loss_con.item() / (len_train)
+
+                if return_logs:
+                    progress(idx+1,len(train_loader), loss_con=loss_con.item(), GPU = device_id)
+
         opt_lr_schedular.step()
             
         print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f} energy_loss: {en_loss:.3f}")

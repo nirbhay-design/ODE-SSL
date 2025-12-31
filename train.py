@@ -31,6 +31,7 @@ def get_args():
     parser.add_argument("--vae_out", type=int, default = None, help="out dimension for vae for DAiLEMa")
     parser.add_argument("--net_type", type=str, default = None, help="net type: score / energy")
     parser.add_argument("--langevin_steps", type=int, default = None, help="steps for Langevin dynamics for ScAlRe")
+    parser.add_argument("--warmup_epochs", type=int, default = None, help="warmup epochs before starting ScAlRe")
 
     args = parser.parse_args()
     return args
@@ -121,6 +122,7 @@ def main_single():
         
         param_config["energy_model"] = energy_model
         param_config["energy_optimizer"] = energy_optimizer
+        param_config["warmup_epochs"] = config["warmup_epochs"]
 
     final_model = train_network(**param_config)
 
@@ -164,6 +166,8 @@ if __name__ == "__main__":
         config["energy_model_params"]["net_type"] = args.net_type
     if args.langevin_steps:
         config["energy_model_params"]["steps"] = args.langevin_steps
+    if args.warmup_epochs:
+        config["warmup_epochs"] = args.warmup_epochs
     
     # setting seeds 
 
