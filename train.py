@@ -153,6 +153,7 @@ if __name__ == "__main__":
         config["opt_params"]["lr"] = args.lr 
     if args.epochs:
         config["n_epochs"] = args.epochs
+        config["schedular_params"]["T_max"] = args.epochs
     if args.epochs_lin:
         config["n_epochs_mlp"] = args.epochs_lin
     if args.ode_steps:
