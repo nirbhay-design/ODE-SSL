@@ -1,0 +1,45 @@
+environment: 
+YAML: configs/scalre.c10.yaml
+==> SEED: 42
+==> num_classes: 10
+==> data_name: cifar10
+==> data_params: {'algo': 'scalre', 'data_dir': 'datasets/cifar10', 'batch_size': 512, 'num_workers': 3, 'image_size': 32}
+==> return_logs: False
+==> eval_every: 10
+==> n_epochs: 800
+==> n_epochs_mlp: 100
+==> gpu_id: 4
+==> opt: SGD
+==> opt_params: {'lr': 0.5, 'momentum': 0.9, 'nesterov': True}
+==> schedular_params: {'T_max': 800, 'eta_min': 0.001}
+==> mlp_opt: SGD
+==> mlp_opt_params: {'lr': 0.01, 'momentum': 0.9, 'nesterov': True}
+==> energy_model_params: {'eta': 0.01, 'steps': 5, 'sigma': 0.2, 'delta': 0.1, 'net_type': 'score'}
+==> energy_opt: AdamW
+==> energy_model_opt_params: {'lr': 0.001}
+==> model_params: {'model_name': 'resnet50', 'pretrained': False, 'proj_dim': 128, 'algo_type': 'scalre'}
+==> mlp_type: linear
+==> loss: scalre
+==> loss_params: {'sim': 'cosine', 'tau': 0.5}
+==> distributed: False
+==> train_algo: scalre
+==> model_save_path: saved_models/scalre.c10.r50.sc.e800.lin.pth
+==> warmup_epochs: 0
+==> config: configs/scalre.c10.yaml
+--------------------------------------------------
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+# of Training Images: 50000
+# of Testing Images: 10000
+===> using linear mlp
+using optimizer: SGD
+using optimizer: SGD
+loss function: scalre
+using optimizer: AdamW
+### ScAlRe Training begins
+[GPU4] epochs: [1/800] train_loss_con: 6.767 energy_loss: 1024.542
+[GPU4] epochs: [2/800] train_loss_con: 6.429 energy_loss: 1024.271
+[GPU4] epochs: [3/800] train_loss_con: 6.248 energy_loss: 1024.111
+[GPU4] epochs: [4/800] train_loss_con: 6.130 energy_loss: 1024.022
+[GPU4] epochs: [5/800] train_loss_con: 6.043 energy_loss: 1023.859

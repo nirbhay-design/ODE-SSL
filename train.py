@@ -6,13 +6,14 @@ import numpy as np
 from src.network import Network, MLP, CARL_mlp, EnergyNet, EnergyScoreNet
 from train_utils import yaml_loader, train_nodel, train_carl, model_optimizer, \
                         loss_function, train_florel, train_lema, train_dailema, \
-                        train_scalre, load_dataset
+                        train_scalre, load_dataset, get_tsne_knn_logreg
 
 import torch.multiprocessing as mp 
 from torch.nn.parallel import DistributedDataParallel as DDP 
 from torch.distributed import init_process_group, destroy_process_group
 import os 
 import argparse
+import json 
 
 def get_args():
     parser = argparse.ArgumentParser(description="Training script")
@@ -27,11 +28,20 @@ def get_args():
     parser.add_argument("--epochs_lin", type=int, default = None, help="epochs for linear probing")
     parser.add_argument("--opt", type=str, default=None, help="SGD/ADAM/AdamW")
     parser.add_argument("--lr", type=float, default = None, help="lr for SSL")
+    ## NODEL / CARL
     parser.add_argument("--ode_steps", type=int, default = None, help="steps to return from ODE solver")
+    # DARe
     parser.add_argument("--vae_out", type=int, default = None, help="out dimension for vae for DAiLEMa")
+    # ScAlRe / LEMa
     parser.add_argument("--net_type", type=str, default = None, help="net type: score / energy")
     parser.add_argument("--langevin_steps", type=int, default = None, help="steps for Langevin dynamics for ScAlRe")
     parser.add_argument("--warmup_epochs", type=int, default = None, help="warmup epochs before starting ScAlRe")
+    # evaluation 
+    parser.add_argument("--mlp_type", type=str, default=None, help="hidden/linear")
+    parser.add_argument("--test", action="store_true", help="test or not")
+    parser.add_argument("--knn", action="store_true", help="evaluate knn or not")
+    parser.add_argument("--lreg", action="store_true", help="evaluate logistic regression or not")
+    parser.add_argument("--tsne", action="store_true", help="get test tsne or not")
 
     args = parser.parse_args()
     return args
@@ -62,20 +72,7 @@ def main_single():
     train_algo = config['train_algo']
 
     model = Network(**config['model_params'])
-    # print(model.load_state_dict(torch.load(config["model_save_path"], map_location="cpu")))
-    mlp = MLP(model.classifier_infeatures, config['num_classes'], config['mlp_type'])
 
-    pred_net = None 
-    if train_algo == "carl":
-        pred_net = CARL_mlp(**config["carl_pred_params"])
-
-    optimizer = model_optimizer(model, config['opt'], pred_net, **config['opt_params'])
-    mlp_optimizer = model_optimizer(mlp, config['mlp_opt'], **config['mlp_opt_params'])
-
-    opt_lr_schedular = optim.lr_scheduler.CosineAnnealingLR(optimizer, **config['schedular_params'])
-
-    loss, loss_mlp = loss_function(loss_type = config['loss'], **config.get('loss_params', {}))
-    
     train_dl, train_dl_mlp, test_dl, train_ds, test_ds = load_dataset(
         dataset_name = config['data_name'],
         distributed = False,
@@ -92,6 +89,39 @@ def main_single():
     device = config['gpu_id']
 
     tsne_name = "_".join(config["model_save_path"].split('/')[-1].split('.')[:-1]) + ".png"
+    
+    ## test part starts:
+
+    if args.test:
+        print(model.load_state_dict(torch.load(config["model_save_path"], map_location="cpu")))
+        
+        test_config = {"model": model, "train_loader": train_dl_mlp, "test_loader": test_dl, 
+                       "device": device, "algo": train_algo, "return_logs": return_logs, 
+                       "tsne": args.tsne, "knn": args.knn, "log_reg": args.lreg, "tsne_name": tsne_name}
+        
+        output = get_tsne_knn_logreg(**test_config)
+        save_config = {**config, **output}
+        output_json = ".".join(config['model_save_path'].split('/')[-1].split('.')[:-1]) + '.json'
+        with open(f"eval_json/{output_json}", "w") as f:
+            json.dump(save_config, f, indent=4)
+        return 
+
+    
+    # defining traning params begins
+
+    mlp = MLP(model.classifier_infeatures, config['num_classes'], config['mlp_type'])
+
+    pred_net = None 
+    if train_algo == "carl":
+        pred_net = CARL_mlp(**config["carl_pred_params"])
+
+    optimizer = model_optimizer(model, config['opt'], pred_net, **config['opt_params'])
+    mlp_optimizer = model_optimizer(mlp, config['mlp_opt'], **config['mlp_opt_params'])
+
+    opt_lr_schedular = optim.lr_scheduler.CosineAnnealingLR(optimizer, **config['schedular_params'])
+
+    loss, loss_mlp = loss_function(loss_type = config['loss'], **config.get('loss_params', {}))
+            
     ## defining parameter configs for each training algorithm
 
     param_config = {"train_algo": train_algo, "model": model, "mlp": mlp, "train_loader": train_dl, "train_loader_mlp": train_dl_mlp,
@@ -128,6 +158,18 @@ def main_single():
 
     torch.save(final_model.state_dict(), config["model_save_path"])
     print("Model weights saved")
+
+    print(model.load_state_dict(torch.load(config["model_save_path"], map_location="cpu")))
+        
+    test_config = {"model": model, "train_loader": train_dl_mlp, "test_loader": test_dl, 
+                    "device": device, "algo": train_algo, "return_logs": return_logs, 
+                    "tsne": True, "knn": True, "log_reg": True, "tsne_name": tsne_name}
+    
+    output = get_tsne_knn_logreg(**test_config)
+    # print(output)
+    print(f"knn_acc: {output['knn_acc']:.3f}, log_reg_acc: {output['lreg_acc']:.3f}")
+
+    # exit(0)
 
     # weights = torch.load(config["model_save_path"])
     # print(model.load_state_dict(weights))
@@ -168,6 +210,8 @@ if __name__ == "__main__":
         config["energy_model_params"]["steps"] = args.langevin_steps
     if args.warmup_epochs:
         config["warmup_epochs"] = args.warmup_epochs
+    if args.mlp_type:
+        config["mlp_type"] = args.mlp_type
     
     # setting seeds 
 

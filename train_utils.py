@@ -12,7 +12,9 @@ import math
 import copy
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt 
-
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
 
 def yaml_loader(yaml_file):
     with open(yaml_file,'r') as f:
@@ -30,7 +32,8 @@ def progress(current, total, **kwargs):
     if (current == total):
         print()
 
-def make_tsne_for_dataset(model, loader, device, algo, return_logs = False, tsne_name = None):
+def get_features_labels(model, loader, device, return_logs = False):
+    model = model.to(device)
     model.eval()
 
     all_features = []
@@ -51,9 +54,16 @@ def make_tsne_for_dataset(model, loader, device, algo, return_logs = False, tsne
             if return_logs:
                 progress(idx+1,loader_len)
 
-    features = torch.vstack(all_features).detach().cpu().numpy()
+    features = F.normalize(torch.vstack(all_features), dim = -1).detach().cpu().numpy()
     labels = torch.hstack(all_labels).detach().cpu().numpy()
 
+    return {"features": features, "labels": labels}
+
+def make_tsne_for_dataset(model, loader, device, algo, return_logs = False, tsne_name = None):
+    
+    output = get_features_labels(model, loader, device, return_logs)
+    features = output["features"]
+    labels = output["labels"]
     make_tsne_plot(features, labels, name = tsne_name)
 
 def evaluate(model, mlp, loader, device, return_logs=False, algo=None):
@@ -81,6 +91,39 @@ def evaluate(model, mlp, loader, device, return_logs=False, algo=None):
                 # print('batches done : ',idx,end='\r')
         accuracy = round(float(correct / samples), 3)
     return accuracy 
+
+def get_tsne_knn_logreg(model, train_loader, test_loader, device, algo, return_logs = False, tsne = True, knn = True, log_reg = True, tsne_name = None):
+    train_output = get_features_labels(model, train_loader, device, return_logs)
+    test_output = get_features_labels(model, test_loader, device, return_logs)
+    
+    x_train, y_train = train_output["features"], train_output["labels"]
+    x_test, y_test = test_output["features"], test_output["labels"]
+
+    outputs = {}
+
+    if tsne:
+        print("TSNE on Test set")
+        # make_tsne_plot(train_output["features"], train_output["labels"], name = f"trnd_{tsne_name}")
+        make_tsne_plot(x_test, y_test, name = f"tstd_{tsne_name}")
+
+    if knn:
+        print("knn evalution")
+        knnc = KNeighborsClassifier(n_neighbors=200)
+        knnc.fit(x_train, y_train)
+        y_test_pred = knnc.predict(x_test)
+        knn_acc = accuracy_score(y_test, y_test_pred)
+        outputs["knn_acc"] = knn_acc
+
+    if log_reg:
+        print("logistic regression evalution")
+        lreg = LogisticRegression(random_state=42) # Example hyperparameters
+        lreg.fit(x_train, y_train)
+        # Make predictions
+        y_test_pred = lreg.predict(x_test)
+        lreg_acc = accuracy_score(y_test, y_test_pred)
+        outputs["lreg_acc"] = lreg_acc
+
+    return outputs 
 
 def train_mlp(
     model, mlp, train_loader, test_loader, 
@@ -603,7 +646,7 @@ def make_tsne_plot(X, y, name):
     X_embedded = tsne.fit_transform(X)
 
     plt.figure(figsize=(8, 6))
-    plt.scatter(X_embedded[:, 0], X_embedded[:, 1], c=y, cmap='tab10')  # Color by labels
+    plt.scatter(X_embedded[:, 0], X_embedded[:, 1], c=y, s = 8, alpha = 0.8, cmap='turbo')  # Color by labels
     plt.title("t-SNE")
     plt.xlabel("t-SNE Component 1")
     plt.ylabel("t-SNE Component 2")

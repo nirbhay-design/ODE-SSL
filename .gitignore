@@ -5,3 +5,4 @@
 __pycache__/
 cifar10/
 cifar100/
+test_garbage
