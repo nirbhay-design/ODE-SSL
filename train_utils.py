@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
+import umap 
 
 def yaml_loader(yaml_file):
     with open(yaml_file,'r') as f:
@@ -642,7 +643,8 @@ class EMA():
         return copy.deepcopy(target) 
 
 def make_tsne_plot(X, y, name):
-    tsne = TSNE(n_components=2, random_state=0)
+    tsne = umap.UMAP()
+    # tsne = TSNE(n_components=2, random_state=0)
     X_embedded = tsne.fit_transform(X)
 
     plt.figure(figsize=(8, 6))
