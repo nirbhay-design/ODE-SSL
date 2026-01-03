@@ -162,7 +162,7 @@ def main_single():
         
     test_config = {"model": model, "train_loader": train_dl_mlp, "test_loader": test_dl, 
                     "device": device, "algo": train_algo, "return_logs": return_logs, 
-                    "tsne": True, "knn": True, "log_reg": True, "tsne_name": tsne_name}
+                    "tsne": False, "knn": True, "log_reg": True, "tsne_name": tsne_name}
     
     output = get_tsne_knn_logreg(**test_config)
     # print(output)

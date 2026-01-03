@@ -257,3 +257,4 @@ using optimizer: AdamW
 [GPU5] epochs: [217/800] train_loss_con: 5.542 energy_loss: 481.163
 [GPU5] epochs: [218/800] train_loss_con: 5.538 energy_loss: 481.150
 [GPU5] epochs: [219/800] train_loss_con: 5.542 energy_loss: 480.127
+[GPU5] epochs: [220/800] train_loss_con: 5.541 energy_loss: 479.910
