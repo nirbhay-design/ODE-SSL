@@ -104,6 +104,7 @@ def main_single():
         output_json = ".".join(config['model_save_path'].split('/')[-1].split('.')[:-1]) + '.json'
         with open(f"eval_json/{output_json}", "w") as f:
             json.dump(save_config, f, indent=4)
+        print(f"knn_acc: {output['knn_acc']:.3f}, log_reg_acc: {output['lreg_acc']:.3f}")
         return 
 
     
