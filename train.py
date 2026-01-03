@@ -72,7 +72,21 @@ def main_single():
     train_algo = config['train_algo']
 
     model = Network(**config['model_params'])
+    # defining traning params begins
 
+    mlp = MLP(model.classifier_infeatures, config['num_classes'], config['mlp_type'])
+
+    pred_net = None 
+    if train_algo == "carl":
+        pred_net = CARL_mlp(**config["carl_pred_params"])
+
+    optimizer = model_optimizer(model, config['opt'], pred_net, **config['opt_params'])
+    mlp_optimizer = model_optimizer(mlp, config['mlp_opt'], **config['mlp_opt_params'])
+
+    opt_lr_schedular = optim.lr_scheduler.CosineAnnealingLR(optimizer, **config['schedular_params'])
+
+    loss, loss_mlp = loss_function(loss_type = config['loss'], **config.get('loss_params', {}))
+            
     train_dl, train_dl_mlp, test_dl, train_ds, test_ds = load_dataset(
         dataset_name = config['data_name'],
         distributed = False,
@@ -102,27 +116,11 @@ def main_single():
         output = get_tsne_knn_logreg(**test_config)
         save_config = {**config, **output}
         output_json = ".".join(config['model_save_path'].split('/')[-1].split('.')[:-1]) + '.json'
+        os.makedirs("eval_json", exist_ok=True)
         with open(f"eval_json/{output_json}", "w") as f:
             json.dump(save_config, f, indent=4)
         print(f"knn_acc: {output['knn_acc']:.3f}, log_reg_acc: {output['lreg_acc']:.3f}")
         return 
-
-    
-    # defining traning params begins
-
-    mlp = MLP(model.classifier_infeatures, config['num_classes'], config['mlp_type'])
-
-    pred_net = None 
-    if train_algo == "carl":
-        pred_net = CARL_mlp(**config["carl_pred_params"])
-
-    optimizer = model_optimizer(model, config['opt'], pred_net, **config['opt_params'])
-    mlp_optimizer = model_optimizer(mlp, config['mlp_opt'], **config['mlp_opt_params'])
-
-    opt_lr_schedular = optim.lr_scheduler.CosineAnnealingLR(optimizer, **config['schedular_params'])
-
-    loss, loss_mlp = loss_function(loss_type = config['loss'], **config.get('loss_params', {}))
-            
     ## defining parameter configs for each training algorithm
 
     param_config = {"train_algo": train_algo, "model": model, "mlp": mlp, "train_loader": train_dl, "train_loader_mlp": train_dl_mlp,
