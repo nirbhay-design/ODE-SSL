@@ -6,7 +6,7 @@ import numpy as np
 from src.network import Network, MLP, CARL_mlp, EnergyNet, EnergyScoreNet
 from train_utils import yaml_loader, train_nodel, train_carl, model_optimizer, \
                         loss_function, train_florel, train_lema, train_dailema, \
-                        train_scalre, load_dataset, get_tsne_knn_logreg
+                        train_scalre, load_dataset, get_tsne_knn_logreg, train_mlp
 
 import torch.multiprocessing as mp 
 from torch.nn.parallel import DistributedDataParallel as DDP 
@@ -28,6 +28,7 @@ def get_args():
     parser.add_argument("--epochs_lin", type=int, default = None, help="epochs for linear probing")
     parser.add_argument("--opt", type=str, default=None, help="SGD/ADAM/AdamW")
     parser.add_argument("--lr", type=float, default = None, help="lr for SSL")
+    parser.add_argument("--linear_lr", type=float, default = None, help="lr for linear probing")
     ## NODEL / CARL
     parser.add_argument("--ode_steps", type=int, default = None, help="steps to return from ODE solver")
     # DARe
@@ -41,6 +42,7 @@ def get_args():
     parser.add_argument("--test", action="store_true", help="test or not")
     parser.add_argument("--knn", action="store_true", help="evaluate knn or not")
     parser.add_argument("--lreg", action="store_true", help="evaluate logistic regression or not")
+    parser.add_argument("--linprobe", action="store_true", help="evaluate linear probing or not ")
     parser.add_argument("--tsne", action="store_true", help="get test tsne or not")
 
     args = parser.parse_args()
@@ -114,13 +116,29 @@ def main_single():
                        "tsne": args.tsne, "knn": args.knn, "log_reg": args.lreg, "tsne_name": tsne_name}
         
         output = get_tsne_knn_logreg(**test_config)
+
+        if args.linprobe:
+            _, tval = train_mlp(
+                model, mlp, train_dl_mlp, test_dl, 
+                loss_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
+                device, device, return_logs = return_logs)
+            best_lin_acc = max(tval['testacc'])
+            output['best_linear_acc'] = best_lin_acc
+
         save_config = {**config, **output}
         output_json = ".".join(config['model_save_path'].split('/')[-1].split('.')[:-1]) + '.json'
         os.makedirs("eval_json", exist_ok=True)
-        with open(f"eval_json/{output_json}", "w") as f:
+
+        file_name = f"eval_json/{output_json}"
+        if os.path.exists(file_name):
+            with open(file_name, "r") as f:
+                existing_data = json.load(f)
+            save_config = {**existing_data, **save_config}
+
+        with open(file_name, "w") as f:
             json.dump(save_config, f, indent=4)
-        print(f"knn_acc: {output['knn_acc']:.3f}, log_reg_acc: {output['lreg_acc']:.3f}")
-        return 
+        print(f"knn_acc: {output.get('knn_acc', -1):.3f}, log_reg_acc: {output.get('lreg_acc', -1):.3f}")
+        return  
     ## defining parameter configs for each training algorithm
 
     param_config = {"train_algo": train_algo, "model": model, "mlp": mlp, "train_loader": train_dl, "train_loader_mlp": train_dl_mlp,
@@ -211,6 +229,8 @@ if __name__ == "__main__":
         config["warmup_epochs"] = args.warmup_epochs
     if args.mlp_type:
         config["mlp_type"] = args.mlp_type
+    if args.linear_lr:
+        config["mlp_opt_params"]["lr"] = args.linear_lr
     
     # setting seeds 
 
