@@ -952,3 +952,21 @@ using optimizer: AdamW
 [GPU0] Final Test Accuracy: 0.903
 Model weights saved
 <All keys matched successfully>
+OpenBLAS warning: precompiled NUM_THREADS exceeded, adding auxiliary array for thread metadata.
+To avoid this warning, please rebuild your copy of OpenBLAS with a larger NUM_THREADS setting
+or set the environment variable OPENBLAS_NUM_THREADS to 64 or lower
+TSNE on Test set
+knn evalution
+logistic regression evalution
+knn_acc: 0.876, log_reg_acc: 0.892
+BLAS : Bad memory unallocation! :  640  0x7fce16aea000
+BLAS : Bad memory unallocation! :  640  0x7fce0aaea000
+BLAS : Bad memory unallocation! :  640  0x7fcdd2aea000
+BLAS : Bad memory unallocation! :  640  0x7fcdd0aea000
+BLAS : Bad memory unallocation! :  640  0x7fcdccaea000
+BLAS : Bad memory unallocation! :  640  0x7fcd76aea000
+BLAS : Bad memory unallocation! :  640  0x7fcd78aea000
+BLAS : Bad memory unallocation! :  640  0x7fcd3eaea000
+BLAS : Bad memory unallocation! :  640  0x7fcd08aea000
+BLAS : Bad memory unallocation! :  640  0x7fcd04aea000
+BLAS : Bad memory unallocation! :  640  0x7fcca2aea000
