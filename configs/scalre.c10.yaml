@@ -17,6 +17,7 @@ opt_params:
   lr: !!float 5e-1
   momentum: 0.9
   nesterov: True
+  weight_decay: !!float 1e-4
 # schedular_params:
 #   step_size: 40 
 #   gamma: 0.1
