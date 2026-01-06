@@ -953,3 +953,10 @@ using optimizer: AdamW
 [GPU4] Final Test Accuracy: 0.884
 Model weights saved
 <All keys matched successfully>
+OpenBLAS warning: precompiled NUM_THREADS exceeded, adding auxiliary array for thread metadata.
+To avoid this warning, please rebuild your copy of OpenBLAS with a larger NUM_THREADS setting
+or set the environment variable OPENBLAS_NUM_THREADS to 64 or lower
+TSNE on Test set
+knn evalution
+logistic regression evalution
+knn_acc: 0.868, log_reg_acc: 0.886

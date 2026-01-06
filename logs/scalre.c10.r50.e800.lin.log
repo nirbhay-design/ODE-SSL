@@ -956,3 +956,15 @@ Model weights saved
 OpenBLAS warning: precompiled NUM_THREADS exceeded, adding auxiliary array for thread metadata.
 To avoid this warning, please rebuild your copy of OpenBLAS with a larger NUM_THREADS setting
 or set the environment variable OPENBLAS_NUM_THREADS to 64 or lower
+TSNE on Test set
+knn evalution
+logistic regression evalution
+knn_acc: 0.874, log_reg_acc: 0.893
+BLAS : Bad memory unallocation! :  640  0x7fc544b3e000
+BLAS : Bad memory unallocation! :  640  0x7fc4fcb3e000
+BLAS : Bad memory unallocation! :  640  0x7fc4feb3e000
+BLAS : Bad memory unallocation! :  640  0x7fc4f0b3e000
+BLAS : Bad memory unallocation! :  640  0x7fc4f2b3e000
+BLAS : Bad memory unallocation! :  640  0x7fc4f8b3e000
+BLAS : Bad memory unallocation! :  640  0x7fc49ab3e000
+BLAS : Bad memory unallocation! :  640  0x7fc468b3e000

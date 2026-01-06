@@ -893,3 +893,90 @@ using optimizer: AdamW
 [GPU3] epochs: [46/100] train_acc: 0.661 train_loss_sup: 1.202
 [GPU3] epochs: [47/100] train_acc: 0.664 train_loss_sup: 1.204
 [GPU3] epochs: [48/100] train_acc: 0.664 train_loss_sup: 1.195
+[GPU3] epochs: [49/100] train_acc: 0.664 train_loss_sup: 1.198
+[GPU3] epochs: [50/100] train_acc: 0.669 train_loss_sup: 1.191
+[GPU3] Test Accuracy at epoch: 50: 0.643
+[GPU3] epochs: [51/100] train_acc: 0.666 train_loss_sup: 1.192
+[GPU3] epochs: [52/100] train_acc: 0.667 train_loss_sup: 1.190
+[GPU3] epochs: [53/100] train_acc: 0.668 train_loss_sup: 1.186
+[GPU3] epochs: [54/100] train_acc: 0.669 train_loss_sup: 1.178
+[GPU3] epochs: [55/100] train_acc: 0.669 train_loss_sup: 1.179
+[GPU3] epochs: [56/100] train_acc: 0.669 train_loss_sup: 1.182
+[GPU3] epochs: [57/100] train_acc: 0.672 train_loss_sup: 1.164
+[GPU3] epochs: [58/100] train_acc: 0.671 train_loss_sup: 1.170
+[GPU3] epochs: [59/100] train_acc: 0.672 train_loss_sup: 1.169
+[GPU3] epochs: [60/100] train_acc: 0.674 train_loss_sup: 1.165
+[GPU3] Test Accuracy at epoch: 60: 0.647
+[GPU3] epochs: [61/100] train_acc: 0.671 train_loss_sup: 1.173
+[GPU3] epochs: [62/100] train_acc: 0.674 train_loss_sup: 1.163
+[GPU3] epochs: [63/100] train_acc: 0.676 train_loss_sup: 1.159
+[GPU3] epochs: [64/100] train_acc: 0.671 train_loss_sup: 1.164
+[GPU3] epochs: [65/100] train_acc: 0.673 train_loss_sup: 1.161
+[GPU3] epochs: [66/100] train_acc: 0.678 train_loss_sup: 1.150
+[GPU3] epochs: [67/100] train_acc: 0.681 train_loss_sup: 1.149
+[GPU3] epochs: [68/100] train_acc: 0.680 train_loss_sup: 1.148
+[GPU3] epochs: [69/100] train_acc: 0.678 train_loss_sup: 1.149
+[GPU3] epochs: [70/100] train_acc: 0.679 train_loss_sup: 1.141
+[GPU3] Test Accuracy at epoch: 70: 0.65
+[GPU3] epochs: [71/100] train_acc: 0.681 train_loss_sup: 1.133
+[GPU3] epochs: [72/100] train_acc: 0.680 train_loss_sup: 1.137
+[GPU3] epochs: [73/100] train_acc: 0.681 train_loss_sup: 1.138
+[GPU3] epochs: [74/100] train_acc: 0.683 train_loss_sup: 1.139
+[GPU3] epochs: [75/100] train_acc: 0.682 train_loss_sup: 1.132
+[GPU3] epochs: [76/100] train_acc: 0.682 train_loss_sup: 1.137
+[GPU3] epochs: [77/100] train_acc: 0.681 train_loss_sup: 1.132
+[GPU3] epochs: [78/100] train_acc: 0.686 train_loss_sup: 1.124
+[GPU3] epochs: [79/100] train_acc: 0.686 train_loss_sup: 1.126
+[GPU3] epochs: [80/100] train_acc: 0.684 train_loss_sup: 1.126
+[GPU3] Test Accuracy at epoch: 80: 0.649
+[GPU3] epochs: [81/100] train_acc: 0.684 train_loss_sup: 1.124
+[GPU3] epochs: [82/100] train_acc: 0.684 train_loss_sup: 1.125
+[GPU3] epochs: [83/100] train_acc: 0.685 train_loss_sup: 1.122
+[GPU3] epochs: [84/100] train_acc: 0.687 train_loss_sup: 1.117
+[GPU3] epochs: [85/100] train_acc: 0.684 train_loss_sup: 1.124
+[GPU3] epochs: [86/100] train_acc: 0.687 train_loss_sup: 1.115
+[GPU3] epochs: [87/100] train_acc: 0.689 train_loss_sup: 1.112
+[GPU3] epochs: [88/100] train_acc: 0.690 train_loss_sup: 1.112
+[GPU3] epochs: [89/100] train_acc: 0.688 train_loss_sup: 1.110
+[GPU3] epochs: [90/100] train_acc: 0.690 train_loss_sup: 1.106
+[GPU3] Test Accuracy at epoch: 90: 0.648
+[GPU3] epochs: [91/100] train_acc: 0.688 train_loss_sup: 1.112
+[GPU3] epochs: [92/100] train_acc: 0.689 train_loss_sup: 1.106
+[GPU3] epochs: [93/100] train_acc: 0.689 train_loss_sup: 1.109
+[GPU3] epochs: [94/100] train_acc: 0.690 train_loss_sup: 1.104
+[GPU3] epochs: [95/100] train_acc: 0.692 train_loss_sup: 1.099
+[GPU3] epochs: [96/100] train_acc: 0.692 train_loss_sup: 1.095
+[GPU3] epochs: [97/100] train_acc: 0.689 train_loss_sup: 1.103
+[GPU3] epochs: [98/100] train_acc: 0.692 train_loss_sup: 1.095
+[GPU3] epochs: [99/100] train_acc: 0.694 train_loss_sup: 1.093
+[GPU3] epochs: [100/100] train_acc: 0.692 train_loss_sup: 1.094
+[GPU3] Final Test Accuracy: 0.656
+Model weights saved
+<All keys matched successfully>
+OpenBLAS warning: precompiled NUM_THREADS exceeded, adding auxiliary array for thread metadata.
+To avoid this warning, please rebuild your copy of OpenBLAS with a larger NUM_THREADS setting
+or set the environment variable OPENBLAS_NUM_THREADS to 64 or lower
+TSNE on Test set
+knn evalution
+logistic regression evalution
+knn_acc: 0.537, log_reg_acc: 0.591
+BLAS : Bad memory unallocation! :  640  0x7fb59eb3e000
+BLAS : Bad memory unallocation! :  640  0x7fb5c4b3e000
+BLAS : Bad memory unallocation! :  640  0x7fb5c0b3e000
+BLAS : Bad memory unallocation! :  640  0x7fb568b3e000
+BLAS : Bad memory unallocation! :  640  0x7fb556b3e000
+BLAS : Bad memory unallocation! :  640  0x7fb56cb3e000
+BLAS : Bad memory unallocation! :  640  0x7fb552b3e000
+BLAS : Bad memory unallocation! :  640  0x7fb558b3e000
+BLAS : Bad memory unallocation! :  640  0x7fb564b3e000
+BLAS : Bad memory unallocation! :  640  0x7fb55cb3e000
+BLAS : Bad memory unallocation! :  640  0x7fb55eb3e000
+BLAS : Bad memory unallocation! :  640  0x7fb54eb3e000
+BLAS : Bad memory unallocation! :  640  0x7fb4e2b3e000
+BLAS : Bad memory unallocation! :  640  0x7fb498b3e000
+BLAS : Bad memory unallocation! :  640  0x7fb496b3e000
+BLAS : Bad memory unallocation! :  640  0x7fb49ab3e000
+BLAS : Bad memory unallocation! :  640  0x7fb450b3e000
+BLAS : Bad memory unallocation! :  640  0x7fb3e6b3e000
+BLAS : Bad memory unallocation! :  640  0x7fb3eab3e000
+BLAS : Bad memory unallocation! :  640  0x7fb3e4b3e000

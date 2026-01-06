@@ -947,3 +947,15 @@ using optimizer: AdamW
 [GPU1] epochs: [96/100] train_acc: 0.593 train_loss_sup: 1.476
 [GPU1] epochs: [97/100] train_acc: 0.591 train_loss_sup: 1.477
 [GPU1] epochs: [98/100] train_acc: 0.590 train_loss_sup: 1.478
+[GPU1] epochs: [99/100] train_acc: 0.590 train_loss_sup: 1.483
+[GPU1] epochs: [100/100] train_acc: 0.591 train_loss_sup: 1.486
+[GPU1] Final Test Accuracy: 0.588
+Model weights saved
+<All keys matched successfully>
+OpenBLAS warning: precompiled NUM_THREADS exceeded, adding auxiliary array for thread metadata.
+To avoid this warning, please rebuild your copy of OpenBLAS with a larger NUM_THREADS setting
+or set the environment variable OPENBLAS_NUM_THREADS to 64 or lower
+TSNE on Test set
+knn evalution
+logistic regression evalution
+knn_acc: 0.510, log_reg_acc: 0.570

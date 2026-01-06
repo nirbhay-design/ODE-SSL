@@ -934,3 +934,29 @@ using optimizer: AdamW
 [GPU3] epochs: [83/100] train_acc: 0.566 train_loss_sup: 1.596
 [GPU3] epochs: [84/100] train_acc: 0.563 train_loss_sup: 1.597
 [GPU3] epochs: [85/100] train_acc: 0.564 train_loss_sup: 1.590
+[GPU3] epochs: [86/100] train_acc: 0.563 train_loss_sup: 1.594
+[GPU3] epochs: [87/100] train_acc: 0.564 train_loss_sup: 1.588
+[GPU3] epochs: [88/100] train_acc: 0.564 train_loss_sup: 1.594
+[GPU3] epochs: [89/100] train_acc: 0.565 train_loss_sup: 1.586
+[GPU3] epochs: [90/100] train_acc: 0.564 train_loss_sup: 1.590
+[GPU3] Test Accuracy at epoch: 90: 0.573
+[GPU3] epochs: [91/100] train_acc: 0.567 train_loss_sup: 1.581
+[GPU3] epochs: [92/100] train_acc: 0.567 train_loss_sup: 1.579
+[GPU3] epochs: [93/100] train_acc: 0.565 train_loss_sup: 1.583
+[GPU3] epochs: [94/100] train_acc: 0.567 train_loss_sup: 1.583
+[GPU3] epochs: [95/100] train_acc: 0.565 train_loss_sup: 1.583
+[GPU3] epochs: [96/100] train_acc: 0.569 train_loss_sup: 1.577
+[GPU3] epochs: [97/100] train_acc: 0.564 train_loss_sup: 1.581
+[GPU3] epochs: [98/100] train_acc: 0.568 train_loss_sup: 1.577
+[GPU3] epochs: [99/100] train_acc: 0.567 train_loss_sup: 1.571
+[GPU3] epochs: [100/100] train_acc: 0.569 train_loss_sup: 1.579
+[GPU3] Final Test Accuracy: 0.574
+Model weights saved
+<All keys matched successfully>
+OpenBLAS warning: precompiled NUM_THREADS exceeded, adding auxiliary array for thread metadata.
+To avoid this warning, please rebuild your copy of OpenBLAS with a larger NUM_THREADS setting
+or set the environment variable OPENBLAS_NUM_THREADS to 64 or lower
+TSNE on Test set
+knn evalution
+logistic regression evalution
+knn_acc: 0.513, log_reg_acc: 0.570
