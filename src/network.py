@@ -280,7 +280,7 @@ class Network(nn.Module):
         if not pretrained:
             in_feat = self.feat_extractor.conv1.in_channels
             out_feat = self.feat_extractor.conv1.out_channels
-            self.feat_extractor.conv1 = nn.Conv2d(in_feat, out_feat, kernel_size=3, stride=1, bias=False)
+            self.feat_extractor.conv1 = nn.Conv2d(in_feat, out_feat, kernel_size=3, stride=1, padding=1, bias=False)
 
         self.classifier_infeatures = model._modules.get(module_keys[-1], nn.Identity()).in_features
 

@@ -916,3 +916,60 @@ using optimizer: AdamW
 [GPU3] epochs: [67/100] train_acc: 0.566 train_loss_sup: 2.031
 [GPU3] epochs: [68/100] train_acc: 0.571 train_loss_sup: 2.021
 [GPU3] epochs: [69/100] train_acc: 0.568 train_loss_sup: 2.019
+[GPU3] epochs: [70/100] train_acc: 0.568 train_loss_sup: 2.010
+[GPU3] Test Accuracy at epoch: 70: 0.593
+[GPU3] epochs: [71/100] train_acc: 0.570 train_loss_sup: 1.997
+[GPU3] epochs: [72/100] train_acc: 0.568 train_loss_sup: 1.995
+[GPU3] epochs: [73/100] train_acc: 0.570 train_loss_sup: 1.989
+[GPU3] epochs: [74/100] train_acc: 0.569 train_loss_sup: 1.983
+[GPU3] epochs: [75/100] train_acc: 0.571 train_loss_sup: 1.972
+[GPU3] epochs: [76/100] train_acc: 0.569 train_loss_sup: 1.964
+[GPU3] epochs: [77/100] train_acc: 0.570 train_loss_sup: 1.960
+[GPU3] epochs: [78/100] train_acc: 0.569 train_loss_sup: 1.961
+[GPU3] epochs: [79/100] train_acc: 0.571 train_loss_sup: 1.949
+[GPU3] epochs: [80/100] train_acc: 0.569 train_loss_sup: 1.949
+[GPU3] Test Accuracy at epoch: 80: 0.595
+[GPU3] epochs: [81/100] train_acc: 0.570 train_loss_sup: 1.939
+[GPU3] epochs: [82/100] train_acc: 0.571 train_loss_sup: 1.936
+[GPU3] epochs: [83/100] train_acc: 0.572 train_loss_sup: 1.923
+[GPU3] epochs: [84/100] train_acc: 0.572 train_loss_sup: 1.924
+[GPU3] epochs: [85/100] train_acc: 0.574 train_loss_sup: 1.915
+[GPU3] epochs: [86/100] train_acc: 0.571 train_loss_sup: 1.912
+[GPU3] epochs: [87/100] train_acc: 0.573 train_loss_sup: 1.907
+[GPU3] epochs: [88/100] train_acc: 0.574 train_loss_sup: 1.900
+[GPU3] epochs: [89/100] train_acc: 0.575 train_loss_sup: 1.895
+[GPU3] epochs: [90/100] train_acc: 0.574 train_loss_sup: 1.895
+[GPU3] Test Accuracy at epoch: 90: 0.597
+[GPU3] epochs: [91/100] train_acc: 0.574 train_loss_sup: 1.886
+[GPU3] epochs: [92/100] train_acc: 0.574 train_loss_sup: 1.877
+[GPU3] epochs: [93/100] train_acc: 0.573 train_loss_sup: 1.878
+[GPU3] epochs: [94/100] train_acc: 0.575 train_loss_sup: 1.875
+[GPU3] epochs: [95/100] train_acc: 0.574 train_loss_sup: 1.870
+[GPU3] epochs: [96/100] train_acc: 0.574 train_loss_sup: 1.863
+[GPU3] epochs: [97/100] train_acc: 0.573 train_loss_sup: 1.862
+[GPU3] epochs: [98/100] train_acc: 0.576 train_loss_sup: 1.856
+[GPU3] epochs: [99/100] train_acc: 0.577 train_loss_sup: 1.850
+[GPU3] epochs: [100/100] train_acc: 0.574 train_loss_sup: 1.852
+[GPU3] Final Test Accuracy: 0.599
+Model weights saved
+<All keys matched successfully>
+OpenBLAS warning: precompiled NUM_THREADS exceeded, adding auxiliary array for thread metadata.
+To avoid this warning, please rebuild your copy of OpenBLAS with a larger NUM_THREADS setting
+or set the environment variable OPENBLAS_NUM_THREADS to 64 or lower
+knn evalution
+logistic regression evalution
+knn_acc: 0.590, log_reg_acc: 0.643
+BLAS : Bad memory unallocation! :  640  0x7f86e1e57000
+BLAS : Bad memory unallocation! :  640  0x7f86e7e57000
+BLAS : Bad memory unallocation! :  640  0x7f86cbe57000
+BLAS : Bad memory unallocation! :  640  0x7f86c7e57000
+BLAS : Bad memory unallocation! :  640  0x7f86e5e57000
+BLAS : Bad memory unallocation! :  640  0x7f8657e57000
+BLAS : Bad memory unallocation! :  640  0x7f8653e57000
+BLAS : Bad memory unallocation! :  640  0x7f865fe57000
+BLAS : Bad memory unallocation! :  640  0x7f8651e57000
+BLAS : Bad memory unallocation! :  640  0x7f865be57000
+BLAS : Bad memory unallocation! :  640  0x7f8601e57000
+BLAS : Bad memory unallocation! :  640  0x7f85ffe57000
+BLAS : Bad memory unallocation! :  640  0x7f8607e57000
+BLAS : Bad memory unallocation! :  640  0x7f8597e57000
