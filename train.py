@@ -6,7 +6,8 @@ import numpy as np
 from src.network import Network, MLP, CARL_mlp, EnergyNet, EnergyScoreNet
 from train_utils import yaml_loader, train_nodel, train_carl, model_optimizer, \
                         loss_function, train_florel, train_lema, train_dailema, \
-                        train_scalre, load_dataset, get_tsne_knn_logreg, train_mlp
+                        train_scalre, load_dataset, get_tsne_knn_logreg, train_mlp, \
+                        train_bt_sc, train_simsiam_sc
 
 import torch.multiprocessing as mp 
 from torch.nn.parallel import DistributedDataParallel as DDP 
@@ -68,6 +69,10 @@ def train_network(**kwargs):
         return train_dailema(**kwargs)
     elif train_algo == "scalre":
         return train_scalre(**kwargs)
+    elif train_algo == "bt-sc":
+        return train_bt_sc(**kwargs)
+    elif train_algo == "simsiam-sc":
+        return train_simsiam_sc(**kwargs)
     return None
 
 def main_single():
@@ -163,13 +168,14 @@ def main_single():
         param_config["energy_model"] = energy_model
         param_config["energy_optimizer"] = energy_optimizer
 
-    elif train_algo == "scalre":
+    elif train_algo in ["scalre", "bt-sc", "simsiam-sc"]:
         energy_model = EnergyScoreNet(model.classifier_infeatures, **config["energy_model_params"])
         energy_optimizer = model_optimizer(energy_model, config["energy_opt"], **config["energy_model_opt_params"])
         
         param_config["energy_model"] = energy_model
         param_config["energy_optimizer"] = energy_optimizer
-        param_config["warmup_epochs"] = config["warmup_epochs"]
+        if train_algo == "scalre":
+            param_config["warmup_epochs"] = config["warmup_epochs"]
 
     final_model = train_network(**param_config)
 

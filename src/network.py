@@ -257,7 +257,7 @@ class EnergyScoreNet(nn.Module):
 
 
 class Network(nn.Module):
-    def __init__(self, model_name = 'resnet18', pretrained = False, proj_dim = 128, ode_steps = 10, algo_type="nodel", carl_hidden = 4096, vae_out = 256):
+    def __init__(self, model_name = 'resnet18', pretrained = False, proj_dim = 128, ode_steps = 10, algo_type="nodel", carl_hidden = 4096, byol_hidden=4096, pred_dim = 512, barlow_hidden = 8192, vae_out = 256):
         super().__init__()
         if model_name == 'resnet50':
             model = torchvision.models.resnet50(
@@ -312,7 +312,40 @@ class Network(nn.Module):
 
         elif self.algo_type in ["scalre"]: # Score Alignment for representation learning 
             self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
-                                        
+
+        elif self.algo_type in ["byol-sc"]:
+            self.proj = CARL_mlp(in_features = self.classifier_infeatures, hidden_dim = byol_hidden, out_features = proj_dim)
+
+        elif self.algo_type in ["simsiam-sc"]:
+            prev_dim = self.classifier_infeatures
+            self.proj = nn.Sequential(
+                nn.Linear(prev_dim, prev_dim, bias=False),
+                nn.BatchNorm1d(prev_dim),
+                nn.ReLU(),
+                nn.Linear(prev_dim, prev_dim, bias=False),
+                nn.BatchNorm1d(prev_dim),
+                nn.ReLU(),
+                nn.Linear(prev_dim, prev_dim, bias=False),
+                nn.BatchNorm1d(prev_dim)
+            )
+            self.pred = nn.Sequential(
+                nn.Linear(prev_dim, pred_dim, bias=False),
+                nn.BatchNorm1d(pred_dim),
+                nn.ReLU(),
+                nn.Linear(pred_dim, prev_dim)
+            )           
+        
+        elif self.algo in ["bt-sc"]:
+            self.proj = nn.Sequential(
+                nn.Linear(self.classifier_infeatures, barlow_hidden, bias=False),
+                nn.BatchNorm1d(barlow_hidden, bias=False),
+                nn.ReLU(),
+                nn.Linear(barlow_hidden, barlow_hidden, bias=False),
+                nn.BatchNorm1d(barlow_hidden),
+                nn.ReLU(),
+                nn.Linear(barlow_hidden, proj_dim)
+            )
+
     def forward(self, x, t = None, test=None):
         features = self.feat_extractor(x).flatten(1)
         if test:
@@ -334,10 +367,17 @@ class Network(nn.Module):
                     "proj_features": proj["output"],
                     "logprob": proj["logprob"]}
         
-        elif self.algo_type in ["lema", "scalre"]:
+        elif self.algo_type in ["lema", "scalre", "bt-sc", "byol-sc"]:
             proj = self.proj(features)
             return {"features": features,
                     "proj_features": proj}
+        
+        elif self.algo_type in ["simsiam-sc"]:
+            proj = self.proj(features)
+            pred = self.pred(proj)
+            return {"features": features,
+                    "proj_features": proj,
+                    "pred_features": pred}
         
         elif self.algo_type in ["dailema"]:
             proj = self.proj(features)
