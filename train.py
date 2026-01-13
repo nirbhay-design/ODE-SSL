@@ -7,7 +7,7 @@ from src.network import Network, MLP, CARL_mlp, EnergyNet, EnergyScoreNet
 from train_utils import yaml_loader, train_nodel, train_carl, model_optimizer, \
                         loss_function, train_florel, train_lema, train_dailema, \
                         train_scalre, load_dataset, get_tsne_knn_logreg, train_mlp, \
-                        train_bt_sc, train_simsiam_sc
+                        train_bt_sc, train_simsiam_sc, train_byol_sc
 
 import torch.multiprocessing as mp 
 from torch.nn.parallel import DistributedDataParallel as DDP 
@@ -73,6 +73,8 @@ def train_network(**kwargs):
         return train_bt_sc(**kwargs)
     elif train_algo == "simsiam-sc":
         return train_simsiam_sc(**kwargs)
+    elif train_algo == "byol-sc":
+        return train_byol_sc(**kwargs)
     return None
 
 def main_single():
@@ -84,7 +86,7 @@ def main_single():
     mlp = MLP(model.classifier_infeatures, config['num_classes'], config['mlp_type'])
 
     pred_net = None 
-    if train_algo == "carl":
+    if train_algo == "carl" or train_algo == "byol-sc":
         pred_net = CARL_mlp(**config["carl_pred_params"])
 
     optimizer = model_optimizer(model, config['opt'], pred_net, **config['opt_params'])
@@ -151,8 +153,9 @@ def main_single():
         "mlp_optimizer": mlp_optimizer, "opt_lr_schedular": opt_lr_schedular, "eval_every": eval_every, 
         "n_epochs": n_epochs, "n_epochs_mlp": n_epochs_mlp, "device_id": device, "eval_id": device, "tsne_name": tsne_name, "return_logs": return_logs}
     
-    if train_algo == 'carl':
+    if train_algo == 'carl' or train_algo == "byol-sc":
         target_net = Network(**config['model_params'])
+        target_net.load_state_dict(model.state_dict())
         ema_tau = config['ema_tau']
 
         param_config.pop("model")
@@ -168,7 +171,7 @@ def main_single():
         param_config["energy_model"] = energy_model
         param_config["energy_optimizer"] = energy_optimizer
 
-    elif train_algo in ["scalre", "bt-sc", "simsiam-sc"]:
+    elif train_algo in ["scalre", "bt-sc", "simsiam-sc", "byol-sc"]:
         energy_model = EnergyScoreNet(model.classifier_infeatures, **config["energy_model_params"])
         energy_optimizer = model_optimizer(energy_model, config["energy_opt"], **config["energy_model_opt_params"])
         
