@@ -194,13 +194,13 @@
 
 # nohup python train.py --config configs/simsiam.sc.c100.yaml --gpu 5 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type score --save_path simsiam.sc.c100.r50.e800.pth > logs/simsiam.sc.c100.r50.e800.log &
 
-nohup python train.py --config configs/simsiam.sc.c10.yaml --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type energy --save_path simsiam.en.c10.r18.e800.pth > logs/simsiam.en.c10.r18.e800.log &
+# nohup python train.py --config configs/simsiam.sc.c10.yaml --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type energy --save_path simsiam.en.c10.r18.e800.pth > logs/simsiam.en.c10.r18.e800.log &
 
-nohup python train.py --config configs/simsiam.sc.c100.yaml --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --lr 0.08 --linear_lr 0.1 --mlp_type linear --net_type energy --save_path simsiam.en.c100.r18.e800.pth > logs/simsiam.en.c100.r18.e800.log &
+# nohup python train.py --config configs/simsiam.sc.c100.yaml --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --lr 0.08 --linear_lr 0.1 --mlp_type linear --net_type energy --save_path simsiam.en.c100.r18.e800.pth > logs/simsiam.en.c100.r18.e800.log &
 
-nohup python train.py --config configs/simsiam.sc.c10.yaml --gpu 0 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type energy --save_path simsiam.en.c10.r50.e800.pth > logs/simsiam.en.c10.r50.e800.log &
+# nohup python train.py --config configs/simsiam.sc.c10.yaml --gpu 0 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type energy --save_path simsiam.en.c10.r50.e800.pth > logs/simsiam.en.c10.r50.e800.log &
 
-nohup python train.py --config configs/simsiam.sc.c100.yaml --gpu 1 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type energy --save_path simsiam.en.c100.r50.e800.pth > logs/simsiam.en.c100.r50.e800.log &
+# nohup python train.py --config configs/simsiam.sc.c100.yaml --gpu 1 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type energy --save_path simsiam.en.c100.r50.e800.pth > logs/simsiam.en.c100.r50.e800.log &
 
 
 # nohup python train.py --config configs/bt.sc.c10.yaml --gpu 2 --model resnet18 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type score --save_path bt.sc.c10.r18.e800.pth > logs/bt.sc.c10.r18.e800.log &
@@ -210,3 +210,11 @@ nohup python train.py --config configs/simsiam.sc.c100.yaml --gpu 1 --model resn
 # nohup python train.py --config configs/bt.sc.c10.yaml --gpu 3 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type score --save_path bt.sc.c10.r50.e800.pth > logs/bt.sc.c10.r50.e800.log &
 
 # nohup python train.py --config configs/bt.sc.c100.yaml --gpu 4 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type score --save_path bt.sc.c100.r50.e800.pth > logs/bt.sc.c100.r50.e800.log &
+
+nohup python train.py --config configs/bt.sc.c10.yaml --gpu 2 --model resnet18 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type energy --save_path bt.en.c10.r18.e800.pth > logs/bt.en.c10.r18.e800.log &
+
+nohup python train.py --config configs/bt.sc.c100.yaml --gpu 2 --model resnet18 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type energy --save_path bt.en.c100.r18.e800.pth > logs/bt.en.c100.r18.e800.log &
+
+nohup python train.py --config configs/bt.sc.c10.yaml --gpu 3 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type energy --save_path bt.en.c10.r50.e800.pth > logs/bt.en.c10.r50.e800.log &
+
+nohup python train.py --config configs/bt.sc.c100.yaml --gpu 4 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type energy --save_path bt.en.c100.r50.e800.pth > logs/bt.en.c100.r50.e800.log &
