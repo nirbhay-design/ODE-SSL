@@ -726,7 +726,7 @@ def train_byol_sc(
         eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, return_logs=False): 
     
 
-    print(f"### byol Training begins")
+    print(f"### byol-sc Training begins")
     device = torch.device(f"cuda:{device_id}")
     ema = EMA(ema_beta, n_epochs * len(train_loader))
     online_model = online_model.to(device)

@@ -86,8 +86,10 @@ def main_single():
     mlp = MLP(model.classifier_infeatures, config['num_classes'], config['mlp_type'])
 
     pred_net = None 
-    if train_algo == "carl" or train_algo == "byol-sc":
+    if train_algo == "carl":
         pred_net = CARL_mlp(**config["carl_pred_params"])
+    if train_algo == "byol-sc":
+        pred_net = CARL_mlp(**config["byol_pred_params"])
 
     optimizer = model_optimizer(model, config['opt'], pred_net, **config['opt_params'])
     mlp_optimizer = model_optimizer(mlp, config['mlp_opt'], **config['mlp_opt_params'])
@@ -164,14 +166,14 @@ def main_single():
         param_config["online_pred_model"] = pred_net 
         param_config["ema_beta"] = ema_tau
 
-    elif train_algo == "lema" or train_algo == "dailema":
+    if train_algo == "lema" or train_algo == "dailema":
         energy_model = EnergyNet(model.classifier_infeatures, **config["energy_model_params"])
         energy_optimizer = model_optimizer(energy_model, config["energy_opt"], **config["energy_model_opt_params"])
         
         param_config["energy_model"] = energy_model
         param_config["energy_optimizer"] = energy_optimizer
 
-    elif train_algo in ["scalre", "bt-sc", "simsiam-sc", "byol-sc"]:
+    if train_algo in ["scalre", "bt-sc", "simsiam-sc", "byol-sc"]:
         energy_model = EnergyScoreNet(model.classifier_infeatures, **config["energy_model_params"])
         energy_optimizer = model_optimizer(energy_model, config["energy_opt"], **config["energy_model_opt_params"])
         
