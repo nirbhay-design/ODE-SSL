@@ -1,10 +1,10 @@
 {
     "SEED": 42,
-    "num_classes": 10,
-    "data_name": "cifar10",
+    "num_classes": 100,
+    "data_name": "cifar100",
     "data_params": {
         "algo": "scalre",
-        "data_dir": "datasets/cifar10",
+        "data_dir": "datasets/cifar100",
         "batch_size": 512,
         "num_workers": 3,
         "image_size": 32
@@ -13,7 +13,7 @@
     "eval_every": 10,
     "n_epochs": 800,
     "n_epochs_mlp": 100,
-    "gpu_id": 1,
+    "gpu_id": 0,
     "opt": "SGD",
     "opt_params": {
         "lr": 0.5,
@@ -31,22 +31,22 @@
         "momentum": 0.9,
         "nesterov": true
     },
-    "energy_model_params": {
-        "eta": 0.01,
-        "steps": 5,
-        "sigma": 0.2,
-        "delta": 0.1,
-        "net_type": "score"
-    },
-    "energy_opt": "AdamW",
-    "energy_model_opt_params": {
-        "lr": 0.001
-    },
     "model_params": {
         "model_name": "resnet50",
         "pretrained": false,
         "proj_dim": 128,
         "algo_type": "scalre"
+    },
+    "energy_model_params": {
+        "eta": 0.01,
+        "steps": 5,
+        "sigma": 0.2,
+        "delta": 0.1,
+        "net_type": "energy"
+    },
+    "energy_opt": "AdamW",
+    "energy_model_opt_params": {
+        "lr": 0.001
     },
     "mlp_type": "linear",
     "loss": "scalre",
@@ -56,10 +56,8 @@
     },
     "distributed": false,
     "train_algo": "scalre",
-    "model_save_path": "saved_models/scalre.c10.r50.sc.e800.lin0.1.pth",
+    "model_save_path": "saved_models/scalre.c100.r50.e800.lin0.1.pth",
     "warmup_epochs": 0,
-    "config": "configs/scalre.c10.yaml",
-    "knn_acc": 0.888,
-    "lreg_acc": 0.9156,
-    "knn_acc_20": 0.8952
+    "config": "configs/scalre.c100.yaml",
+    "knn_acc_20": 0.6144
 }

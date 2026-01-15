@@ -13,7 +13,7 @@
     "eval_every": 10,
     "n_epochs": 800,
     "n_epochs_mlp": 100,
-    "gpu_id": 1,
+    "gpu_id": 0,
     "opt": "SGD",
     "opt_params": {
         "lr": 0.5,
@@ -43,7 +43,7 @@
         "lr": 0.001
     },
     "model_params": {
-        "model_name": "resnet50",
+        "model_name": "resnet18",
         "pretrained": false,
         "proj_dim": 128,
         "algo_type": "scalre"
@@ -56,10 +56,8 @@
     },
     "distributed": false,
     "train_algo": "scalre",
-    "model_save_path": "saved_models/scalre.c10.r50.sc.e800.lin0.1.pth",
+    "model_save_path": "saved_models/scalre.c10.r18.sc.e800.lin0.1.pth",
     "warmup_epochs": 0,
     "config": "configs/scalre.c10.yaml",
-    "knn_acc": 0.888,
-    "lreg_acc": 0.9156,
-    "knn_acc_20": 0.8952
+    "knn_acc_20": 0.8737
 }
