@@ -335,7 +335,7 @@ class Network(nn.Module):
                 nn.Linear(pred_dim, prev_dim)
             )           
         
-        elif self.algo in ["bt-sc"]:
+        elif self.algo in ["bt-sc", "vicreg-sc"]:
             self.proj = nn.Sequential(
                 nn.Linear(self.classifier_infeatures, barlow_hidden, bias=False),
                 nn.BatchNorm1d(barlow_hidden, bias=False),
@@ -367,7 +367,7 @@ class Network(nn.Module):
                     "proj_features": proj["output"],
                     "logprob": proj["logprob"]}
         
-        elif self.algo_type in ["lema", "scalre", "bt-sc", "byol-sc"]:
+        elif self.algo_type in ["lema", "scalre", "bt-sc", "byol-sc", "vicreg-sc"]:
             proj = self.proj(features)
             return {"features": features,
                     "proj_features": proj}

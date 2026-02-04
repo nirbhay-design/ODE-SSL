@@ -7,7 +7,7 @@ from src.network import Network, MLP, CARL_mlp, EnergyNet, EnergyScoreNet
 from train_utils import yaml_loader, train_nodel, train_carl, model_optimizer, \
                         loss_function, train_florel, train_lema, train_dailema, \
                         train_scalre, load_dataset, get_tsne_knn_logreg, train_mlp, \
-                        train_bt_sc, train_simsiam_sc, train_byol_sc
+                        train_bt_sc, train_simsiam_sc, train_byol_sc, train_vicreg_sc
 
 import torch.multiprocessing as mp 
 from torch.nn.parallel import DistributedDataParallel as DDP 
@@ -75,6 +75,8 @@ def train_network(**kwargs):
         return train_simsiam_sc(**kwargs)
     elif train_algo == "byol-sc":
         return train_byol_sc(**kwargs)
+    elif train_algo == "vicreg-sc":
+        return train_vicreg_sc(**kwargs)
     return None
 
 def main_single():
@@ -176,7 +178,7 @@ def main_single():
         param_config["energy_model"] = energy_model
         param_config["energy_optimizer"] = energy_optimizer
 
-    if train_algo in ["scalre", "bt-sc", "simsiam-sc", "byol-sc"]:
+    if train_algo in ["scalre", "bt-sc", "simsiam-sc", "byol-sc", "vicreg-sc"]:
         energy_model = EnergyScoreNet(model.classifier_infeatures, **config["energy_model_params"])
         energy_optimizer = model_optimizer(energy_model, config["energy_opt"], **config["energy_model_opt_params"])
         
