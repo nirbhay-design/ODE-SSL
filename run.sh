@@ -237,10 +237,18 @@
 # nohup python train.py --config configs/byol.sc.c100.yaml --gpu 6 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --net_type score --lr 0.2 --save_path byol.sc.c100.r50.e800.pth > logs/byol.sc.c100.r50.e800.log &
 
 
-nohup python train.py --config configs/vicreg.sc.c10.yaml --gpu 4 --model resnet18 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --opt LARS --net_type score --save_path vicreg.c10.r18.sc.e800.pth > logs/vicreg.c10.r18.sc.e800.log &
+# nohup python train.py --config configs/vicreg.sc.c10.yaml --gpu 4 --model resnet18 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --opt LARS --net_type score --save_path vicreg.c10.r18.sc.e800.pth > logs/vicreg.c10.r18.sc.e800.log &
 
-nohup python train.py --config configs/vicreg.sc.c100.yaml --gpu 5 --model resnet18 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --opt LARS --net_type score --save_path vicreg.c100.r18.sc.e800.pth > logs/vicreg.c100.r18.sc.e800.log &
+# nohup python train.py --config configs/vicreg.sc.c100.yaml --gpu 5 --model resnet18 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --opt LARS --net_type score --save_path vicreg.c100.r18.sc.e800.pth > logs/vicreg.c100.r18.sc.e800.log &
 
-nohup python train.py --config configs/vicreg.sc.c10.yaml --gpu 6 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --opt LARS --net_type score --save_path vicreg.c10.r50.sc.e800.pth > logs/vicreg.c10.r50.sc.e800.log &
+# nohup python train.py --config configs/vicreg.sc.c10.yaml --gpu 6 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --opt LARS --net_type score --save_path vicreg.c10.r50.sc.e800.pth > logs/vicreg.c10.r50.sc.e800.log &
 
-nohup python train.py --config configs/vicreg.sc.c100.yaml --gpu 7 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --opt LARS --net_type score --save_path vicreg.c100.r50.sc.e800.pth > logs/vicreg.c100.r50.sc.e800.log &
+# nohup python train.py --config configs/vicreg.sc.c100.yaml --gpu 7 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --opt LARS --net_type score --save_path vicreg.c100.r50.sc.e800.pth > logs/vicreg.c100.r50.sc.e800.log &
+
+nohup python train.py --config configs/vicreg.sc.c10.yaml --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --opt LARS --net_type energy --save_path vicreg.c10.r18.en.e800.pth > logs/vicreg.c10.r18.en.e800.log &
+
+nohup python train.py --config configs/vicreg.sc.c100.yaml --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --opt LARS --net_type energy --save_path vicreg.c100.r18.en.e800.pth > logs/vicreg.c100.r18.en.e800.log &
+
+nohup python train.py --config configs/vicreg.sc.c10.yaml --gpu 0 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --opt LARS --net_type energy --save_path vicreg.c10.r50.en.e800.pth > logs/vicreg.c10.r50.en.e800.log &
+
+nohup python train.py --config configs/vicreg.sc.c100.yaml --gpu 1 --model resnet50 --epochs 800 --epochs_lin 100 --linear_lr 0.1 --mlp_type linear --opt LARS --net_type energy --save_path vicreg.c100.r50.en.e800.pth > logs/vicreg.c100.r50.en.e800.log &
