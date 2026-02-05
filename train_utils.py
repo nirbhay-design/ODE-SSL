@@ -844,7 +844,8 @@ def train_vicreg_sc(
             esample = energy_model.langevin_sampling(feat)
             esample_cap = energy_model.langevin_sampling(feat_cap)
 
-            loss_con = lossfunction(proj_feat, proj_feat_cap) + F.mse_loss(feat, esample.detach()) + F.mse_loss(feat_cap, esample_cap.detach()) 
+            loss_con = lossfunction(proj_feat, proj_feat_cap) + 0.1 * \
+                (F.mse_loss(feat, esample.detach()) + F.mse_loss(feat_cap, esample_cap.detach())) 
             
             optimizer.zero_grad()
             loss_con.backward()
