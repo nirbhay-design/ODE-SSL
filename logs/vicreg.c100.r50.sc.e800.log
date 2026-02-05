@@ -898,3 +898,72 @@ using optimizer: AdamW
 [GPU7] Test Accuracy at epoch: 50: 0.648
 [GPU7] epochs: [51/100] train_acc: 0.668 train_loss_sup: 1.238
 [GPU7] epochs: [52/100] train_acc: 0.669 train_loss_sup: 1.236
+[GPU7] epochs: [53/100] train_acc: 0.669 train_loss_sup: 1.240
+[GPU7] epochs: [54/100] train_acc: 0.673 train_loss_sup: 1.230
+[GPU7] epochs: [55/100] train_acc: 0.673 train_loss_sup: 1.226
+[GPU7] epochs: [56/100] train_acc: 0.669 train_loss_sup: 1.233
+[GPU7] epochs: [57/100] train_acc: 0.673 train_loss_sup: 1.218
+[GPU7] epochs: [58/100] train_acc: 0.673 train_loss_sup: 1.219
+[GPU7] epochs: [59/100] train_acc: 0.677 train_loss_sup: 1.206
+[GPU7] epochs: [60/100] train_acc: 0.680 train_loss_sup: 1.211
+[GPU7] Test Accuracy at epoch: 60: 0.651
+[GPU7] epochs: [61/100] train_acc: 0.676 train_loss_sup: 1.211
+[GPU7] epochs: [62/100] train_acc: 0.678 train_loss_sup: 1.200
+[GPU7] epochs: [63/100] train_acc: 0.680 train_loss_sup: 1.197
+[GPU7] epochs: [64/100] train_acc: 0.682 train_loss_sup: 1.188
+[GPU7] epochs: [65/100] train_acc: 0.682 train_loss_sup: 1.193
+[GPU7] epochs: [66/100] train_acc: 0.681 train_loss_sup: 1.198
+[GPU7] epochs: [67/100] train_acc: 0.681 train_loss_sup: 1.185
+[GPU7] epochs: [68/100] train_acc: 0.680 train_loss_sup: 1.192
+[GPU7] epochs: [69/100] train_acc: 0.682 train_loss_sup: 1.182
+[GPU7] epochs: [70/100] train_acc: 0.684 train_loss_sup: 1.179
+[GPU7] Test Accuracy at epoch: 70: 0.655
+[GPU7] epochs: [71/100] train_acc: 0.686 train_loss_sup: 1.175
+[GPU7] epochs: [72/100] train_acc: 0.684 train_loss_sup: 1.177
+[GPU7] epochs: [73/100] train_acc: 0.686 train_loss_sup: 1.176
+[GPU7] epochs: [74/100] train_acc: 0.687 train_loss_sup: 1.165
+[GPU7] epochs: [75/100] train_acc: 0.687 train_loss_sup: 1.162
+[GPU7] epochs: [76/100] train_acc: 0.686 train_loss_sup: 1.172
+[GPU7] epochs: [77/100] train_acc: 0.689 train_loss_sup: 1.158
+[GPU7] epochs: [78/100] train_acc: 0.689 train_loss_sup: 1.160
+[GPU7] epochs: [79/100] train_acc: 0.691 train_loss_sup: 1.156
+[GPU7] epochs: [80/100] train_acc: 0.690 train_loss_sup: 1.157
+[GPU7] Test Accuracy at epoch: 80: 0.655
+[GPU7] epochs: [81/100] train_acc: 0.689 train_loss_sup: 1.161
+[GPU7] epochs: [82/100] train_acc: 0.693 train_loss_sup: 1.149
+[GPU7] epochs: [83/100] train_acc: 0.693 train_loss_sup: 1.148
+[GPU7] epochs: [84/100] train_acc: 0.693 train_loss_sup: 1.145
+[GPU7] epochs: [85/100] train_acc: 0.695 train_loss_sup: 1.145
+[GPU7] epochs: [86/100] train_acc: 0.695 train_loss_sup: 1.138
+[GPU7] epochs: [87/100] train_acc: 0.695 train_loss_sup: 1.133
+[GPU7] epochs: [88/100] train_acc: 0.697 train_loss_sup: 1.131
+[GPU7] epochs: [89/100] train_acc: 0.694 train_loss_sup: 1.131
+[GPU7] epochs: [90/100] train_acc: 0.695 train_loss_sup: 1.137
+[GPU7] Test Accuracy at epoch: 90: 0.651
+[GPU7] epochs: [91/100] train_acc: 0.697 train_loss_sup: 1.129
+[GPU7] epochs: [92/100] train_acc: 0.696 train_loss_sup: 1.128
+[GPU7] epochs: [93/100] train_acc: 0.697 train_loss_sup: 1.124
+[GPU7] epochs: [94/100] train_acc: 0.697 train_loss_sup: 1.130
+[GPU7] epochs: [95/100] train_acc: 0.695 train_loss_sup: 1.130
+[GPU7] epochs: [96/100] train_acc: 0.699 train_loss_sup: 1.121
+[GPU7] epochs: [97/100] train_acc: 0.697 train_loss_sup: 1.123
+[GPU7] epochs: [98/100] train_acc: 0.703 train_loss_sup: 1.110
+[GPU7] epochs: [99/100] train_acc: 0.701 train_loss_sup: 1.115
+[GPU7] epochs: [100/100] train_acc: 0.701 train_loss_sup: 1.115
+[GPU7] Final Test Accuracy: 0.654
+Model weights saved
+<All keys matched successfully>
+OpenBLAS warning: precompiled NUM_THREADS exceeded, adding auxiliary array for thread metadata.
+To avoid this warning, please rebuild your copy of OpenBLAS with a larger NUM_THREADS setting
+or set the environment variable OPENBLAS_NUM_THREADS to 64 or lower
+knn evalution
+KNN with K=200
+logistic regression evalution
+knn_acc: 0.484, log_reg_acc: 0.586
+BLAS : Bad memory unallocation! :  640  0x7f25bf95f000
+BLAS : Bad memory unallocation! :  640  0x7f25bd95f000
+BLAS : Bad memory unallocation! :  640  0x7f25b995f000
+BLAS : Bad memory unallocation! :  640  0x7f259395f000
+BLAS : Bad memory unallocation! :  640  0x7f259795f000
+BLAS : Bad memory unallocation! :  640  0x7f254d95f000
+BLAS : Bad memory unallocation! :  640  0x7f24fb95f000

@@ -946,3 +946,30 @@ using optimizer: AdamW
 [GPU6] epochs: [94/100] train_acc: 0.864 train_loss_sup: 0.399
 [GPU6] epochs: [95/100] train_acc: 0.865 train_loss_sup: 0.392
 [GPU6] epochs: [96/100] train_acc: 0.863 train_loss_sup: 0.403
+[GPU6] epochs: [97/100] train_acc: 0.866 train_loss_sup: 0.393
+[GPU6] epochs: [98/100] train_acc: 0.866 train_loss_sup: 0.393
+[GPU6] epochs: [99/100] train_acc: 0.863 train_loss_sup: 0.402
+[GPU6] epochs: [100/100] train_acc: 0.865 train_loss_sup: 0.394
+[GPU6] Final Test Accuracy: 0.883
+Model weights saved
+<All keys matched successfully>
+OpenBLAS warning: precompiled NUM_THREADS exceeded, adding auxiliary array for thread metadata.
+To avoid this warning, please rebuild your copy of OpenBLAS with a larger NUM_THREADS setting
+or set the environment variable OPENBLAS_NUM_THREADS to 64 or lower
+knn evalution
+KNN with K=200
+logistic regression evalution
+knn_acc: 0.809, log_reg_acc: 0.867
+BLAS : Bad memory unallocation! :  640  0x7f1744cff000
+BLAS : Bad memory unallocation! :  640  0x7f173acff000
+BLAS : Bad memory unallocation! :  640  0x7f1732cff000
+BLAS : Bad memory unallocation! :  640  0x7f1734cff000
+BLAS : Bad memory unallocation! :  640  0x7f16aacff000
+BLAS : Bad memory unallocation! :  640  0x7f16b2cff000
+BLAS : Bad memory unallocation! :  640  0x7f16aecff000
+BLAS : Bad memory unallocation! :  640  0x7f16a8cff000
+BLAS : Bad memory unallocation! :  640  0x7f16b4cff000
+BLAS : Bad memory unallocation! :  640  0x7f16bacff000
+BLAS : Bad memory unallocation! :  640  0x7f16b8cff000
+BLAS : Bad memory unallocation! :  640  0x7f162acff000
+BLAS : Bad memory unallocation! :  640  0x7f1604cff000
