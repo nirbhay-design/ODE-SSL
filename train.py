@@ -83,6 +83,11 @@ def main_single():
     train_algo = config['train_algo']
 
     model = Network(**config['model_params'])
+
+    print(model)
+    for name, param in model.named_parameters():
+        print(f"{name}: {param.shape}")
+    exit(0)
     # defining traning params begins
 
     mlp = MLP(model.classifier_infeatures, config['num_classes'], config['mlp_type'])
