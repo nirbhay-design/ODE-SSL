@@ -69,3 +69,4 @@ class SimCLR(nn.Module):
         x_full = torch.cat([x,x_cap], dim = 0)
 
         return self.supcon(x_full, fake_labels)
+

@@ -25,3 +25,4 @@ class BarlowTwinLoss(nn.Module):
         diff.fill_diagonal_(0.0)
 
         return diag_elem.sum() + self.lambd * diff.sum()
+

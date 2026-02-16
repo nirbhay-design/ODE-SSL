@@ -132,18 +132,9 @@ class Network(nn.Module):
             else:
                 self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
                 # self.proj = nn.Linear(self.classifier_infeatures, proj_dim)
-        elif self.algo_type in ["florel"]:
-            self.proj = nn.Sequential(nn.Linear(self.classifier_infeatures, proj_dim),
-                                      FloReLBlock(
-                                          FloReLproj(proj_dim),
-                                          steps = ode_steps
-                                        )
-                                    )
+
         elif self.algo_type in ["lema"]:
             self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
-
-        elif self.algo_type in ["dailema"]:
-            self.proj = VAE_linear(self.classifier_infeatures, vae_out)
 
         elif self.algo_type in ["scalre"]: # Score Alignment for representation learning 
             self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
