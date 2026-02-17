@@ -32,6 +32,7 @@ model_params:
   pretrained: False 
   proj_dim: 4096
   barlow_hidden: 4096
+  algo_type: 'bt-sc'
 mlp_type: "hidden"
 loss: bt-sc
 loss_params: 

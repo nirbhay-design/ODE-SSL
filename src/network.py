@@ -4,6 +4,7 @@ import torchvision
 import torch.nn as nn 
 import torch.nn.functional as F
 from torchdiffeq import odeint
+from .ssl import proj_dict, pred_dict
 import warnings; warnings.filterwarnings("ignore")
 
 class MLP(nn.Module): # MLP for linear protocol
@@ -91,8 +92,9 @@ class EnergyScoreNet(nn.Module):
         return loss 
 
 # proj_dim = 128, ode_steps = 10, algo_type="nodel", carl_hidden = 4096, byol_hidden=4096, pred_dim = 512, barlow_hidden = 8192, vae_out = 256
-class Network(nn.Module):
-    def __init__(self, model_name = 'resnet18', pretrained = False, **kwargs):
+
+class BaseEncoder(nn.Module):
+    def __init__(self, model_name = "resnet18", pretrained = False):
         super().__init__()
         if model_name == 'resnet50':
             model = torchvision.models.resnet50(
@@ -104,6 +106,7 @@ class Network(nn.Module):
             print(f"{model_name} model type not supported")
             model = None
 
+        # for smaller image size
         module_keys = list(model._modules.keys())
         self.feat_extractor = nn.Sequential()
         for key in module_keys[:-1]:
@@ -119,22 +122,29 @@ class Network(nn.Module):
 
         self.classifier_infeatures = model._modules.get(module_keys[-1], nn.Identity()).in_features
 
-        self.algo_type = algo_type
+    def forward(self, x):
+        return self.feat_extractor(x).flatten(1)
+
+class Network(nn.Module):
+    def __init__(self, **kwargs):
+        super().__init__()
+        self.base_encoder = BaseEncoder(model_name = kwargs.get("model_name", "resnet18"), pretrained = kwargs.get("pretrained", False))
+        self.ci = self.base_encoder.classifier_infeatures
+        self.algo_type = kwargs.get("algo_type", "-1")
+        assert self.algo_type != "-1", "Please specify algo_type for the network"
 
         # so far general feature extractor ($h_{\theta}$)
-        if self.algo_type in ["nodel", "carl"]:
-            self.ode_steps = ode_steps
-            self.ode_block = ODEBlock(ODENetwork(self.classifier_infeatures), steps=self.ode_steps)
-
-            # This is projection head
-            if algo_type == 'carl':
-                self.proj = CARL_mlp(in_features = self.classifier_infeatures, hidden_dim = carl_hidden, out_features = proj_dim)
-            else:
-                self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
-                # self.proj = nn.Linear(self.classifier_infeatures, proj_dim)
+        proj_dim = kwargs.get("proj_dim", 128)
+        self.proj_args = {
+            "lema": (self.ci, 2*self.ci, proj_dim),
+            "scalre": (self.ci, 2*self.ci, proj_dim),
+            "byol": (self.ci, kwargs.get("byol_hidden", 4096), proj_dim),
+            "simsiam": (self.ci),
+            "bt": (self.ci, kwargs.get("barlow_hidden", 8192), proj_dim)
+        }
 
         elif self.algo_type in ["lema"]:
-            self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
+            self.proj = proj_dict[self.algo_type](self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
 
         elif self.algo_type in ["scalre"]: # Score Alignment for representation learning 
             self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
@@ -144,33 +154,10 @@ class Network(nn.Module):
 
         elif self.algo_type in ["simsiam-sc"]:
             prev_dim = self.classifier_infeatures
-            self.proj = nn.Sequential(
-                nn.Linear(prev_dim, prev_dim, bias=False),
-                nn.BatchNorm1d(prev_dim),
-                nn.ReLU(),
-                nn.Linear(prev_dim, prev_dim, bias=False),
-                nn.BatchNorm1d(prev_dim),
-                nn.ReLU(),
-                nn.Linear(prev_dim, prev_dim, bias=False),
-                nn.BatchNorm1d(prev_dim)
-            )
-            self.pred = nn.Sequential(
-                nn.Linear(prev_dim, pred_dim, bias=False),
-                nn.BatchNorm1d(pred_dim),
-                nn.ReLU(),
-                nn.Linear(pred_dim, prev_dim)
-            )           
+                       
         
         elif self.algo in ["bt-sc", "vicreg-sc"]:
-            self.proj = nn.Sequential(
-                nn.Linear(self.classifier_infeatures, barlow_hidden, bias=False),
-                nn.BatchNorm1d(barlow_hidden, bias=False),
-                nn.ReLU(),
-                nn.Linear(barlow_hidden, barlow_hidden, bias=False),
-                nn.BatchNorm1d(barlow_hidden),
-                nn.ReLU(),
-                nn.Linear(barlow_hidden, proj_dim)
-            )
+            
 
     def forward(self, x, t = None, test=None):
         features = self.feat_extractor(x).flatten(1)
