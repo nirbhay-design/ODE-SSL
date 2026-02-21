@@ -33,10 +33,7 @@ model_params:
   proj_dim: 256
   algo_type: 'byol-sc'
   byol_hidden: 4096
-byol_pred_params:
-  in_features: 256
-  hidden_dim: 4096
-  out_features: 256
+  pred_dim: 256
 ema_tau: 0.996
 mlp_type: "hidden"
 loss: byol-sc

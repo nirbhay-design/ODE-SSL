@@ -140,63 +140,35 @@ class Network(nn.Module):
             "scalre": (self.ci, 2*self.ci, proj_dim),
             "byol": (self.ci, kwargs.get("byol_hidden", 4096), proj_dim),
             "simsiam": (self.ci),
-            "bt": (self.ci, kwargs.get("barlow_hidden", 8192), proj_dim)
+            "bt": (self.ci, kwargs.get("barlow_hidden", 8192), proj_dim),
+            "vicreg": (self.ci, kwargs.get("barlow_hidden", 8192), proj_dim),
+            "simsiam-sc": (self.ci),
+            "bt-sc": (self.ci, kwargs.get("barlow_hidden", 8192), proj_dim),
+            "vicreg-sc": (self.ci, kwargs.get("barlow_hidden", 8192), proj_dim),
+            "byol-sc": (self.ci, kwargs.get("byol_hidden", 4096), proj_dim)
         }
 
-        elif self.algo_type in ["lema"]:
-            self.proj = proj_dict[self.algo_type](self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
+        self.pred_args = {"byol": (kwargs.get("pred_dim", 256), kwargs.get("byol_hidden", 4096), proj_dim),
+                          "simsiam": (self.ci, kwargs.get("pred_dim", 512)),
+                          "byol-sc": (kwargs.get("pred_dim", 256), kwargs.get("byol_hidden", 4096), proj_dim),
+                          "simsiam-sc": (self.ci, kwargs.get("pred_dim", 512))}
 
-        elif self.algo_type in ["scalre"]: # Score Alignment for representation learning 
-            self.proj = CARL_mlp(self.classifier_infeatures, 2*self.classifier_infeatures, proj_dim)
-
-        elif self.algo_type in ["byol-sc"]:
-            self.proj = CARL_mlp(in_features = self.classifier_infeatures, hidden_dim = byol_hidden, out_features = proj_dim)
-
-        elif self.algo_type in ["simsiam-sc"]:
-            prev_dim = self.classifier_infeatures
-                       
-        
-        elif self.algo in ["bt-sc", "vicreg-sc"]:
-            
+        self.proj = proj_dict[self.algo_type](*self.proj_args[self.algo_type])
+        self.pred = pred_dict.get(self.algo_type, None)
+        if self.pred is not None:
+            self.pred = self.pred(*self.pred_args[self.algo_type])
 
     def forward(self, x, t = None, test=None):
         features = self.feat_extractor(x).flatten(1)
         if test:
             return {"features": features}
         
-        if self.algo_type in ["nodel", "carl"]:
-            cont_dynamics = self.ode_block(features)
-            if t is None:
-                proj_features = self.proj(cont_dynamics[-1])
-            else:
-                proj_features = self.proj(cont_dynamics[t,torch.arange(x.shape[0],device=x.device)])
-            return {"features": features, 
-                    "cont_dyn": cont_dynamics, 
-                    "proj_features": proj_features} # 2048/512, embedding dynamics
-        
-        elif self.algo_type in ["florel"]:
-            proj = self.proj(features)
-            return {"features": features,
-                    "proj_features": proj["output"],
-                    "logprob": proj["logprob"]}
-        
-        elif self.algo_type in ["lema", "scalre", "bt-sc", "byol-sc", "vicreg-sc"]:
-            proj = self.proj(features)
-            return {"features": features,
-                    "proj_features": proj}
-        
-        elif self.algo_type in ["simsiam-sc"]:
-            proj = self.proj(features)
-            pred = self.pred(proj)
-            return {"features": features,
-                    "proj_features": proj,
-                    "pred_features": pred}
-        
-        elif self.algo_type in ["dailema"]:
-            proj = self.proj(features)
-            return {"features": features,
-                    "mu": proj["mu"],
-                    "log_var": proj["log_var"]}
+        proj = self.proj(features)
+        if self.pred is not None:
+            pred = self.pred(features)
+            return {"features": features, "proj_features": proj, "pred_features": pred}
+        else:
+            return {"features": features, "proj_features": proj}
 
 
 if __name__ == "__main__":
