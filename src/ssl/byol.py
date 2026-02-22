@@ -26,11 +26,21 @@ class BYOL_mlp(nn.Module): # pred and proj net for carl
     def forward(self, x):
         return self.mlp(x)
 
+class EMA():
+    def __init__(self, tau, K):
+        self.tau_base = tau
+        self.tau = tau 
+        self.K = K
+
+    def __call__(self, online, target, k):
+        for online_wt, target_wt in zip(online.parameters(), target.parameters()):
+            target_wt.data = self.tau * target_wt.data + (1 - self.tau) * online_wt.data
+        self.tau = 1 - (1 - self.tau_base) * (math.cos(math.pi * k / self.K) + 1) / 2
+
 def train_byol_sc(
-        online_model, target_model, online_pred_model, energy_model, mlp, train_loader, train_loader_mlp,
-        test_loader, lossfunction, lossfunction_mlp, energy_optimizer,
-        optimizer, mlp_optimizer, opt_lr_schedular, ema_beta, 
-        eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, return_logs=False): 
+        online_model, target_model, online_pred_model, energy_model, train_loader,
+        lossfunction, energy_optimizer,optimizer, opt_lr_schedular, ema_beta, 
+        n_epochs, device_id, eval_id, return_logs=False): 
     
 
     print(f"### byol-sc Training begins")
@@ -98,24 +108,13 @@ def train_byol_sc(
             
         print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f} energy_loss: {en_loss:.3f}")
 
-    print("### TSNE starts")
-    make_tsne_for_dataset(online_model, test_loader, device_id, 'byol-sc', return_logs = return_logs, tsne_name = tsne_name)
-
-    print("### MLP training begins")
-
-    train_mlp(
-        online_model, mlp, train_loader_mlp, test_loader, 
-        lossfunction_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
-        device_id, eval_id, return_logs = return_logs, algo='byol-sc')
-
     return online_model
 
 
 def train_byol(
-        online_model, target_model, online_pred_model, mlp, train_loader, train_loader_mlp,
-        test_loader, lossfunction, lossfunction_mlp, 
-        optimizer, mlp_optimizer, opt_lr_schedular, ema_beta, 
-        eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, return_logs=False): 
+        online_model, target_model, online_pred_model, train_loader,
+        lossfunction, optimizer, opt_lr_schedular, ema_beta, 
+        n_epochs, device_id, eval_id, return_logs=False): 
     
 
     print(f"### byol Training begins")
@@ -166,15 +165,5 @@ def train_byol(
         opt_lr_schedular.step()
             
         print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f}")
-
-    print("### TSNE starts")
-    make_tsne_for_dataset(online_model, test_loader, device_id, 'byol', return_logs = return_logs, tsne_name = tsne_name)
-
-    print("### MLP training begins")
-
-    train_mlp(
-        online_model, mlp, train_loader_mlp, test_loader, 
-        lossfunction_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
-        device_id, eval_id, return_logs = return_logs, algo='byol')
 
     return online_model

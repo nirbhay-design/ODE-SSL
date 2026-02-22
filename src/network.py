@@ -159,7 +159,7 @@ class Network(nn.Module):
             self.pred = self.pred(*self.pred_args[self.algo_type])
 
     def forward(self, x, t = None, test=None):
-        features = self.feat_extractor(x).flatten(1)
+        features = self.base_encoder(x)
         if test:
             return {"features": features}
         

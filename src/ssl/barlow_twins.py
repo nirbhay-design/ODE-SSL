@@ -8,11 +8,8 @@ class BarlowTwinLoss(nn.Module):
         super().__init__()
         self.lambd = lambd
 
-    def forward(self, za, zb):
+    def forward(self, za, zb): # za and zb are already batch normalized 
         N, D = za.shape
-
-        za = (za - za.mean(0, keepdim=True)) / za.std(0, keepdim=True)
-        zb = (zb - zb.mean(0, keepdim=True)) / zb.std(0, keepdim=True)
 
         C = torch.mm(za.T, zb) / N # DxD
 
@@ -36,23 +33,24 @@ class bt_proj(nn.Module):
                 nn.Linear(barlow_hidden, barlow_hidden, bias=False),
                 nn.BatchNorm1d(barlow_hidden),
                 nn.ReLU(),
-                nn.Linear(barlow_hidden, proj_dim)
+                nn.Linear(barlow_hidden, proj_dim),
+                nn.BatchNorm1d(proj_dim, affine=False)
             )
 
     def forward(self, x):  
         return self.proj(x)
 
 def train_bt_sc(
-        model, mlp, energy_model, train_loader, train_loader_mlp,
-        test_loader, lossfunction, lossfunction_mlp, 
-        optimizer, mlp_optimizer, energy_optimizer, opt_lr_schedular, 
-        eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, return_logs=False): 
+        model, energy_model, train_loader, lossfunction, 
+        optimizer, energy_optimizer, opt_lr_schedular, 
+        n_epochs, device_id, eval_id, return_logs=False): 
     
     print(f"### Barlow Twins with SC-net Training begins")
 
     device = torch.device(f"cuda:{device_id}")
     model = model.to(device)
     energy_model = energy_model.to(device)
+
     for epochs in range(n_epochs):
         model.train()
         energy_model.train()
@@ -94,23 +92,22 @@ def train_bt_sc(
               
         print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f} energy_loss: {en_loss:.3f}")
 
-    print("### TSNE starts")
-    make_tsne_for_dataset(model, test_loader, device_id, 'bt-sc', return_logs = return_logs, tsne_name = tsne_name)
+    # print("### TSNE starts")
+    # make_tsne_for_dataset(model, test_loader, device_id, 'bt-sc', return_logs = return_logs, tsne_name = tsne_name)
 
-    print("### MLP training begins")
+    # print("### MLP training begins")
 
-    train_mlp(
-        model, mlp, train_loader_mlp, test_loader, 
-        lossfunction_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
-        device_id, eval_id, return_logs = return_logs)
+    # train_mlp(
+    #     model, mlp, train_loader_mlp, test_loader, 
+    #     lossfunction_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
+    #     device_id, eval_id, return_logs = return_logs)
 
     return model
 
-def train_barlow_twins(
-        model, mlp, train_loader, train_loader_mlp,
-        test_loader, lossfunction, lossfunction_mlp, 
-        optimizer, mlp_optimizer, opt_lr_schedular, 
-        eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, return_logs=False): 
+def train_bt(
+        model, train_loader, lossfunction, 
+        optimizer, opt_lr_schedular, 
+        n_epochs, device_id, eval_id, return_logs=False): 
     
     print(f"### Barlow Twins Training begins")
 
@@ -144,15 +141,5 @@ def train_barlow_twins(
         opt_lr_schedular.step()
               
         print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f}")
-
-    print("### TSNE starts")
-    make_tsne_for_dataset(model, test_loader, device_id, 'barlow_twins', return_logs = return_logs, tsne_name = tsne_name)
-
-    print("### MLP training begins")
-
-    train_mlp(
-        model, mlp, train_loader_mlp, test_loader, 
-        lossfunction_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
-        device_id, eval_id, return_logs = return_logs)
 
     return model

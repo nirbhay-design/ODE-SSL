@@ -40,5 +40,15 @@ pred_dict = {
 }
 
 pretrain_algo = {
-
+    "simsiam": train_simsiam,
+    "simclr": train_simclr,
+    "byol": train_byol,
+    "vicreg": train_vicreg,
+    "bt": train_bt,
+    "simsiam-sc": train_simsiam_sc,
+    "scalre": train_scalre,
+    "byol-sc": train_byol_sc,
+    "vicreg-sc": train_vicreg_sc,
+    "bt-sc": train_bt_sc,
+    "lema": train_lema
 }

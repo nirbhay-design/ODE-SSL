@@ -34,10 +34,10 @@ class VICRegLoss(nn.Module):
         return self._lambda * sim_loss + self.mu * var_loss + self.nu * cov_loss  
 
 def train_vicreg_sc(
-        model, mlp, energy_model, train_loader, train_loader_mlp,
-        test_loader, lossfunction, lossfunction_mlp, energy_optimizer,
-        optimizer, mlp_optimizer, opt_lr_schedular, 
-        eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, return_logs=False): 
+        model, energy_model, train_loader,
+        lossfunction, energy_optimizer,
+        optimizer, opt_lr_schedular, 
+        n_epochs, device_id, eval_id, return_logs=False): 
     
     print(f"### VICReg-SC Training begins")
 
@@ -86,24 +86,13 @@ def train_vicreg_sc(
               
         print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f} energy_loss: {en_loss:.3f}")
 
-    print("### TSNE starts")
-    make_tsne_for_dataset(model, test_loader, device_id, 'vicreg-sc', return_logs = return_logs, tsne_name = tsne_name)
-
-    print("### MLP training begins")
-
-    train_mlp(
-        model, mlp, train_loader_mlp, test_loader, 
-        lossfunction_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
-        device_id, eval_id, return_logs = return_logs)
-
     return model
 
 
 def train_vicreg(
-        model, mlp, train_loader, train_loader_mlp,
-        test_loader, lossfunction, lossfunction_mlp, 
-        optimizer, mlp_optimizer, opt_lr_schedular, 
-        eval_every, n_epochs, n_epochs_mlp, device_id, eval_id, tsne_name, return_logs=False): 
+        model, train_loader,
+        lossfunction, optimizer, opt_lr_schedular, 
+        n_epochs, device_id, eval_id, return_logs=False): 
     
     print(f"### VICReg Training begins")
 
@@ -137,15 +126,5 @@ def train_vicreg(
         opt_lr_schedular.step()
               
         print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_loss_con: {cur_loss:.3f}")
-
-    print("### TSNE starts")
-    make_tsne_for_dataset(model, test_loader, device_id, 'vicreg', return_logs = return_logs, tsne_name = tsne_name)
-
-    print("### MLP training begins")
-
-    train_mlp(
-        model, mlp, train_loader_mlp, test_loader, 
-        lossfunction_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
-        device_id, eval_id, return_logs = return_logs)
 
     return model
