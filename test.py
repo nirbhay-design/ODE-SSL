@@ -1,29 +1,95 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import DataLoader, TensorDataset
-import itertools
-import copy
 
-class LinearProbe(nn.Module):
-    def __init__(self, feature_dim, num_classes, normalize_features=True):
-        super().__init__()
-        self.normalize_features = normalize_features
-        self.fc = nn.Linear(feature_dim, num_classes)
+def evaluate(model, mlp, loader, device, return_logs=False, algo=None):
+    model.eval()
+    mlp.eval()
+    correct = 0;samples =0
+    with torch.no_grad():
+        loader_len = len(loader)
+        for idx,(x,y) in enumerate(loader):
+            x = x.to(device)
+            y = y.to(device)
+
+            output = model(x, test=True)
+            feats = output["features"]
+            scores = mlp(feats)
+
+            predict_prob = F.softmax(scores,dim=1)
+            _,predictions = predict_prob.max(1)
+
+            correct += (predictions == y).sum()
+            samples += predictions.size(0)
         
-        # Standard initialization for linear probes
-        self.fc.weight.data.normal_(mean=0.0, std=0.01)
-        self.fc.bias.data.zero_()
+            if return_logs:
+                progress(idx+1,loader_len)
+                # print('batches done : ',idx,end='\r')
+        accuracy = round(float(correct / samples), 3)
+    return accuracy 
 
-    def forward(self, x):
-        if self.normalize_features:
-            # L2 normalization is highly recommended for learned features
-            x = torch.nn.functional.normalize(x, dim=1, p=2)
-        return self.fc(x)
+def train_mlp(
+    model, mlp, train_loader, test_loader, 
+    lossfunction, mlp_optimizer, n_epochs, eval_every,
+    device_id, eval_id, return_logs=False, mlp_schedular=None):
+
+    tval = {'trainacc':[],"trainloss":[], "testacc":[]}
+    device = torch.device(f"cuda:{device_id}")
+    model = model.to(device)
+    mlp = mlp.to(device)
+    for epochs in range(n_epochs):
+        model.eval()
+        mlp.train()
+        curacc = 0
+        cur_mlp_loss = 0
+        len_train = len(train_loader)
+        for idx , (data, target) in enumerate(train_loader):
+            data = data.to(device)
+            target = target.to(device)
+            
+            with torch.no_grad():
+                output = model(data, test=True)
+                feats = output["features"]
+            scores = mlp(feats.detach())      
+            
+            loss_sup = lossfunction(scores, target)
+
+            mlp_optimizer.zero_grad()
+            loss_sup.backward()
+            mlp_optimizer.step()
+
+            cur_mlp_loss += loss_sup.item() / (len_train)
+            scores = F.softmax(scores,dim = 1)
+            _,predicted = torch.max(scores,dim = 1)
+            correct = (predicted == target).sum()
+            samples = scores.shape[0]
+            curacc += correct / (samples * len_train)
+            
+            if return_logs:
+                progress(idx+1,len(train_loader), loss_sup=loss_sup.item(), GPU = device_id)
+        
+        if mlp_schedular is not None:
+            mlp_schedular.step()
+        
+        if epochs % eval_every == 0 and device_id == eval_id:
+            cur_test_acc = evaluate(model, mlp, test_loader, device, return_logs, algo=algo)
+            tval["testacc"].append(float(cur_test_acc))
+            print(f"[GPU{device_id}] Test Accuracy at epoch: {epochs}: {cur_test_acc}")
+      
+        tval['trainacc'].append(float(curacc))
+        tval['trainloss'].append(float(cur_mlp_loss))
+        
+        print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_acc: {curacc:.3f} train_loss_sup: {cur_mlp_loss:.3f}")
+    
+    if device_id == eval_id:
+        final_test_acc = evaluate(model, mlp, test_loader, device, return_logs, algo=algo)
+        print(f"[GPU{device_id}] Final Test Accuracy: {final_test_acc}")
+
+    return mlp, tval
 
 def train_linear_probe(
     train_loader, 
-    val_loader, 
+    test_loader, 
     feature_dim, 
     num_classes, 
     device='cuda', 
@@ -33,8 +99,8 @@ def train_linear_probe(
     Trains a linear probe and grid-searches LR and Weight Decay for optimal performance.
     """
     # Standard sweep grids for linear probing
-    learning_rates = [0.01, 0.1, 0.3, 1.0, 3.0]
-    weight_decays = [1e-6, 1e-5, 1e-4, 1e-3, 0.0]
+    learning_rates = [0.1, 1.0]
+    weight_decays = [1e-6, 1e-4, 0.0]
     
     best_acc = 0.0
     best_model_state = None
@@ -71,7 +137,7 @@ def train_linear_probe(
             scheduler.step()
 
         # Evaluate on validation set
-        val_acc = evaluate(model, val_loader, device)
+        val_acc = evaluate(model, test_loader, device)
         
         print(f"LR: {lr:5.3f} | WD: {wd:7.6f} | Val Acc: {val_acc:.2f}%")
         
@@ -104,25 +170,6 @@ def evaluate(model, dataloader, device):
             
     return 100 * correct / total
 
-# ==========================================
-# Example Usage
-# ==========================================
+
 if __name__ == "__main__":
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    
-    # Dummy data (replace with your actual extracted feature tensors)
-    N_TRAIN, N_VAL, DIM, CLASSES = 5000, 1000, 512, 10
-    
-    train_features = torch.randn(N_TRAIN, DIM)
-    train_labels = torch.randint(0, CLASSES, (N_TRAIN,))
-    val_features = torch.randn(N_VAL, DIM)
-    val_labels = torch.randint(0, CLASSES, (N_VAL,))
-
-    train_loader = DataLoader(TensorDataset(train_features, train_labels), batch_size=256, shuffle=True)
-    val_loader = DataLoader(TensorDataset(val_features, val_labels), batch_size=256, shuffle=False)
-
-    best_model, best_params = train_linear_probe(
-        train_loader, val_loader, 
-        feature_dim=DIM, num_classes=CLASSES, 
-        device=device, epochs=50
-    )
+    pass 

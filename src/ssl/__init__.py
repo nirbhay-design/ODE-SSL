@@ -23,12 +23,12 @@ proj_dict = {
     "simclr": BYOL_mlp,
     "byol": BYOL_mlp,
     "bt": bt_proj,
-    "vicreg": bt_proj,
+    "vicreg": vicreg_proj,
     "simsiam-sc": simsiam_proj,
     "scalre": BYOL_mlp,
     "byol-sc": BYOL_mlp,
     "bt-sc": bt_proj,
-    "vicreg-sc": bt_proj,
+    "vicreg-sc": vicreg_proj,
     "lema": BYOL_mlp
 }
 
@@ -50,5 +50,5 @@ pretrain_algo = {
     "byol-sc": train_byol_sc,
     "vicreg-sc": train_vicreg_sc,
     "bt-sc": train_bt_sc,
-    "lema": train_lema
+    # "lema": train_lema
 }

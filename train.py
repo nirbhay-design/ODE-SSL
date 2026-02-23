@@ -3,11 +3,10 @@ import torch
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
-from src.network import Network, MLP, CARL_mlp, EnergyNet, EnergyScoreNet
-from train_utils import yaml_loader, train_nodel, train_carl, model_optimizer, \
-                        loss_function, train_florel, train_lema, train_dailema, \
-                        train_scalre, load_dataset, get_tsne_knn_logreg, train_mlp, \
-                        train_bt_sc, train_simsiam_sc, train_byol_sc, train_vicreg_sc
+from src.network import Network, EnergyScoreNet
+from src.ssl import pred_dict, pretrain_algo 
+from train_utils import yaml_loader, model_optimizer, \
+                        loss_function, load_dataset, get_tsne_knn_logreg, train_mlp
 
 import torch.multiprocessing as mp 
 from torch.nn.parallel import DistributedDataParallel as DDP 
@@ -21,6 +20,7 @@ def get_args():
 
     # basic experiment settings
     parser.add_argument("--config", type=str, default = "configs/nodel.c10.yaml", required=True, help="config file")
+    parser.add_argument("--dataset", type=str, default = "cifar10", required=True, help="dataset name")
     parser.add_argument("--save_path", type=str, default="model.pth", required=True, help="path to save model")
     parser.add_argument("--gpu", type=int, default = 0, help="gpu_id")
     parser.add_argument("--model", type=str, default="resnet50", help="resnet18/resnet50")
@@ -29,6 +29,7 @@ def get_args():
     parser.add_argument("--epochs_lin", type=int, default = None, help="epochs for linear probing")
     parser.add_argument("--opt", type=str, default=None, help="SGD/ADAM/AdamW")
     parser.add_argument("--lr", type=float, default = None, help="lr for SSL")
+    parser.add_argument("--wd", type=float, default = None, help="weight decay for SSL")
     parser.add_argument("--linear_lr", type=float, default = None, help="lr for linear probing")
     ## NODEL / CARL
     parser.add_argument("--ode_steps", type=int, default = None, help="steps to return from ODE solver")
@@ -57,27 +58,8 @@ def ddp_setup(rank, world_size):
 def train_network(**kwargs):
     train_algo = kwargs['train_algo']
     kwargs.pop("train_algo")
-    if train_algo == "nodel":
-        return train_nodel(**kwargs)
-    elif train_algo == 'carl':
-        return train_carl(**kwargs)
-    elif train_algo == "florel":
-        return train_florel(**kwargs)
-    elif train_algo == "lema":
-        return train_lema(**kwargs)
-    elif train_algo == "dailema":
-        return train_dailema(**kwargs)
-    elif train_algo == "scalre":
-        return train_scalre(**kwargs)
-    elif train_algo == "bt-sc":
-        return train_bt_sc(**kwargs)
-    elif train_algo == "simsiam-sc":
-        return train_simsiam_sc(**kwargs)
-    elif train_algo == "byol-sc":
-        return train_byol_sc(**kwargs)
-    elif train_algo == "vicreg-sc":
-        return train_vicreg_sc(**kwargs)
-    return None
+    model = pretrain_algo[train_algo](**kwargs)
+    return model 
 
 def main_single():
     train_algo = config['train_algo']
@@ -85,12 +67,8 @@ def main_single():
     model = Network(**config['model_params'])
 
     print(model)
-    for name, param in model.named_parameters():
-        print(f"{name}: {param.shape}")
-    exit(0)
-    # defining traning params begins
 
-    mlp = MLP(model.classifier_infeatures, config['num_classes'], config['mlp_type'])
+    # mlp = MLP(model.classifier_infeatures, config['num_classes'], config['mlp_type'])
 
     pred_net = None 
     if train_algo == "carl":
@@ -233,6 +211,8 @@ if __name__ == "__main__":
             config["opt_params"].pop("nesterov", -1)
     if args.lr:
         config["opt_params"]["lr"] = args.lr 
+    if args.wd:
+        config["opt_params"]["weight_decay"] = args.wd
     if args.epochs:
         config["n_epochs"] = args.epochs
         config["schedular_params"]["T_max"] = args.epochs

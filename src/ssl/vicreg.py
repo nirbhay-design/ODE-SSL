@@ -33,6 +33,22 @@ class VICRegLoss(nn.Module):
 
         return self._lambda * sim_loss + self.mu * var_loss + self.nu * cov_loss  
 
+class vicreg_proj(nn.Module):
+    def __init__(self, in_features, barlow_hidden, proj_dim):
+        super().__init__()
+        self.proj = nn.Sequential(
+                nn.Linear(in_features, barlow_hidden, bias=False),
+                nn.BatchNorm1d(barlow_hidden),
+                nn.ReLU(),
+                nn.Linear(barlow_hidden, barlow_hidden, bias=False),
+                nn.BatchNorm1d(barlow_hidden),
+                nn.ReLU(),
+                nn.Linear(barlow_hidden, proj_dim)
+            )
+
+    def forward(self, x):  
+        return self.proj(x)
+
 def train_vicreg_sc(
         model, energy_model, train_loader,
         lossfunction, energy_optimizer,

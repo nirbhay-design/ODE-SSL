@@ -28,7 +28,7 @@ class bt_proj(nn.Module):
         super().__init__()
         self.proj = nn.Sequential(
                 nn.Linear(in_features, barlow_hidden, bias=False),
-                nn.BatchNorm1d(barlow_hidden, bias=False),
+                nn.BatchNorm1d(barlow_hidden),
                 nn.ReLU(),
                 nn.Linear(barlow_hidden, barlow_hidden, bias=False),
                 nn.BatchNorm1d(barlow_hidden),

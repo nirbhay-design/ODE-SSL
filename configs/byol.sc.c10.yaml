@@ -1,8 +1,9 @@
 SEED: 42
 num_classes: 10
 data_name: cifar10
+train_algo: &algo byol-sc
 data_params:
-  algo: byol-sc
+  algo: *algo
   data_dir: datasets/cifar10
   batch_size: 512
   num_workers: 3
@@ -31,14 +32,13 @@ model_params:
   model_name: 'resnet18' 
   pretrained: False 
   proj_dim: 256
-  algo_type: 'byol-sc'
+  algo_type: *algo
   byol_hidden: 4096
   pred_dim: 256
 ema_tau: 0.996
 mlp_type: "hidden"
-loss: byol-sc
+loss: *algo
 distributed: False
-train_algo: byol-sc
 model_save_path: saved_models
 energy_model_params:
   eta: !!float 1e-2

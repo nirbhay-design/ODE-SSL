@@ -12,9 +12,10 @@ class MLP(nn.Module): # MLP for linear protocol
         super().__init__()
         if mlp_type == "linear":
             print("===> using linear mlp")
-            self.mlp = nn.Sequential(
-                nn.Linear(in_features, num_classes)
-            )
+            self.mlp = nn.Linear(in_features, num_classes)
+            # standard initialization trick 
+            self.mlp.weight.data.normal_(mean=0.0, std=0.01)
+            self.mlp.bias.data.zero_()
         else:
             print("===> using hiddin mlp")
             self.mlp = nn.Sequential(

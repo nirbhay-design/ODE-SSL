@@ -1,8 +1,9 @@
 SEED: 42
 num_classes: 10
 data_name: cifar10
+train_algo: &algo simsiam-sc
 data_params:
-  algo: simsiam-sc
+  algo: *algo 
   data_dir: datasets/cifar10
   batch_size: 512
   num_workers: 3
@@ -31,12 +32,11 @@ model_params:
   model_name: 'resnet50' 
   pretrained: False 
   proj_dim: 128
-  algo_type: 'simsiam-sc'
+  algo_type: *algo 
   pred_dim: 512
 mlp_type: "hidden"
-loss: simsiam-sc
+loss: *algo
 distributed: False
-train_algo: simsiam-sc
 model_save_path: saved_models
 energy_model_params:
   eta: !!float 1e-2

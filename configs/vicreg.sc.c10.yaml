@@ -1,8 +1,9 @@
 SEED: 42
 num_classes: 10
 data_name: cifar10
+train_algo: &algo vicreg-sc
 data_params:
-  algo: vicreg-sc
+  algo: *algo
   data_dir: datasets/cifar10
   batch_size: 512
   num_workers: 3
@@ -32,14 +33,14 @@ model_params:
   pretrained: False 
   proj_dim: 4096
   barlow_hidden: 4096
+  algo_type: *algo
 mlp_type: "hidden"
-loss: vicreg-sc
+loss: *algo
 loss_params: 
   _lambda: 25.0
   mu: 25.0
   nu: 1.0
 distributed: False
-train_algo: vicreg-sc
 model_save_path: saved_models
 energy_model_params:
   eta: !!float 1e-2

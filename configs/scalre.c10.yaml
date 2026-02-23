@@ -1,8 +1,9 @@
 SEED: 42
 num_classes: 10
 data_name: cifar10
+train_algo: &algo scalre
 data_params:
-  algo: scalre
+  algo: *algo
   data_dir: datasets/cifar10
   batch_size: 512
   num_workers: 3
@@ -45,15 +46,14 @@ model_params:
   model_name: 'resnet18' 
   pretrained: False 
   proj_dim: 128
-  algo_type: scalre
+  algo_type: *algo 
 
 mlp_type: "hidden"
-loss: scalre
+loss: *algo
 loss_params: 
   sim: 'cosine'
   tau: 0.5
 distributed: False
-train_algo: scalre
 
 model_save_path: saved_models
 warmup_epochs: 0
