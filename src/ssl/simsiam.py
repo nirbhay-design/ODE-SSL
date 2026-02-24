@@ -45,7 +45,7 @@ class simsiam_pred(nn.Module):
 def train_simsiam_sc(
         model, energy_model, train_loader,
         lossfunction, optimizer, energy_optimizer, opt_lr_schedular, 
-        n_epochs, device_id, eval_id, return_logs=False): 
+        n_epochs, device_id, eval_id, return_logs=False, progress=None): 
     
 
     print(f"### simsiam with SC-net Training begins")
@@ -98,7 +98,7 @@ def train_simsiam_sc(
 def train_simsiam(
         model, train_loader, lossfunction,
         optimizer, opt_lr_schedular, n_epochs, 
-        device_id, eval_id, return_logs=False): 
+        device_id, eval_id, return_logs=False, progress=None): 
     
 
     print(f"### simsiam Training begins")

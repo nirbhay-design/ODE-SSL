@@ -1,0 +1,21 @@
+dataset: 
+  cifar10: 
+    num_classes: 10
+    params: 
+      data_dir: datasets/cifar10
+      batch_size: 512
+      num_workers: 3
+      image_size: 32
+      algo: test 
+  cifar100: 
+    num_classes: 100
+    params: 
+      data_dir: datasets/cifar100
+      batch_size: 512
+      num_workers: 3
+      image_size: 32
+      algo: test
+
+lr: [0.1, 1.0]
+wd: [1e-6, 1e-4, 0.0]
+

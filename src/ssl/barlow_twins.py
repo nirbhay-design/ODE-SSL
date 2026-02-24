@@ -43,7 +43,7 @@ class bt_proj(nn.Module):
 def train_bt_sc(
         model, energy_model, train_loader, lossfunction, 
         optimizer, energy_optimizer, opt_lr_schedular, 
-        n_epochs, device_id, eval_id, return_logs=False): 
+        n_epochs, device_id, eval_id, return_logs=False, progress=None): 
     
     print(f"### Barlow Twins with SC-net Training begins")
 
@@ -107,7 +107,7 @@ def train_bt_sc(
 def train_bt(
         model, train_loader, lossfunction, 
         optimizer, opt_lr_schedular, 
-        n_epochs, device_id, eval_id, return_logs=False): 
+        n_epochs, device_id, eval_id, return_logs=False, progress=None): 
     
     print(f"### Barlow Twins Training begins")
 

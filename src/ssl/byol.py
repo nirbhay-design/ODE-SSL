@@ -32,15 +32,19 @@ class EMA():
         self.tau = tau 
         self.K = K
 
-    def __call__(self, online, target, k):
+    def ema(self, online, target):
         for online_wt, target_wt in zip(online.parameters(), target.parameters()):
             target_wt.data = self.tau * target_wt.data + (1 - self.tau) * online_wt.data
+
+    def __call__(self, online, target, k):
+        self.ema(online.base_encoder, target.base_encoder)
+        self.ema(online.proj, target.proj)
         self.tau = 1 - (1 - self.tau_base) * (math.cos(math.pi * k / self.K) + 1) / 2
 
 def train_byol_sc(
-        online_model, target_model, online_pred_model, energy_model, train_loader,
+        online_model, target_model, energy_model, train_loader,
         lossfunction, energy_optimizer,optimizer, opt_lr_schedular, ema_beta, 
-        n_epochs, device_id, eval_id, return_logs=False): 
+        n_epochs, device_id, eval_id, return_logs=False, progress=None): 
     
 
     print(f"### byol-sc Training begins")
@@ -48,15 +52,14 @@ def train_byol_sc(
     ema = EMA(ema_beta, n_epochs * len(train_loader))
     online_model = online_model.to(device)
     target_model = target_model.to(device)
-    online_pred_model = online_pred_model.to(device)
     energy_model = energy_model.to(device)
 
     global_step = 1
 
     for epochs in range(n_epochs):
         online_model.train()
-        online_pred_model.train()
         energy_model.train()
+        target_model.train()
         en_loss = 0
         cur_loss = 0
         len_train = len(train_loader)
@@ -68,8 +71,7 @@ def train_byol_sc(
 
             # _, online_proj = online_model(data_all) # y, z
             output = online_model(data_all) # z
-            feat_proj, online_proj = output["features"], output['proj_features']
-            online_pred = online_pred_model(online_proj) # q
+            feat_proj, online_pred = output["features"], output['pred_features']
             with torch.no_grad():
                 tar_output = target_model(data_all) # y, z
                 target_proj = tar_output['proj_features']
@@ -112,9 +114,9 @@ def train_byol_sc(
 
 
 def train_byol(
-        online_model, target_model, online_pred_model, train_loader,
+        online_model, target_model, train_loader,
         lossfunction, optimizer, opt_lr_schedular, ema_beta, 
-        n_epochs, device_id, eval_id, return_logs=False): 
+        n_epochs, device_id, eval_id, return_logs=False, progress=None): 
     
 
     print(f"### byol Training begins")
@@ -122,13 +124,12 @@ def train_byol(
     ema = EMA(ema_beta, n_epochs * len(train_loader))
     online_model = online_model.to(device)
     target_model = target_model.to(device)
-    online_pred_model = online_pred_model.to(device)
 
     global_step = 1
 
     for epochs in range(n_epochs):
         online_model.train()
-        online_pred_model.train()
+        target_model.train()
         cur_loss = 0
         len_train = len(train_loader)
         for idx , (data, data_cap, target) in enumerate(train_loader):
@@ -139,8 +140,7 @@ def train_byol(
 
             # _, online_proj = online_model(data_all) # y, z
             output = online_model(data_all) # z
-            online_proj = output['proj_features']
-            online_pred = online_pred_model(online_proj) # q
+            online_pred = output['pred_features']
             with torch.no_grad():
                 tar_output = target_model(data_all) # y, z
                 target_proj = tar_output['proj_features']

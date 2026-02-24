@@ -47,8 +47,7 @@ def get_features_labels(model, loader, device, return_logs = False):
             x = x.to(device)
             y = y.to(device)
 
-            output = model(x, test=True)
-            feats = output["features"]
+            feats = model(x)
 
             all_features.append(feats)
             all_labels.append(y)

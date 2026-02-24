@@ -73,7 +73,7 @@ class SimCLR(nn.Module):
 def train_scalre( # Score Alignment for Representation Learning
         model, energy_model, train_loader,
         lossfunction, optimizer, energy_optimizer, opt_lr_schedular, 
-        n_epochs, device_id, eval_id, return_logs=False): 
+        n_epochs, device_id, eval_id, return_logs=False, progress=None): 
     
 
     print(f"### ScAlRe Training begins")
@@ -133,7 +133,7 @@ def train_scalre( # Score Alignment for Representation Learning
 def train_simclr(
         model, train_loader, lossfunction, 
         optimizer, opt_lr_schedular, 
-        n_epochs, device_id, eval_id, return_logs=False): 
+        n_epochs, device_id, eval_id, return_logs=False, progress=None): 
     
 
     print(f"### SimCLR Training begins")

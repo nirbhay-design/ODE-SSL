@@ -174,27 +174,16 @@ class Network(nn.Module):
 
 if __name__ == "__main__":
     device=torch.device('cuda:0')
-    # network = Network(model_name = 'resnet50', pretrained=False, algo_type='florel', ode_steps=2, carl_hidden = 4096, proj_dim = 256)
-    # # mlp = MLP(network.classifier_infeatures, num_classes=10, mlp_type='hidden')
-    # network = network.to(device)
-    # x = torch.rand(2,3,224,224,device=device)
-    # # t = torch.randint(0, 10, size=(x.shape[0],))
-    # # t = t.to(device)
-    # output = network(x)
-    # print(output["features"].shape)
-    # # print(output["cont_dyn"].shape)
-    # print(output["logprob"].shape)
-    # print(output["proj_features"].shape)
+    byol_params = {
+        "model_name": 'resnet18',
+        "pretrained": False,
+        "proj_dim": 256,
+        "algo_type": "byol",
+        "byol_hidden": 4096,
+        "pred_dim": 256
+    }
 
-    # contrastive loss on proj_feat, representations are feat, MLP on feat 
-    # energynet = EnergyNet(128)
-    # energynet = energynet.to(device)
-    
+    byol_net = Network(**byol_params).to(device)
 
-    energy_score_net = EnergyScoreNet(z_dim = 128, net_type = "score").to(device)
-
-    a = torch.rand(10,128, device=device)
-    out = energy_score_net.langevin_sampling(a)
-    print(out.shape)
-    print(out.isnan().sum())
-    print(out.min(), out.max())
+    print(byol_net.base_encoder)
+    print(byol_net.proj)

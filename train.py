@@ -3,11 +3,11 @@ import torch
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
-from src.network import Network, EnergyScoreNet
+from src.network import Network, EnergyScoreNet, BaseEncoder
 from src.ssl import pred_dict, pretrain_algo 
-from train_utils import yaml_loader, model_optimizer, \
-                        loss_function, load_dataset, get_tsne_knn_logreg, train_mlp
-
+from train_utils import yaml_loader, model_optimizer, progress, \
+                        loss_function, load_dataset, get_tsne_knn_logreg
+from test import train_linear_probe
 import torch.multiprocessing as mp 
 from torch.nn.parallel import DistributedDataParallel as DDP 
 from torch.distributed import init_process_group, destroy_process_group
@@ -30,7 +30,7 @@ def get_args():
     parser.add_argument("--opt", type=str, default=None, help="SGD/ADAM/AdamW")
     parser.add_argument("--lr", type=float, default = None, help="lr for SSL")
     parser.add_argument("--wd", type=float, default = None, help="weight decay for SSL")
-    parser.add_argument("--linear_lr", type=float, default = None, help="lr for linear probing")
+    # parser.add_argument("--linear_lr", type=float, default = None, help="lr for linear probing")
     ## NODEL / CARL
     parser.add_argument("--ode_steps", type=int, default = None, help="steps to return from ODE solver")
     # DARe
@@ -40,7 +40,7 @@ def get_args():
     parser.add_argument("--langevin_steps", type=int, default = None, help="steps for Langevin dynamics for ScAlRe")
     parser.add_argument("--warmup_epochs", type=int, default = None, help="warmup epochs before starting ScAlRe")
     # evaluation 
-    parser.add_argument("--mlp_type", type=str, default=None, help="hidden/linear")
+    # parser.add_argument("--mlp_type", type=str, default=None, help="hidden/linear")
     parser.add_argument("--test", action="store_true", help="test or not")
     parser.add_argument("--knn", action="store_true", help="evaluate knn or not")
     parser.add_argument("--lreg", action="store_true", help="evaluate logistic regression or not")
@@ -65,28 +65,19 @@ def main_single():
     train_algo = config['train_algo']
 
     model = Network(**config['model_params'])
-
     print(model)
+    print(f"NOC: {config['dataset'][args.dataset]['num_classes']}")
 
-    # mlp = MLP(model.classifier_infeatures, config['num_classes'], config['mlp_type'])
-
-    pred_net = None 
-    if train_algo == "carl":
-        pred_net = CARL_mlp(**config["carl_pred_params"])
-    if train_algo == "byol-sc":
-        pred_net = CARL_mlp(**config["byol_pred_params"])
-
-    optimizer = model_optimizer(model, config['opt'], pred_net, **config['opt_params'])
-    mlp_optimizer = model_optimizer(mlp, config['mlp_opt'], **config['mlp_opt_params'])
-
+    optimizer = model_optimizer(model, config['opt'], **config['opt_params'])
     opt_lr_schedular = optim.lr_scheduler.CosineAnnealingLR(optimizer, **config['schedular_params'])
 
-    loss, loss_mlp = loss_function(loss_type = config['loss'], **config.get('loss_params', {}))
+    loss = loss_function(loss_type = config['loss'], **config.get('loss_params', {}))
+    print(f"loss: {loss}")
             
     train_dl, train_dl_mlp, test_dl, train_ds, test_ds = load_dataset(
-        dataset_name = config['data_name'],
+        dataset_name = args.dataset,
         distributed = False,
-        **config['data_params'])
+        **config["dataset"][args.dataset]["params"])
     
     print(f"# of Training Images: {len(train_ds)}")
     print(f"# of Testing Images: {len(test_ds)}")
@@ -100,97 +91,54 @@ def main_single():
 
     tsne_name = "_".join(config["model_save_path"].split('/')[-1].split('.')[:-1]) + ".png"
     
-    ## test part starts:
-
-    if args.test:
-        print(model.load_state_dict(torch.load(config["model_save_path"], map_location="cpu")))
-        
-        test_config = {"model": model, "train_loader": train_dl_mlp, "test_loader": test_dl, 
-                       "device": device, "algo": train_algo, "return_logs": return_logs, 
-                       "tsne": args.tsne, "knn": args.knn, "log_reg": args.lreg, "tsne_name": tsne_name}
-        
-        output = get_tsne_knn_logreg(**test_config)
-
-        if args.linprobe:
-            _, tval = train_mlp(
-                model, mlp, train_dl_mlp, test_dl, 
-                loss_mlp, mlp_optimizer, n_epochs_mlp, eval_every,
-                device, device, return_logs = return_logs)
-            best_lin_acc = max(tval['testacc'])
-            output['best_linear_acc'] = best_lin_acc
-
-        save_config = {**config, **output}
-        output_json = ".".join(config['model_save_path'].split('/')[-1].split('.')[:-1]) + '.json'
-        os.makedirs("eval_json", exist_ok=True)
-
-        file_name = f"eval_json/{output_json}"
-        if os.path.exists(file_name):
-            with open(file_name, "r") as f:
-                existing_data = json.load(f)
-            save_config = {**existing_data, **save_config}
-
-        with open(file_name, "w") as f:
-            json.dump(save_config, f, indent=4)
-        for key, value in output.items():
-            print(f"{key}: {value:.3f}", end = ", ")
-        print()
-        print(f"knn_acc: {output.get('knn_acc', -1):.3f}, log_reg_acc: {output.get('lreg_acc', -1):.3f}")
-        return  
     ## defining parameter configs for each training algorithm
 
-    param_config = {"train_algo": train_algo, "model": model, "mlp": mlp, "train_loader": train_dl, "train_loader_mlp": train_dl_mlp,
-        "test_loader": test_dl, "lossfunction": loss, "lossfunction_mlp": loss_mlp, "optimizer": optimizer, 
-        "mlp_optimizer": mlp_optimizer, "opt_lr_schedular": opt_lr_schedular, "eval_every": eval_every, 
-        "n_epochs": n_epochs, "n_epochs_mlp": n_epochs_mlp, "device_id": device, "eval_id": device, "tsne_name": tsne_name, "return_logs": return_logs}
+    param_config = {"train_algo": train_algo, "model": model, "train_loader": train_dl,
+        "lossfunction": loss, "optimizer": optimizer, "opt_lr_schedular": opt_lr_schedular, "progress": progress,
+        "n_epochs": n_epochs, "device_id": device, "eval_id": device, "return_logs": return_logs}
     
-    if train_algo == 'carl' or train_algo == "byol-sc":
+    if train_algo in ["byol-sc", "byol"]:
         target_net = Network(**config['model_params'])
         target_net.load_state_dict(model.state_dict())
+        target_net.pred = None # no predictor for target network 
         ema_tau = config['ema_tau']
 
         param_config.pop("model")
         param_config["online_model"] = model 
         param_config["target_model"] = target_net 
-        param_config["online_pred_model"] = pred_net 
         param_config["ema_beta"] = ema_tau
 
-    if train_algo == "lema" or train_algo == "dailema":
-        energy_model = EnergyNet(model.classifier_infeatures, **config["energy_model_params"])
-        energy_optimizer = model_optimizer(energy_model, config["energy_opt"], **config["energy_model_opt_params"])
-        
-        param_config["energy_model"] = energy_model
-        param_config["energy_optimizer"] = energy_optimizer
-
     if train_algo in ["scalre", "bt-sc", "simsiam-sc", "byol-sc", "vicreg-sc"]:
-        energy_model = EnergyScoreNet(model.classifier_infeatures, **config["energy_model_params"])
+        energy_model = EnergyScoreNet(model.ci, **config["energy_model_params"])
         energy_optimizer = model_optimizer(energy_model, config["energy_opt"], **config["energy_model_opt_params"])
         
         param_config["energy_model"] = energy_model
         param_config["energy_optimizer"] = energy_optimizer
-        if train_algo == "scalre":
-            param_config["warmup_epochs"] = config["warmup_epochs"]
 
     final_model = train_network(**param_config)
 
-    torch.save(final_model.state_dict(), config["model_save_path"])
+    torch.save(final_model.base_encoder.state_dict(), config["model_save_path"])
     print("Model weights saved")
 
-    print(model.load_state_dict(torch.load(config["model_save_path"], map_location="cpu")))
-        
-    test_config = {"model": model, "train_loader": train_dl_mlp, "test_loader": test_dl, 
+    print(model.base_encoder.load_state_dict(torch.load(config["model_save_path"], map_location="cpu")))
+
+    train_linear_probe(
+            pretrain_model=model.base_encoder,
+            train_loader=train_dl_mlp,
+            test_loader=test_dl,
+            num_classes=config["dataset"][args.dataset]["num_classes"],
+            device=device,
+            epochs=n_epochs_mlp,
+            eval_every=eval_every,
+            return_logs=return_logs
+        )
+
+    test_config = {"model": model.base_encoder, "train_loader": train_dl_mlp, "test_loader": test_dl, 
                     "device": device, "algo": train_algo, "return_logs": return_logs, 
                     "tsne": False, "knn": True, "log_reg": True, "tsne_name": tsne_name}
     
     output = get_tsne_knn_logreg(**test_config)
-    # print(output)
     print(f"knn_acc: {output['knn_acc']:.3f}, log_reg_acc: {output['lreg_acc']:.3f}")
-
-    # exit(0)
-
-    # weights = torch.load(config["model_save_path"])
-    # print(model.load_state_dict(weights))
-    # print("weights load")
-
 
 if __name__ == "__main__":
     # editing config based on arguments 
@@ -226,12 +174,6 @@ if __name__ == "__main__":
         config["energy_model_params"]["net_type"] = args.net_type
     if args.langevin_steps:
         config["energy_model_params"]["steps"] = args.langevin_steps
-    if args.warmup_epochs:
-        config["warmup_epochs"] = args.warmup_epochs
-    if args.mlp_type:
-        config["mlp_type"] = args.mlp_type
-    if args.linear_lr:
-        config["mlp_opt_params"]["lr"] = args.linear_lr
     
     # setting seeds 
 

@@ -53,7 +53,7 @@ def train_vicreg_sc(
         model, energy_model, train_loader,
         lossfunction, energy_optimizer,
         optimizer, opt_lr_schedular, 
-        n_epochs, device_id, eval_id, return_logs=False): 
+        n_epochs, device_id, eval_id, return_logs=False, progress=None): 
     
     print(f"### VICReg-SC Training begins")
 
@@ -108,7 +108,7 @@ def train_vicreg_sc(
 def train_vicreg(
         model, train_loader,
         lossfunction, optimizer, opt_lr_schedular, 
-        n_epochs, device_id, eval_id, return_logs=False): 
+        n_epochs, device_id, eval_id, return_logs=False, progress=None): 
     
     print(f"### VICReg Training begins")
 

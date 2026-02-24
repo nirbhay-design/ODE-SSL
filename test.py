@@ -1,8 +1,28 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from src.network import MLP, BaseEncoder
+from train_utils import load_dataset, progress, yaml_loader
+import itertools
+import argparse 
+import torch.nn.functional as F
 
-def evaluate(model, mlp, loader, device, return_logs=False, algo=None):
+def get_args():
+    parser = argparse.ArgumentParser(description="Training script for linear probing")
+
+    # basic experiment settings
+    parser.add_argument("--dataset", type=str, default = "cifar10", required=True, help="dataset name")
+    parser.add_argument("--saved_path", type=str, default="model.pth", required=True, help="path for pretrained model")
+    parser.add_argument("--gpu", type=int, default = 0, help="gpu_id")
+    parser.add_argument("--model", type=str, default="resnet18", help="resnet18/resnet50")
+    parser.add_argument("--verbose", action="store_true", help="verbose or not")
+    parser.add_argument("--epochs", type=int, default = 100, help="epochs for linear probing")
+    parser.add_argument("--eval_every", type=int, default = 10, help="evaluation interval")
+
+    args = parser.parse_args()
+    return args
+
+def evaluate(model, mlp, loader, device, return_logs=False):
     model.eval()
     mlp.eval()
     correct = 0;samples =0
@@ -12,8 +32,7 @@ def evaluate(model, mlp, loader, device, return_logs=False, algo=None):
             x = x.to(device)
             y = y.to(device)
 
-            output = model(x, test=True)
-            feats = output["features"]
+            feats = model(x)
             scores = mlp(feats)
 
             predict_prob = F.softmax(scores,dim=1)
@@ -48,8 +67,7 @@ def train_mlp(
             target = target.to(device)
             
             with torch.no_grad():
-                output = model(data, test=True)
-                feats = output["features"]
+                feats = model(data)
             scores = mlp(feats.detach())      
             
             loss_sup = lossfunction(scores, target)
@@ -72,7 +90,7 @@ def train_mlp(
             mlp_schedular.step()
         
         if epochs % eval_every == 0 and device_id == eval_id:
-            cur_test_acc = evaluate(model, mlp, test_loader, device, return_logs, algo=algo)
+            cur_test_acc = evaluate(model, mlp, test_loader, device, return_logs)
             tval["testacc"].append(float(cur_test_acc))
             print(f"[GPU{device_id}] Test Accuracy at epoch: {epochs}: {cur_test_acc}")
       
@@ -82,94 +100,79 @@ def train_mlp(
         print(f"[GPU{device_id}] epochs: [{epochs+1}/{n_epochs}] train_acc: {curacc:.3f} train_loss_sup: {cur_mlp_loss:.3f}")
     
     if device_id == eval_id:
-        final_test_acc = evaluate(model, mlp, test_loader, device, return_logs, algo=algo)
+        final_test_acc = evaluate(model, mlp, test_loader, device, return_logs)
+        tval["testacc"].append(float(final_test_acc))
         print(f"[GPU{device_id}] Final Test Accuracy: {final_test_acc}")
 
     return mlp, tval
 
 def train_linear_probe(
+    pretrain_model,
     train_loader, 
     test_loader, 
-    feature_dim, 
     num_classes, 
-    device='cuda', 
-    epochs=100
+    device=0, 
+    epochs=100,
+    eval_every=10,
+    return_logs=False
 ):
-    """
-    Trains a linear probe and grid-searches LR and Weight Decay for optimal performance.
-    """
     # Standard sweep grids for linear probing
     learning_rates = [0.1, 1.0]
     weight_decays = [1e-6, 1e-4, 0.0]
+    loss = nn.CrossEntropyLoss()
     
     best_acc = 0.0
-    best_model_state = None
     best_hparams = {}
-
-    criterion = nn.CrossEntropyLoss()
 
     print(f"Starting Hyperparameter Sweep on {device}...")
     
     for lr, wd in itertools.product(learning_rates, weight_decays):
-        model = LinearProbe(feature_dim, num_classes).to(device)
-        
-        # Best Practice: Do not apply weight decay to the bias term
-        parameters = [
-            {'params': [model.fc.weight], 'weight_decay': wd},
-            {'params': [model.fc.bias], 'weight_decay': 0.0}
-        ]
-        
-        # SGD with momentum is standard and usually outperforms Adam for linear probes
-        optimizer = optim.SGD(parameters, lr=lr, momentum=0.9)
+        mlp = MLP(pretrain_model.classifier_infeatures, num_classes, mlp_type = "linear").to(device)
+        optimizer = optim.SGD(mlp.parameters(), lr=lr, momentum=0.9, weight_decay=wd)
         scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
 
-        for epoch in range(epochs):
-            model.train()
-            for features, targets in train_loader:
-                features, targets = features.to(device), targets.to(device)
-                
-                optimizer.zero_grad()
-                outputs = model(features)
-                loss = criterion(outputs, targets)
-                loss.backward()
-                optimizer.step()
-                
-            scheduler.step()
+        mlp, tval = train_mlp(
+            pretrain_model, mlp, train_loader, test_loader, 
+            lossfunction=loss, mlp_optimizer=optimizer, n_epochs=epochs, 
+            eval_every=eval_every, device_id=device, eval_id=device, return_logs=return_logs,
+            mlp_schedular=scheduler
+        )
 
-        # Evaluate on validation set
-        val_acc = evaluate(model, test_loader, device)
+        best_test_acc = max(tval['testacc'])
+
+        print(f"LR: {lr:5.3f} | WD: {wd:7.6f} | test Acc: {best_test_acc:.3f}%")
         
-        print(f"LR: {lr:5.3f} | WD: {wd:7.6f} | Val Acc: {val_acc:.2f}%")
-        
-        if val_acc > best_acc:
-            best_acc = val_acc
-            best_model_state = copy.deepcopy(model.state_dict())
+        if best_test_acc > best_acc:
+            best_acc = best_test_acc
             best_hparams = {'lr': lr, 'wd': wd}
 
     print("-" * 30)
-    print(f"Best Validation Accuracy: {best_acc:.2f}%")
+    print(f"Best Test Accuracy: {best_acc:.3f}%")
     print(f"Optimal Hyperparameters: LR={best_hparams['lr']}, WD={best_hparams['wd']}")
-    
-    # Load best weights into the final model
-    optimal_model = LinearProbe(feature_dim, num_classes).to(device)
-    optimal_model.load_state_dict(best_model_state)
-    
-    return optimal_model, best_hparams
-
-def evaluate(model, dataloader, device):
-    model.eval()
-    correct = 0
-    total = 0
-    with torch.no_grad():
-        for features, targets in dataloader:
-            features, targets = features.to(device), targets.to(device)
-            outputs = model(features)
-            _, predicted = torch.max(outputs.data, 1)
-            total += targets.size(0)
-            correct += (predicted == targets).sum().item()
-            
-    return 100 * correct / total
-
 
 if __name__ == "__main__":
-    pass 
+    args = get_args()
+    print(args)
+
+    config = yaml_loader("configs/test.yaml")
+
+    encoder = BaseEncoder(model_name=args.model, pretrained=False)
+    device = torch.device(f"cuda:{args.gpu}")
+    print(encoder.load_state_dict(torch.load(args.saved_path, map_location=device)))
+
+    _, train_dl_mlp, test_dl, _, _ = load_dataset(
+        dataset_name = args.dataset,
+        distributed = False,
+        **config["dataset"][args.dataset]["params"])
+
+
+    train_linear_probe(
+        pretrain_model=encoder,
+        train_loader=train_dl_mlp,
+        test_loader=test_dl,
+        num_classes=config["dataset"][args.dataset]["num_classes"],
+        device=args.gpu,
+        epochs=args.epochs,
+        eval_every=args.eval_every,
+        return_logs=args.verbose
+    )

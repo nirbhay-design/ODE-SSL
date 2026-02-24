@@ -78,13 +78,17 @@ def get_transforms(image_size, data_name = "cifar10", algo='supcon'):
         transforms.Normalize(mean = mean, std = std)
     ])
 
+    print(f"augmentation for {algo}: ")
+    print(train_transforms)
+    print(train_transforms_prime)
+
     return {"train_transforms": train_transforms, 
             "train_transforms_prime": train_transforms_prime, 
             "train_transforms_mlp": train_transforms_mlp, 
             "test_transforms": test_transforms}
 
 class DataCifar():
-    def __init__(self, algo = "simclr", data_name = "cifar10", data_dir = "datasets/cifar10", target_transforms = {}):
+    def __init__(self, algo = "simclr", data_name = "cifar10", data_dir = "datasets/cifar10", target_transform = {}):
         if data_name == "cifar10":
             self.data = torchvision.datasets.CIFAR10(data_dir, train = True, download = True)
         elif data_name == "cifar100":
