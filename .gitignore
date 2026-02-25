@@ -3,6 +3,5 @@
 *.ckpt 
 .ipynb_checkpoints/
 __pycache__/
-cifar10/
-cifar100/
+datasets/
 test_garbage
