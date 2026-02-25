@@ -153,12 +153,28 @@
 
 # nohup python train.py --config configs/bt.yaml --dataset cifar100 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100  --save_path bt.c100.r18.pth > logs/bt.c100.r18.log &
 
+# nohup python train.py --config configs/bt.sc.yaml --dataset cifar10 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --net_type energy --save_path bt.en.c10.r18.pth > logs/bt.en.c10.r18.log &
+
+# nohup python train.py --config configs/bt.sc.yaml --dataset cifar10 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --net_type score --save_path bt.sc.c10.r18.pth > logs/bt.sc.c10.r18.log &
+
+# nohup python train.py --config configs/bt.sc.yaml --dataset cifar100 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --net_type energy --save_path bt.en.c100.r18.pth > logs/bt.en.c100.r18.log &
+
+# nohup python train.py --config configs/bt.sc.yaml --dataset cifar100 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --net_type score --save_path bt.sc.c100.r18.pth > logs/bt.sc.c100.r18.log &
+
 
 # vicreg experiments 
 
 # nohup python train.py --config configs/vicreg.yaml --dataset cifar10 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --opt LARS --save_path vicreg.c10.r18.pth > logs/vicreg.c10.r18.log &
 
 # nohup python train.py --config configs/vicreg.yaml --dataset cifar100 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --opt LARS --save_path vicreg.c100.r18.pth > logs/vicreg.c100.r18.log &
+
+# nohup python train.py --config configs/vicreg.sc.yaml --dataset cifar10 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --opt LARS --net_type energy --save_path vicreg.en.c10.r18.pth > logs/vicreg.en.c10.r18.log &
+
+# nohup python train.py --config configs/vicreg.sc.yaml --dataset cifar10 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --opt LARS --net_type score --save_path vicreg.sc.c10.r18.pth > logs/vicreg.sc.c10.r18.log &
+
+# nohup python train.py --config configs/vicreg.sc.yaml --dataset cifar100 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --opt LARS --net_type energy --save_path vicreg.en.c100.r18.pth > logs/vicreg.en.c100.r18.log &
+
+# nohup python train.py --config configs/vicreg.sc.yaml --dataset cifar100 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --opt LARS --net_type score --save_path vicreg.sc.c100.r18.pth > logs/vicreg.sc.c100.r18.log &
 
 # simsiam experiments  
 
