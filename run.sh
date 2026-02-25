@@ -149,16 +149,31 @@
 
 # barlow twins experiments 
 
-nohup python train.py --config configs/bt.yaml --dataset cifar10 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --save_path bt.c10.r18.pth > logs/bt.c10.r18.log &
+# nohup python train.py --config configs/bt.yaml --dataset cifar10 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --save_path bt.c10.r18.pth > logs/bt.c10.r18.log &
 
-nohup python train.py --config configs/bt.yaml --dataset cifar100 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100  --save_path bt.c100.r18.pth > logs/bt.c100.r18.log &
+# nohup python train.py --config configs/bt.yaml --dataset cifar100 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100  --save_path bt.c100.r18.pth > logs/bt.c100.r18.log &
 
 
 # vicreg experiments 
 
-nohup python train.py --config configs/vicreg.yaml --dataset cifar10 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --opt LARS --save_path vicreg.c10.r18.pth > logs/vicreg.c10.r18.log &
+# nohup python train.py --config configs/vicreg.yaml --dataset cifar10 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --opt LARS --save_path vicreg.c10.r18.pth > logs/vicreg.c10.r18.log &
 
-nohup python train.py --config configs/vicreg.yaml --dataset cifar100 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --opt LARS --save_path vicreg.c100.r18.pth > logs/vicreg.c100.r18.log &
+# nohup python train.py --config configs/vicreg.yaml --dataset cifar100 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --opt LARS --save_path vicreg.c100.r18.pth > logs/vicreg.c100.r18.log &
 
+# simsiam experiments  
 
+# nohup python train.py --config configs/simsiam.yaml --dataset cifar10 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --save_path simsiam.c10.r18.pth > logs/simsiam.c10.r18.log &
 
+# nohup python train.py --config configs/simsiam.yaml --dataset cifar100 --gpu 0 --model resnet18 --lr 0.08 --epochs 800 --epochs_lin 100  --save_path simsiam.c100.r18.pth > logs/simsiam.c100.r18.log &
+
+# simclr experiments 
+
+# nohup python train.py --config configs/simclr.yaml --dataset cifar10 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --save_path simclr.c10.r18.pth > logs/simclr.c10.r18.log &
+
+# nohup python train.py --config configs/simclr.yaml --dataset cifar100 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --save_path simclr.c100.r18.pth > logs/simclr.c100.r18.log &
+
+# byol experiments 
+
+# nohup python train.py --config configs/byol.yaml --dataset cifar10 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --save_path byol.c10.r18.pth > logs/byol.c10.r18.log &
+
+# nohup python train.py --config configs/byol.yaml --dataset cifar100 --gpu 1 --model resnet18 --wd 1e-4 --epochs 800 --epochs_lin 100 --save_path byol.c100.r18.pth > logs/byol.c100.r18.log &

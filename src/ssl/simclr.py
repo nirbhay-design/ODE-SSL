@@ -143,7 +143,7 @@ def train_simclr(
         model.train()
         cur_loss = 0
         len_train = len(train_loader)
-        for idx , (data, data_cap) in enumerate(train_loader):
+        for idx , (data, data_cap, _) in enumerate(train_loader):
             data = data.to(device)
             data_cap = data_cap.to(device)
             

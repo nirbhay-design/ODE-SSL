@@ -6,7 +6,7 @@ dataset:
     params: 
       data_dir: datasets/cifar10
       batch_size: 512
-      num_workers: 3
+      num_workers: 1
       image_size: 32
       algo: *algo 
   cifar100: 
@@ -14,7 +14,7 @@ dataset:
     params: 
       data_dir: datasets/cifar100
       batch_size: 512
-      num_workers: 3
+      num_workers: 1
       image_size: 32
       algo: *algo
 return_logs: False

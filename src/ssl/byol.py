@@ -1,4 +1,5 @@
 import torch 
+import math
 import torchvision
 import torch.nn as nn 
 import torch.nn.functional as F 
@@ -17,7 +18,7 @@ class BYOL_mlp(nn.Module): # pred and proj net for carl
     def __init__(self, in_features, hidden_dim, out_features):
         super().__init__()
         self.mlp = nn.Sequential(
-            nn.Linear(in_features, hidden_dim),
+            nn.Linear(in_features, hidden_dim, bias=False),
             nn.BatchNorm1d(hidden_dim),
             nn.ReLU(),
             nn.Linear(hidden_dim, out_features)

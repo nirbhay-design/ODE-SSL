@@ -137,13 +137,13 @@ class Network(nn.Module):
         # so far general feature extractor ($h_{\theta}$)
         proj_dim = kwargs.get("proj_dim", 128)
         self.proj_args = {
-            "lema": (self.ci, 2*self.ci, proj_dim),
-            "scalre": (self.ci, 2*self.ci, proj_dim),
+            "simclr": (self.ci, self.ci, proj_dim),
+            "scalre": (self.ci, self.ci, proj_dim),
             "byol": (self.ci, kwargs.get("byol_hidden", 4096), proj_dim),
-            "simsiam": (self.ci),
+            "simsiam": (self.ci,),
             "bt": (self.ci, kwargs.get("barlow_hidden", 8192), proj_dim),
             "vicreg": (self.ci, kwargs.get("barlow_hidden", 8192), proj_dim),
-            "simsiam-sc": (self.ci),
+            "simsiam-sc": (self.ci,),
             "bt-sc": (self.ci, kwargs.get("barlow_hidden", 8192), proj_dim),
             "vicreg-sc": (self.ci, kwargs.get("barlow_hidden", 8192), proj_dim),
             "byol-sc": (self.ci, kwargs.get("byol_hidden", 4096), proj_dim)
@@ -166,7 +166,7 @@ class Network(nn.Module):
         
         proj = self.proj(features)
         if self.pred is not None:
-            pred = self.pred(features)
+            pred = self.pred(proj)
             return {"features": features, "proj_features": proj, "pred_features": pred}
         else:
             return {"features": features, "proj_features": proj}
