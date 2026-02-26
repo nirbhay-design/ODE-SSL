@@ -38,14 +38,14 @@ mlp_opt_params:
   lr: !!float 0.01
   momentum: 0.9
 energy_model_params:
-  eta: !!float 1e-3
-  steps: 8
-  sigma: !!float 1e-1
-  delta: !!float 5.0
+  eta: !!float 1e-2
+  steps: 5
+  sigma: !!float 2e-1
+  delta: !!float 1e-1
   net_type: energy
 energy_opt: AdamW
 energy_model_opt_params:
-  lr: !!float 3e-4
+  lr: !!float 1e-3
 warmup_epochs: 0
 model_params:
   model_name: 'resnet18' 
