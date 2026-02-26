@@ -218,24 +218,24 @@
 
 # barlow twins experiments 
 
-nohup python train.py --config configs/bt.yaml --dataset cifar10 --gpu 0 --model resnet50 --epochs 800 --epochs_lin 100 --save_path bt.c10.r50.pth > logs/bt.c10.r50.log &
+# nohup python train.py --config configs/bt.yaml --dataset cifar10 --gpu 0 --model resnet50 --epochs 800 --epochs_lin 100 --save_path bt.c10.r50.pth > logs/bt.c10.r50.log &
 
-nohup python train.py --config configs/bt.yaml --dataset cifar100 --gpu 1 --model resnet50 --epochs 800 --epochs_lin 100  --save_path bt.c100.r50.pth > logs/bt.c100.r50.log &
+# nohup python train.py --config configs/bt.yaml --dataset cifar100 --gpu 1 --model resnet50 --epochs 800 --epochs_lin 100  --save_path bt.c100.r50.pth > logs/bt.c100.r50.log &
 
-# nohup python train.py --config configs/bt.sc.yaml --dataset cifar10 --gpu 0 --model resnet50 --epochs 800 --epochs_lin 100 --net_type energy --save_path bt.en.c10.r50.pth > logs/bt.en.c10.r50.log &
+nohup python train.py --config configs/bt.sc.yaml --dataset cifar10 --gpu 1 --model resnet50 --epochs 800 --epochs_lin 100 --net_type energy --save_path bt.en.c10.r50.pth > logs/bt.en.c10.r50.log &
 
-# nohup python train.py --config configs/bt.sc.yaml --dataset cifar10 --gpu 0 --model resnet50 --epochs 800 --epochs_lin 100 --net_type score --save_path bt.sc.c10.r50.pth > logs/bt.sc.c10.r50.log &
+nohup python train.py --config configs/bt.sc.yaml --dataset cifar10 --gpu 2 --model resnet50 --epochs 800 --epochs_lin 100 --net_type score --save_path bt.sc.c10.r50.pth > logs/bt.sc.c10.r50.log &
 
-# nohup python train.py --config configs/bt.sc.yaml --dataset cifar100 --gpu 0 --model resnet50 --epochs 800 --epochs_lin 100 --net_type energy --save_path bt.en.c100.r50.pth > logs/bt.en.c100.r50.log &
+nohup python train.py --config configs/bt.sc.yaml --dataset cifar100 --gpu 6 --model resnet50 --epochs 800 --epochs_lin 100 --net_type energy --save_path bt.en.c100.r50.pth > logs/bt.en.c100.r50.log &
 
 # nohup python train.py --config configs/bt.sc.yaml --dataset cifar100 --gpu 0 --model resnet50 --epochs 800 --epochs_lin 100 --net_type score --save_path bt.sc.c100.r50.pth > logs/bt.sc.c100.r50.log &
 
 
 # vicreg experiments 
 
-nohup python train.py --config configs/vicreg.yaml --dataset cifar10 --gpu 2 --model resnet50 --epochs 800 --epochs_lin 100 --opt LARS --save_path vicreg.c10.r50.pth > logs/vicreg.c10.r50.log &
+# nohup python train.py --config configs/vicreg.yaml --dataset cifar10 --gpu 2 --model resnet50 --epochs 800 --epochs_lin 100 --opt LARS --save_path vicreg.c10.r50.pth > logs/vicreg.c10.r50.log &
 
-nohup python train.py --config configs/vicreg.yaml --dataset cifar100 --gpu 3 --model resnet50 --epochs 800 --epochs_lin 100 --opt LARS --save_path vicreg.c100.r50.pth > logs/vicreg.c100.r50.log &
+# nohup python train.py --config configs/vicreg.yaml --dataset cifar100 --gpu 3 --model resnet50 --epochs 800 --epochs_lin 100 --opt LARS --save_path vicreg.c100.r50.pth > logs/vicreg.c100.r50.log &
 
 # nohup python train.py --config configs/vicreg.sc.yaml --dataset cifar10 --gpu 1 --model resnet50 --epochs 800 --epochs_lin 100 --opt LARS --net_type energy --save_path vicreg.en.c10.r50.pth > logs/vicreg.en.c10.r50.log &
 
@@ -247,9 +247,9 @@ nohup python train.py --config configs/vicreg.yaml --dataset cifar100 --gpu 3 --
 
 # simsiam experiments  
 
-nohup python train.py --config configs/simsiam.yaml --dataset cifar10 --gpu 4 --model resnet50 --epochs 800 --epochs_lin 100 --save_path simsiam.c10.r50.pth > logs/simsiam.c10.r50.log &
+# nohup python train.py --config configs/simsiam.yaml --dataset cifar10 --gpu 4 --model resnet50 --epochs 800 --epochs_lin 100 --save_path simsiam.c10.r50.pth > logs/simsiam.c10.r50.log &
 
-nohup python train.py --config configs/simsiam.yaml --dataset cifar100 --gpu 5 --model resnet50 --lr 0.08 --epochs 800 --epochs_lin 100  --save_path simsiam.c100.r50.pth > logs/simsiam.c100.r50.log &
+# nohup python train.py --config configs/simsiam.yaml --dataset cifar100 --gpu 5 --model resnet50 --lr 0.08 --epochs 800 --epochs_lin 100  --save_path simsiam.c100.r50.pth > logs/simsiam.c100.r50.log &
 
 # nohup python train.py --config configs/simsiam.sc.yaml --dataset cifar10 --gpu 1 --model resnet50 --epochs 800 --epochs_lin 100 --net_type energy --save_path simsiam.en.c10.r50.pth > logs/simsiam.en.c10.r50.log &
 
@@ -262,9 +262,9 @@ nohup python train.py --config configs/simsiam.yaml --dataset cifar100 --gpu 5 -
 
 # simclr experiments 
 
-nohup python train.py --config configs/simclr.yaml --dataset cifar10 --gpu 6 --model resnet50 --epochs 800 --epochs_lin 100 --save_path simclr.c10.r50.pth > logs/simclr.c10.r50.log &
+# nohup python train.py --config configs/simclr.yaml --dataset cifar10 --gpu 6 --model resnet50 --epochs 800 --epochs_lin 100 --save_path simclr.c10.r50.pth > logs/simclr.c10.r50.log &
 
-nohup python train.py --config configs/simclr.yaml --dataset cifar100 --gpu 7 --model resnet50 --epochs 800 --epochs_lin 100 --save_path simclr.c100.r50.pth > logs/simclr.c100.r50.log &
+# nohup python train.py --config configs/simclr.yaml --dataset cifar100 --gpu 7 --model resnet50 --epochs 800 --epochs_lin 100 --save_path simclr.c100.r50.pth > logs/simclr.c100.r50.log &
 
 # nohup python train.py --config configs/scalre.yaml --dataset cifar10 --gpu 0 --model resnet50 --epochs 800 --epochs_lin 100 --net_type energy --save_path scalre.en.c10.r50.pth > logs/scalre.en.c10.r50.log &
 
