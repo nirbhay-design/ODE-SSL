@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
-# import umap 
+import umap 
 
 def yaml_loader(yaml_file):
     with open(yaml_file,'r') as f:
@@ -67,7 +67,7 @@ def make_tsne_for_dataset(model, loader, device, return_logs = False, tsne_name 
     labels = output["labels"]
     make_tsne_plot(features, labels, name = tsne_name)
 
-def get_tsne_knn_logreg(model, train_loader, test_loader, device, algo, return_logs = False, tsne = True, knn = True, log_reg = True, tsne_name = None):
+def get_tsne_knn_logreg(model, train_loader, test_loader, device, return_logs = False, umap = True, tsne = True, knn = True, log_reg = True, tsne_name = None):
     train_output = get_features_labels(model, train_loader, device, return_logs)
     test_output = get_features_labels(model, test_loader, device, return_logs)
     
@@ -77,8 +77,12 @@ def get_tsne_knn_logreg(model, train_loader, test_loader, device, algo, return_l
     outputs = {}
 
     if tsne:
-        print("TSNE on Test set")
-        make_tsne_plot(x_test, y_test, name = f"tstd_{tsne_name}")
+        print("TSNE on Train set")
+        make_tsne_plot(x_train, y_train, name = f"tsne.{tsne_name}")
+
+    if umap:
+        print("UMAP on Train set")
+        make_umap_plot(x_train, y_train, name = f"umap.{tsne_name}")
 
     if knn:
         print("knn evalution")
@@ -138,7 +142,20 @@ def make_tsne_plot(X, y, name):
     X_embedded = tsne.fit_transform(X)
 
     plt.figure(figsize=(8, 6))
-    plt.scatter(X_embedded[:, 0], X_embedded[:, 1], c=y, s = 8, alpha = 0.8, cmap='turbo')  # Color by labels
+    plt.scatter(X_embedded[:, 0], X_embedded[:, 1], c=y, s = 4, alpha = 0.8, cmap='turbo')  # Color by labels
+    plt.title("t-SNE")
+    plt.xlabel("t-SNE Component 1")
+    plt.ylabel("t-SNE Component 2")
+    plt.colorbar(label="Labels")
+    plt.savefig(f"plots/{name}")
+    plt.close()
+
+def make_umap_plot(X, y, name):
+    tsne = umap.UMAP()
+    X_embedded = tsne.fit_transform(X)
+
+    plt.figure(figsize=(8, 6))
+    plt.scatter(X_embedded[:, 0], X_embedded[:, 1], c=y, s = 4, alpha = 0.8, cmap='turbo')  # Color by labels
     plt.title("t-SNE")
     plt.xlabel("t-SNE Component 1")
     plt.ylabel("t-SNE Component 2")

@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from src.network import MLP, BaseEncoder
-from train_utils import load_dataset, progress, yaml_loader
+from train_utils import load_dataset, progress, yaml_loader, get_tsne_knn_logreg
 import itertools
 import argparse 
 import torch.nn.functional as F
@@ -18,6 +18,11 @@ def get_args():
     parser.add_argument("--verbose", action="store_true", help="verbose or not")
     parser.add_argument("--epochs", type=int, default = 100, help="epochs for linear probing")
     parser.add_argument("--eval_every", type=int, default = 10, help="evaluation interval")
+    parser.add_argument("--knn", action="store_true", help="evaluate knn or not")
+    parser.add_argument("--lreg", action="store_true", help="evaluate logistic regression or not")
+    parser.add_argument("--linprobe", action="store_true", help="evaluate linear probing or not ")
+    parser.add_argument("--tsne", action="store_true", help="get test tsne or not")
+    parser.add_argument("--umap", action="store_true", help="get test umap or not")
 
     args = parser.parse_args()
     return args
@@ -165,14 +170,23 @@ if __name__ == "__main__":
         distributed = False,
         **config["dataset"][args.dataset]["params"])
 
-
-    train_linear_probe(
-        pretrain_model=encoder,
-        train_loader=train_dl_mlp,
-        test_loader=test_dl,
-        num_classes=config["dataset"][args.dataset]["num_classes"],
-        device=args.gpu,
-        epochs=args.epochs,
-        eval_every=args.eval_every,
-        return_logs=args.verbose
-    )
+    if args.linprobe:
+        train_linear_probe(
+            pretrain_model=encoder,
+            train_loader=train_dl_mlp,
+            test_loader=test_dl,
+            num_classes=config["dataset"][args.dataset]["num_classes"],
+            device=args.gpu,
+            epochs=args.epochs,
+            eval_every=args.eval_every,
+            return_logs=args.verbose
+        )
+    
+    tsne_name = ".".join(args.saved_path.split("/")[-1].split('.')[:-1]) + '.png'
+    test_config = {"model": encoder, "train_loader": train_dl_mlp, "test_loader": test_dl, 
+                    "device": device, "return_logs": args.verbose, "umap": args.umap,
+                    "tsne": args.tsne, "knn": args.knn, "log_reg": args.lreg, "tsne_name": tsne_name}
+    
+    if any([args.tsne, args.knn, args.lreg, args.umap]):
+        output = get_tsne_knn_logreg(**test_config)
+        print(f"knn_acc: {output.get('knn_acc', -1):.3f}, log_reg_acc: {output.get('lreg_acc', -1):.3f}")
