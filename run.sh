@@ -182,11 +182,29 @@
 
 # nohup python train.py --config configs/simsiam.yaml --dataset cifar100 --gpu 0 --model resnet18 --lr 0.08 --epochs 800 --epochs_lin 100  --save_path simsiam.c100.r18.pth > logs/simsiam.c100.r18.log &
 
+nohup python train.py --config configs/simsiam.sc.yaml --dataset cifar10 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --net_type energy --save_path simsiam.en.c10.r18.pth > logs/simsiam.en.c10.r18.log &
+
+nohup python train.py --config configs/simsiam.sc.yaml --dataset cifar10 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --net_type score --save_path simsiam.sc.c10.r18.pth > logs/simsiam.sc.c10.r18.log &
+
+nohup python train.py --config configs/simsiam.sc.yaml --dataset cifar100 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --lr 0.08 --net_type energy --save_path simsiam.en.c100.r18.pth > logs/simsiam.en.c100.r18.log &
+
+nohup python train.py --config configs/simsiam.sc.yaml --dataset cifar100 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --lr 0.08 --net_type score --save_path simsiam.sc.c100.r18.pth > logs/simsiam.sc.c100.r18.log &
+
+
 # simclr experiments 
 
 # nohup python train.py --config configs/simclr.yaml --dataset cifar10 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --save_path simclr.c10.r18.pth > logs/simclr.c10.r18.log &
 
 # nohup python train.py --config configs/simclr.yaml --dataset cifar100 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --save_path simclr.c100.r18.pth > logs/simclr.c100.r18.log &
+
+nohup python train.py --config configs/scalre.yaml --dataset cifar10 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --net_type energy --save_path scalre.en.c10.r18.pth > logs/scalre.en.c10.r18.log &
+
+nohup python train.py --config configs/scalre.yaml --dataset cifar10 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --net_type score --save_path scalre.sc.c10.r18.pth > logs/scalre.sc.c10.r18.log &
+
+nohup python train.py --config configs/scalre.yaml --dataset cifar100 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --net_type energy --save_path scalre.en.c100.r18.pth > logs/scalre.en.c100.r18.log &
+
+nohup python train.py --config configs/scalre.yaml --dataset cifar100 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --net_type score --save_path scalre.sc.c100.r18.pth > logs/scalre.sc.c100.r18.log &
+
 
 # byol experiments 
 
