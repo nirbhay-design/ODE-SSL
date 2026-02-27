@@ -222,11 +222,11 @@
 
 # nohup python train.py --config configs/bt.yaml --dataset cifar100 --gpu 1 --model resnet50 --epochs 800 --epochs_lin 100  --save_path bt.c100.r50.pth > logs/bt.c100.r50.log &
 
-nohup python train.py --config configs/bt.sc.yaml --dataset cifar10 --gpu 1 --model resnet50 --epochs 800 --epochs_lin 100 --net_type energy --save_path bt.en.c10.r50.pth > logs/bt.en.c10.r50.log &
+# nohup python train.py --config configs/bt.sc.yaml --dataset cifar10 --gpu 1 --model resnet50 --epochs 800 --epochs_lin 100 --net_type energy --save_path bt.en.c10.r50.pth > logs/bt.en.c10.r50.log &
 
-nohup python train.py --config configs/bt.sc.yaml --dataset cifar10 --gpu 2 --model resnet50 --epochs 800 --epochs_lin 100 --net_type score --save_path bt.sc.c10.r50.pth > logs/bt.sc.c10.r50.log &
+# nohup python train.py --config configs/bt.sc.yaml --dataset cifar10 --gpu 2 --model resnet50 --epochs 800 --epochs_lin 100 --net_type score --save_path bt.sc.c10.r50.pth > logs/bt.sc.c10.r50.log &
 
-nohup python train.py --config configs/bt.sc.yaml --dataset cifar100 --gpu 6 --model resnet50 --epochs 800 --epochs_lin 100 --net_type energy --save_path bt.en.c100.r50.pth > logs/bt.en.c100.r50.log &
+# nohup python train.py --config configs/bt.sc.yaml --dataset cifar100 --gpu 6 --model resnet50 --epochs 800 --epochs_lin 100 --net_type energy --save_path bt.en.c100.r50.pth > logs/bt.en.c100.r50.log &
 
 # nohup python train.py --config configs/bt.sc.yaml --dataset cifar100 --gpu 0 --model resnet50 --epochs 800 --epochs_lin 100 --net_type score --save_path bt.sc.c100.r50.pth > logs/bt.sc.c100.r50.log &
 

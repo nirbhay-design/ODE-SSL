@@ -134,11 +134,13 @@ def main_single():
         )
 
     test_config = {"model": model.base_encoder, "train_loader": train_dl_mlp, "test_loader": test_dl, 
-                    "device": device, "return_logs": return_logs, "umap": True,
+                    "device": device, "return_logs": return_logs, "umap": False, "cmet": True,
                     "tsne": args.dataset=="cifar10", "knn": True, "log_reg": True, "tsne_name": tsne_name}
     
     output = get_tsne_knn_logreg(**test_config)
-    print(f"knn_acc: {output['knn_acc']:.3f}, log_reg_acc: {output['lreg_acc']:.3f}")
+    for key, value in output.items():
+        print(f"{key}: {value:.3f}")
+    # print(f"knn_acc: {output['knn_acc']:.3f}, log_reg_acc: {output['lreg_acc']:.3f}")
 
 if __name__ == "__main__":
     # editing config based on arguments 

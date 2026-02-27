@@ -77,15 +77,82 @@ def get_transforms(image_size, data_name = "cifar10", algo='supcon'):
         transforms.ToTensor(),
         transforms.Normalize(mean = mean, std = std)
     ])
-
-    print(f"augmentation for {algo}: ")
-    print(train_transforms)
-    print(train_transforms_prime)
+    if algo != "test":
+        print(f"augmentation for {algo}: ")
+        print(train_transforms)
+        print(train_transforms_prime)
 
     return {"train_transforms": train_transforms, 
             "train_transforms_prime": train_transforms_prime, 
             "train_transforms_mlp": train_transforms_mlp, 
             "test_transforms": test_transforms}
+
+class CustomImagenetTrainDataset():
+    def __init__(self,img_path, wnids_path, n_class, pretrain=True, transform=None):
+        self.img_path = img_path
+        with open(wnids_path) as f:
+            self.wnids = f.read().split('\n')
+            self.wnids.remove('')
+        self.wnids = sorted(self.wnids,key = lambda x:x)
+        self.mapping = dict(list(zip(self.wnids,list(range(n_class)))))
+
+        img_class = os.listdir(self.img_path)
+        self.img_map = []
+        for clss in img_class:
+            cls_imgs = os.listdir(os.path.join(self.img_path,clss,'images'))
+            clss_imgs = list(map(lambda x:[clss,x],cls_imgs))
+            self.img_map.extend(clss_imgs)
+
+        self.pretrain = pretrain
+        if self.pretrain:
+            self.target_transform = transform.get("train_transforms", None)
+            self.target_transform_prime = transform.get("train_transforms_prime", None)
+        
+        else:
+            self.transform_mlp = transform
+            
+    def __len__(self):
+        return len(self.img_map)
+
+    def __getitem__(self,idx):
+        class_image,image_name = self.img_map[idx]
+        cls_idx = self.mapping.get(class_image,-1)
+
+        img = Image.open(os.path.join(self.img_path,class_image,'images',image_name)).convert('RGB')
+        if self.pretrain:
+            img1 = self.target_transform(img)
+            img2 = self.target_transform_prime(img)
+            return img1, img2, cls_idx 
+        else:
+            img = self.transform_mlp(img)
+        return (img, cls_idx)
+    
+class CustomImagenetTestDataset():
+    def __init__(self,img_path, wnids, test_anno, n_class, transform=None):
+        self.img_path = img_path
+        with open(wnids) as f:
+            self.wnids = f.read().split('\n')
+            self.wnids.remove('')
+
+        with open(test_anno) as f:
+            self.test_anno = list(map(lambda x:x.split('\t')[:2],f.read().split("\n")))
+            self.test_anno.remove([''])
+
+        self.wnids = sorted(self.wnids,key = lambda x:x)
+        self.mapping = dict(list(zip(self.wnids,list(range(n_class)))))
+        # self.rev_mapping = {j:i for i,j in self.mapping.items()}
+        self.transformations = transform
+
+    def __len__(self):
+        return len(self.test_anno)
+
+    def __getitem__(self,idx):
+        test_img, class_name = self.test_anno[idx]
+        cls_idx = self.mapping.get(class_name,-1)
+
+        img = Image.open(os.path.join(self.img_path,test_img)).convert('RGB')
+        img = self.transformations(img)
+        return (img,cls_idx)
 
 class DataCifar():
     def __init__(self, algo = "simclr", data_name = "cifar10", data_dir = "datasets/cifar10", target_transform = {}):
@@ -135,7 +202,6 @@ class DataCifar():
         img1 = self.target_transform(image)
         img2 = self.target_transform_prime(image)
         return img1, img2, label 
-        
 
 def Cifar100DataLoader(**kwargs):
     image_size = kwargs['image_size']
@@ -227,6 +293,62 @@ def Cifar10DataLoader(**kwargs):
         train=False,
         download=True
     )
+
+    train_dl = torch.utils.data.DataLoader(
+        train_dataset,
+        batch_size = kwargs['batch_size'],
+        shuffle=False if distributed else True,
+        pin_memory=True,
+        num_workers = num_workers,
+        sampler = DistributedSampler(train_dataset) if distributed else None 
+    )
+
+    train_dl_mlp = torch.utils.data.DataLoader(
+        train_dataset_mlp,
+        batch_size = kwargs['batch_size'],
+        shuffle=False if distributed else True,
+        pin_memory=True,
+        num_workers = num_workers,
+        sampler = DistributedSampler(train_dataset_mlp) if distributed else None 
+    )
+
+    test_dl = torch.utils.data.DataLoader(
+        test_dataset,
+        batch_size = 32,
+        shuffle=True,
+        pin_memory=True,
+        num_workers= num_workers
+    )
+
+    return train_dl, train_dl_mlp, test_dl, train_dataset, test_dataset
+
+def tinyimagenet_dataloader(**kwargs):
+    image_size = kwargs['image_size']
+    data_dir = kwargs['data_dir']
+    algo = kwargs['algo']
+
+    all_transforms = get_transforms(image_size, data_name = "tinyimagenet", algo=algo)
+
+    distributed = kwargs['distributed']
+    num_workers = kwargs['num_workers']
+
+    train_transforms = {"train_transforms": all_transforms["train_transforms"],
+                        "train_transforms_prime": all_transforms["train_transforms_prime"]}
+
+    image_path = os.path.join(data_dir, "train")
+    wnids_path = os.path.join(data_dir, "wnids.txt")
+    test_image_path = os.path.join(data_dir, "val", "images")
+    test_anno_path = os.path.join(data_dir, "val", "val_annotations.txt")
+    n_class = 200
+
+    train_dataset = CustomImagenetTrainDataset(img_path = image_path, wnids_path = wnids_path, 
+                                               n_class = n_class, pretrain=True, transform = train_transforms)
+
+    train_dataset_mlp = CustomImagenetTrainDataset(img_path = image_path, wnids_path = wnids_path, 
+                                               n_class = n_class, pretrain=False, transform = all_transforms["train_transforms_mlp"])
+    
+    test_dataset = CustomImagenetTestDataset(img_path = test_image_path, wnids = wnids_path, test_anno = test_anno_path,
+                                             n_class = n_class, transform = all_transforms["test_transforms"])
 
     train_dl = torch.utils.data.DataLoader(
         train_dataset,

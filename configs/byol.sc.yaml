@@ -17,6 +17,14 @@ dataset:
       num_workers: 1
       image_size: 32
       algo: *algo
+  timg:
+    num_classes: 200
+    params: 
+      data_dir: datasets/tinyimagenet/tiny-imagenet-200
+      batch_size: 256
+      num_workers: 1
+      image_size: 64
+      algo: *algo 
 return_logs: False
 eval_every: 10
 n_epochs: &epoch 800

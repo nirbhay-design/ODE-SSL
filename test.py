@@ -23,6 +23,7 @@ def get_args():
     parser.add_argument("--linprobe", action="store_true", help="evaluate linear probing or not ")
     parser.add_argument("--tsne", action="store_true", help="get test tsne or not")
     parser.add_argument("--umap", action="store_true", help="get test umap or not")
+    parser.add_argument("--cmet", action="store_true", help="get clustering metrics or not")
 
     args = parser.parse_args()
     return args
@@ -184,9 +185,11 @@ if __name__ == "__main__":
     
     tsne_name = ".".join(args.saved_path.split("/")[-1].split('.')[:-1]) + '.png'
     test_config = {"model": encoder, "train_loader": train_dl_mlp, "test_loader": test_dl, 
-                    "device": device, "return_logs": args.verbose, "umap": args.umap,
+                    "device": device, "return_logs": args.verbose, "umap": args.umap, "cmet": args.cmet,
                     "tsne": args.tsne, "knn": args.knn, "log_reg": args.lreg, "tsne_name": tsne_name}
     
-    if any([args.tsne, args.knn, args.lreg, args.umap]):
+    if any([args.tsne, args.knn, args.lreg, args.umap, args.cmet]):
         output = get_tsne_knn_logreg(**test_config)
-        print(f"knn_acc: {output.get('knn_acc', -1):.3f}, log_reg_acc: {output.get('lreg_acc', -1):.3f}")
+        for key, value in output.items():
+            print(f"{key}: {value:.3f}")
+        # print(f"knn_acc: {output.get('knn_acc', -1):.3f}, log_reg_acc: {output.get('lreg_acc', -1):.3f}")

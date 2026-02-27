@@ -15,7 +15,11 @@ from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt 
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.cluster import KMeans
+from sklearn.metrics import accuracy_score, silhouette_score,\
+                            adjusted_rand_score, \
+                            normalized_mutual_info_score, \
+                            davies_bouldin_score
 import umap 
 
 def yaml_loader(yaml_file):
@@ -67,7 +71,7 @@ def make_tsne_for_dataset(model, loader, device, return_logs = False, tsne_name 
     labels = output["labels"]
     make_tsne_plot(features, labels, name = tsne_name)
 
-def get_tsne_knn_logreg(model, train_loader, test_loader, device, return_logs = False, umap = True, tsne = True, knn = True, log_reg = True, tsne_name = None):
+def get_tsne_knn_logreg(model, train_loader, test_loader, device, return_logs = False, umap = True, tsne = True, knn = True, log_reg = True, cmet=True, tsne_name = None):
     train_output = get_features_labels(model, train_loader, device, return_logs)
     test_output = get_features_labels(model, test_loader, device, return_logs)
     
@@ -101,6 +105,20 @@ def get_tsne_knn_logreg(model, train_loader, test_loader, device, return_logs = 
         lreg_acc = accuracy_score(y_test, y_test_pred)
         outputs["lreg_acc"] = lreg_acc
 
+    if cmet:
+        N_CLASSES = len(np.unique(y_test))
+        print("clustering metrics evalution")
+        kmeans = KMeans(n_clusters=N_CLASSES, random_state=42)
+        cluster_labels = kmeans.fit_predict(x_train)
+        ari = adjusted_rand_score(y_train, cluster_labels)
+        nmi = normalized_mutual_info_score(y_train, cluster_labels)
+        ss = silhouette_score(x_train, cluster_labels)
+        dbs = davies_bouldin_score(x_train, cluster_labels)
+        outputs["ari"] = ari
+        outputs["nmi"] = nmi
+        outputs["ss"] = ss
+        outputs["dbs"] = dbs 
+
     return outputs 
 
 def loss_function(loss_type = 'scalre', **kwargs):
@@ -132,6 +150,8 @@ def load_dataset(dataset_name, **kwargs):
         return Cifar10DataLoader(**kwargs)
     if dataset_name == 'cifar100':
         return Cifar100DataLoader(**kwargs)
+    if dataset_name == "timg":
+        return tinyimagenet_dataloader(**kwargs)
     else:
         print(f"{dataset_name} is not supported")
         return None
