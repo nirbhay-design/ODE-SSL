@@ -166,17 +166,17 @@
 ####################################################################################################################
 
 DIR="saved_models"
+
 # Enable nullglob so the loop simply skips if no .pth files are found
 shopt -s nullglob
 
-# Iterate directly over the glob (takes a snapshot before the loop starts)
 for filepath in "$DIR"/*.pth; do
   
-  # Extract just the filename (e.g., "byol.c10.r18.pth") from the full path
+  # Extract just the filename (e.g., "byol.c10.r18.pth")
   filename=$(basename "$filepath")
   
-  # Split the filename by '.' and extract the 2nd field
-  ds_code=$(echo "$filename" | cut -d'.' -f2)
+  # Use awk to split by '.' and print the 3rd last field (NF is Number of Fields)
+  ds_code=$(echo "$filename" | awk -F'.' '{print $(NF-2)}')
   
   # Map the extracted code to the full dataset name
   case "$ds_code" in
@@ -187,17 +187,17 @@ for filepath in "$DIR"/*.pth; do
       dataset="cifar100" 
       ;;
     *)    
-      dataset="unknown_dataset" 
+      dataset="unknown_dataset ($ds_code)" 
       ;;
   esac
   
   echo "Found model: $filepath"
-  echo "--> Extracted Dataset: $dataset"
+  echo "Dataset: $dataset"
   python test.py --dataset "$dataset" --model resnet18 --saved_path "$filepath" --cmet --gpu 0
-#   echo "-----------------------------------"
 
 done
 
+# Turn off nullglob
 shopt -u nullglob
 
 # 
