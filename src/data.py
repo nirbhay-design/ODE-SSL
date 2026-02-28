@@ -44,6 +44,8 @@ def get_transforms(image_size, data_name = "cifar10", algo='supcon'):
     solarize_p = 0.0
     if any([i in algo for i in solarize_algo]):
         solarize_p = 0.1
+        if "byol" in algo:
+            solarize_p = 0.2
     
     s = 0.5
 
