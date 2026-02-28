@@ -7,7 +7,7 @@ YAML: configs/byol.yaml
 ==> eval_every: 10
 ==> n_epochs: 800
 ==> n_epochs_mlp: 100
-==> gpu_id: 1
+==> gpu_id: 0
 ==> opt: SGD
 ==> opt_params: {'lr': 0.4, 'momentum': 0.9, 'weight_decay': 0.0001}
 ==> schedular_params: {'T_max': 800, 'eta_min': 0.001}
@@ -136,7 +136,7 @@ Compose(
     ColorJitter(brightness=(0.6, 1.4), contrast=(0.6, 1.4), saturation=(0.6, 1.4), hue=(-0.1, 0.1))
 )
     RandomGrayscale(p=0.2)
-    <src.data.Solarization object at 0x7feacb691cf0>
+    <src.data.Solarization object at 0x7f9bbd25dde0>
     ToTensor()
     Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761))
 )
@@ -148,7 +148,7 @@ Compose(
     ColorJitter(brightness=(0.6, 1.4), contrast=(0.6, 1.4), saturation=(0.6, 1.4), hue=(-0.1, 0.1))
 )
     RandomGrayscale(p=0.2)
-    <src.data.Solarization object at 0x7feacb691390>
+    <src.data.Solarization object at 0x7f9bbd25d180>
     ToTensor()
     Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761))
 )
@@ -158,4 +158,3 @@ Files already downloaded and verified
 # of Training Images: 50000
 # of Testing Images: 10000
 ### byol Training begins
-[GPU1] epochs: [1/800] train_loss_con: -2.665

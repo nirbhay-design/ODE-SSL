@@ -36,9 +36,6 @@ class EMA():
     def ema(self, online, target):
         for online_wt, target_wt in zip(online.parameters(), target.parameters()):
             target_wt.data = self.tau * target_wt.data + (1 - self.tau) * online_wt.data
-        
-        for online_buf, target_buf in zip(online.buffers(), target.buffers()):
-            target_buf.data = self.tau * target_buf.data + (1 - self.tau) * online_buf.data
 
     def __call__(self, online, target, k):
         self.ema(online.base_encoder, target.base_encoder)
@@ -63,7 +60,6 @@ def train_byol_sc(
     for epochs in range(n_epochs):
         online_model.train()
         energy_model.train()
-        target_model.eval()
         en_loss = 0
         cur_loss = 0
         len_train = len(train_loader)
@@ -133,7 +129,6 @@ def train_byol(
 
     for epochs in range(n_epochs):
         online_model.train()
-        target_model.eval()
         cur_loss = 0
         len_train = len(train_loader)
         for idx , (data, data_cap, target) in enumerate(train_loader):

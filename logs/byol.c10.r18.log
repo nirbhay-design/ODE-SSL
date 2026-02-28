@@ -136,7 +136,7 @@ Compose(
     ColorJitter(brightness=(0.6, 1.4), contrast=(0.6, 1.4), saturation=(0.6, 1.4), hue=(-0.1, 0.1))
 )
     RandomGrayscale(p=0.2)
-    <src.data.Solarization object at 0x7f1e79871d80>
+    <src.data.Solarization object at 0x7facb7f5dde0>
     ToTensor()
     Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.2023, 0.1994, 0.201))
 )
@@ -148,7 +148,7 @@ Compose(
     ColorJitter(brightness=(0.6, 1.4), contrast=(0.6, 1.4), saturation=(0.6, 1.4), hue=(-0.1, 0.1))
 )
     RandomGrayscale(p=0.2)
-    <src.data.Solarization object at 0x7f1e79871420>
+    <src.data.Solarization object at 0x7facb7f5d180>
     ToTensor()
     Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.2023, 0.1994, 0.201))
 )
@@ -158,5 +158,4 @@ Files already downloaded and verified
 # of Training Images: 50000
 # of Testing Images: 10000
 ### byol Training begins
-[GPU1] epochs: [1/800] train_loss_con: -2.790
-[GPU1] epochs: [2/800] train_loss_con: -3.983
+[GPU1] epochs: [1/800] train_loss_con: -2.453

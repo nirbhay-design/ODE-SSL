@@ -20,14 +20,14 @@
 |Algorithm|CIFAR10 (R50)||CIFAR100 (R50)||CIFAR10 (R18)||CIFAR100 (R18)||Timg (R18)||
 |---|---|---|---|---|---|---|---|---|---|---|
 ||LR|kNN|LR|kNN|LR|kNN|LR|kNN|LR|kNN|
-|SimCLR|||||85.9||55.0||||
+|SimCLR|||||91.2|89.4|62.6|58.0|||
 |SimCLR-ScAlRe-E|||||87.2||57.0||||
 |SimCLR-ScAlRe-S|||||87.6||57.5||||
 |Barlow Twins|||||80.3||45.8||||
 |Barlow Twins-ScAlRe-E|||||80.3||45.8||||
 |Barlow Twins-ScAlRe-S|||||80.3||45.8||||
 |BYOL|||||84.8||54.8||||
-|BYOL-ScAlRe-E|||||84.8||54.8||||
+|BYOL-ScAlRe-E|||||84.8||54.8|||58.0|
 |BYOL-ScAlRe-S|||||84.8||54.8||||
 |SimSiam|||||88.6||62.3||||
 |SimSiam-ScAlRe-E|||||88.6||62.3||||
@@ -35,6 +35,27 @@
 |VicReg|||||88.6||62.3||||
 |VicReg-ScAlRe-E|||||88.6||62.3||||
 |VicReg-ScAlRe-S|||||88.6||62.3||||
+
+## **Clustering Metrics Results**
+
+|Algorithm|CIFAR10 (R18)||||CIFAR100 (R18)||||
+|---|---|---|---|---|---|---|---|---|
+||ARI|NMI|Silhoutte|DBS|ARI|NMI|Silhoutte|DBS|
+|SimCLR|||||||||
+|SimCLR-ScAlRe-E|||||||||
+|SimCLR-ScAlRe-S|||||||||
+|Barlow Twins|||||||||
+|Barlow Twins-ScAlRe-E|||||||||
+|Barlow Twins-ScAlRe-S|||||||||
+|BYOL|||||||||
+|BYOL-ScAlRe-E|||||||||
+|BYOL-ScAlRe-S|||||||||
+|SimSiam|||||||||
+|SimSiam-ScAlRe-E|||||||||
+|SimSiam-ScAlRe-S|||||||||
+|VicReg|||||||||
+|VicReg-ScAlRe-E|||||||||
+|VicReg-ScAlRe-S|||||||||
 
 
 
