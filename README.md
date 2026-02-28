@@ -1,13 +1,45 @@
+
 ## **Leveraging Generative Modelling for Rich Representations**
 
 - We model representation space as continuous dynamical system (NODEL, CARL)
 - We model representation space as distribution (DARe)
 - We leverage EBMs for rich representations (LEMa)
-- The baselines follow from [nirbhay-design/RepresentationLearningAlgorithms](https://github.com/nirbhay-design/RepresentationLearningAlgorithms) 
+- We leverage Score for rich representations (ScAlRe)
+<!-- - The baselines follow from [nirbhay-design/RepresentationLearningAlgorithms](https://github.com/nirbhay-design/RepresentationLearningAlgorithms)  -->
+
+## **Workflows**
+
+**ScAlRe (Score Alignment Regularization for Representation Learning)**
+
+![scalre](workflows/ScAlReFlow.svg)
 
 ## **Results**
 
-|Algorithm|CIFAR10 (R50)|CIFAR100 (R50)|CIFAR10 (R18)|CIFAR100 (R18)|
+
+
+|Algorithm|CIFAR10 (R50)||CIFAR100 (R50)||CIFAR10 (R18)||CIFAR100 (R18)||Timg (R18)||
+|---|---|---|---|---|---|---|---|---|---|---|
+||LR|kNN|LR|kNN|LR|kNN|LR|kNN|LR|kNN|
+|SimCLR|||||85.9||55.0||||
+|SimCLR-ScAlRe-E|||||87.2||57.0||||
+|SimCLR-ScAlRe-S|||||87.6||57.5||||
+|Barlow Twins|||||80.3||45.8||||
+|Barlow Twins-ScAlRe-E|||||80.3||45.8||||
+|Barlow Twins-ScAlRe-S|||||80.3||45.8||||
+|BYOL|||||84.8||54.8||||
+|BYOL-ScAlRe-E|||||84.8||54.8||||
+|BYOL-ScAlRe-S|||||84.8||54.8||||
+|SimSiam|||||88.6||62.3||||
+|SimSiam-ScAlRe-E|||||88.6||62.3||||
+|SimSiam-ScAlRe-S|||||88.6||62.3||||
+|VicReg|||||88.6||62.3||||
+|VicReg-ScAlRe-E|||||88.6||62.3||||
+|VicReg-ScAlRe-S|||||88.6||62.3||||
+
+
+
+
+<!-- |Algorithm|CIFAR10 (R50)|CIFAR100 (R50)|CIFAR10 (R18)|CIFAR100 (R18)|
 |---|---|---|---|---|
 |SimCLR|87.5|57.7|85.9|55.0|
 |Barlow Twins|81.2|47.7|80.3|45.8|
@@ -24,12 +56,9 @@
 |ScAlRe (score)|89.9|63.3|87.6|57.5|
 |ScAlRe (energy)|89.7|63.8|87.2|57.0|
 |SupCon|**94.0**|74.7|**93.5**|**70.4**|
-|Triplet|83.4|**76.3**|86.0|64.5|
+|Triplet|83.4|**76.3**|86.0|64.5| -->
 
-
-## **Workflows**
-
-**DARe (Distribution Alignment Regularizer)**
+<!-- **DARe (Distribution Alignment Regularizer)**
 
 ![dare](workflows/DARe.svg)
 
@@ -43,7 +72,7 @@
 
 **LEMa (Low Energy Manifolds for Representation Learning)**
 
-![lema](workflows/LEMa.svg)
+![lema](workflows/LEMa.svg) -->
 
 <!-- ## **Experiments**
 
