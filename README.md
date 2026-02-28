@@ -21,20 +21,20 @@
 |---|---|---|---|---|---|---|---|---|---|---|
 ||LR|kNN|LR|kNN|LR|kNN|LR|kNN|LR|kNN|
 |SimCLR|||||91.2|89.4|62.6|58.0|||
-|SimCLR-ScAlRe-E|||||87.2||57.0||||
-|SimCLR-ScAlRe-S|||||87.6||57.5||||
-|Barlow Twins|||||80.3||45.8||||
-|Barlow Twins-ScAlRe-E|||||80.3||45.8||||
-|Barlow Twins-ScAlRe-S|||||80.3||45.8||||
-|BYOL|||||84.8||54.8||||
-|BYOL-ScAlRe-E|||||84.8||54.8|||58.0|
-|BYOL-ScAlRe-S|||||84.8||54.8||||
-|SimSiam|||||88.6||62.3||||
-|SimSiam-ScAlRe-E|||||88.6||62.3||||
-|SimSiam-ScAlRe-S|||||88.6||62.3||||
-|VicReg|||||88.6||62.3||||
-|VicReg-ScAlRe-E|||||88.6||62.3||||
-|VicReg-ScAlRe-S|||||88.6||62.3||||
+|SimCLR-ScAlRe-E|||||91.0|89.3|63.9|57.8|||
+|SimCLR-ScAlRe-S|||||91.5|89.9|63.9|57.9|||
+|Barlow Twins|||||90.1|87.2|67.7|59.0|||
+|Barlow Twins-ScAlRe-E|||||90.1|87.6|66.8|58.6|||
+|Barlow Twins-ScAlRe-S|||||90.5|87.4|65.9|56.3|||
+|BYOL|||||||||||
+|BYOL-ScAlRe-E|||||||||||
+|BYOL-ScAlRe-S|||||||||||
+|SimSiam|||||90.4|88.5|62.6|57.1|||
+|SimSiam-ScAlRe-E|||||90.5|89.1|62.7|58.0|||
+|SimSiam-ScAlRe-S|||||90.6|88.8|62.8|57.9|||
+|VicReg|||||87.7|84.2|62.7|52.2|||
+|VicReg-ScAlRe-E|||||87.8|84.1|62.4|52.0|||
+|VicReg-ScAlRe-S|||||87.5|84.3|62.8|52.3|||
 
 ## **Clustering Metrics Results**
 
@@ -104,10 +104,14 @@
 
 ## **Reproducing the results**
 
-```
-python train.py --config configs/nodel.c10.yaml --gpu 0 --model resnet50 --epochs 600 --epochs_lin 100 --save_path nodel.c10.r50.pth
-```
+- lookout for more commands in `run.sh`
 
 ```
-python train.py --config configs/carl.c10.yaml --gpu 0 --model resnet50 --epochs 600 --epochs_lin 100 --save_path carl.c10.r50.pth
+python train.py --config configs/simclr.yaml --dataset cifar10 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --save_path simclr.c10.r18.pth > logs/simclr.c10.r18.log
+```
+
+## **Test the pretrained model 
+
+```
+python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/simclr.c10.r18.pth --cmet --knn --lreg --linprobe --tsne --gpu 0 --verbose
 ```
