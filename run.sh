@@ -92,6 +92,14 @@
 
 # nohup python train.py --config configs/byol.yaml --dataset cifar100 --gpu 1 --model resnet18 --wd 1e-4 --epochs 800 --epochs_lin 100 --save_path byol.c100.r18.pth > logs/byol.c100.r18.log &
 
+# nohup python train.py --config configs/byol.sc.yaml --dataset cifar10 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --wd 1e-6 --opt LARS --net_type energy --save_path byol.en.c10.r18.pth > logs/byol.en.c10.r18.log &
+
+# nohup python train.py --config configs/byol.sc.yaml --dataset cifar10 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --wd 1e-6 --opt LARS --net_type score --save_path byol.sc.c10.r18.pth > logs/byol.sc.c10.r18.log &
+
+# nohup python train.py --config configs/byol.sc.yaml --dataset cifar100 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --wd 1e-6 --opt LARS --net_type energy --save_path byol.en.c100.r18.pth > logs/byol.en.c100.r18.log &
+
+# nohup python train.py --config configs/byol.sc.yaml --dataset cifar100 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --wd 1e-6 --opt LARS --net_type score --save_path byol.sc.c100.r18.pth > logs/byol.sc.c100.r18.log &
+
 
 ######################## 800 epochs updated experiments (r50) ####################### 
 ###############################################################################
