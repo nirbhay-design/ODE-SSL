@@ -80,7 +80,7 @@
 
 # nohup python train.py --config configs/scalre.yaml --dataset cifar100 --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --net_type score --save_path scalre.sc.c100.r18.pth > logs/scalre.sc.c100.r18.log &
 
-# nohup python train.py --config configs/simclr.yaml --dataset timg --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --save_path simclr.timg.r18.pth > logs/simclr.timg.r18.log &
+# nohup python train.py --config configs/simclr.yaml --dataset timg --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --save_path simclr.timg.r18.pth > logs/simclr.timg.r18.log &
 
 # nohup python train.py --config configs/scalre.yaml --dataset timg --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --net_type energy --save_path scalre.en.timg.r18.pth > logs/scalre.en.timg.r18.log &
 
@@ -165,39 +165,39 @@
 ############################################### Test commands ######################################################
 ####################################################################################################################
 
-DIR="saved_models"
+# DIR="saved_models"
 
-# Enable nullglob so the loop simply skips if no .pth files are found
-shopt -s nullglob
+# # Enable nullglob so the loop simply skips if no .pth files are found
+# shopt -s nullglob
 
-for filepath in "$DIR"/*.pth; do
+# for filepath in "$DIR"/*.pth; do
   
-  # Extract just the filename (e.g., "byol.c10.r18.pth")
-  filename=$(basename "$filepath")
+#   # Extract just the filename (e.g., "byol.c10.r18.pth")
+#   filename=$(basename "$filepath")
   
-  # Use awk to split by '.' and print the 3rd last field (NF is Number of Fields)
-  ds_code=$(echo "$filename" | awk -F'.' '{print $(NF-2)}')
+#   # Use awk to split by '.' and print the 3rd last field (NF is Number of Fields)
+#   ds_code=$(echo "$filename" | awk -F'.' '{print $(NF-2)}')
   
-  # Map the extracted code to the full dataset name
-  case "$ds_code" in
-    c10)  
-      dataset="cifar10" 
-      ;;
-    c100) 
-      dataset="cifar100" 
-      ;;
-    *)    
-      dataset="unknown_dataset ($ds_code)" 
-      ;;
-  esac
+#   # Map the extracted code to the full dataset name
+#   case "$ds_code" in
+#     c10)  
+#       dataset="cifar10" 
+#       ;;
+#     c100) 
+#       dataset="cifar100" 
+#       ;;
+#     *)    
+#       dataset="unknown_dataset ($ds_code)" 
+#       ;;
+#   esac
   
-  echo "Found model: $filepath"
-  echo "Dataset: $dataset"
-  python test.py --dataset "$dataset" --model resnet18 --saved_path "$filepath" --cmet --gpu 0
+#   echo "Found model: $filepath"
+#   echo "Dataset: $dataset"
+#   python test.py --dataset "$dataset" --model resnet18 --saved_path "$filepath" --cmet --gpu 0
 
-done
+# done
 
-# Turn off nullglob
-shopt -u nullglob
+# # Turn off nullglob
+# shopt -u nullglob
 
-# 
+# # 
