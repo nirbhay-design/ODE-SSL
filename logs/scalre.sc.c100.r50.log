@@ -1,8 +1,3 @@
-2026-03-02 15:59:08.950394: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
-To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2026-03-02 15:59:09.791251: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer.so.7'; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/cuda-12.8/lib64:/usr/local/cuda-12.8/lib64:
-2026-03-02 15:59:09.791341: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer_plugin.so.7'; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/cuda-12.8/lib64:/usr/local/cuda-12.8/lib64:
-2026-03-02 15:59:09.791348: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
 environment: 
 YAML: configs/scalre.yaml
 ==> SEED: 42
@@ -12,7 +7,7 @@ YAML: configs/scalre.yaml
 ==> eval_every: 10
 ==> n_epochs: 800
 ==> n_epochs_mlp: 100
-==> gpu_id: 1
+==> gpu_id: 0
 ==> opt: SGD
 ==> opt_params: {'lr': 0.5, 'momentum': 0.9, 'nesterov': True, 'weight_decay': 0.0001}
 ==> schedular_params: {'T_max': 800, 'eta_min': 0.001}
@@ -231,7 +226,7 @@ Compose(
     ColorJitter(brightness=(0.6, 1.4), contrast=(0.6, 1.4), saturation=(0.6, 1.4), hue=(-0.1, 0.1))
 )
     RandomGrayscale(p=0.2)
-    <src.data.Solarization object at 0x7fc963c83850>
+    <src.data.Solarization object at 0x7fc49ced1930>
     ToTensor()
     Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761))
 )
@@ -243,7 +238,7 @@ Compose(
     ColorJitter(brightness=(0.6, 1.4), contrast=(0.6, 1.4), saturation=(0.6, 1.4), hue=(-0.1, 0.1))
 )
     RandomGrayscale(p=0.2)
-    <src.data.Solarization object at 0x7fc963c83a30>
+    <src.data.Solarization object at 0x7fc49ced1e40>
     ToTensor()
     Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761))
 )
