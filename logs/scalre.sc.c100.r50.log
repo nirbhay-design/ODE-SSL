@@ -246,3 +246,14 @@ Compose(
 # of Testing Images: 10000
 using optimizer: AdamW
 ### ScAlRe Training begins
+[GPU1] epochs: [1/800] train_loss_con: 6.591 energy_loss: 1024.548
+[GPU1] epochs: [2/800] train_loss_con: 6.287 energy_loss: 1024.274
+[GPU1] epochs: [3/800] train_loss_con: 6.156 energy_loss: 1024.112
+[GPU1] epochs: [4/800] train_loss_con: 6.076 energy_loss: 1024.022
+[GPU1] epochs: [5/800] train_loss_con: 6.033 energy_loss: 1023.859
+[GPU1] epochs: [6/800] train_loss_con: 5.985 energy_loss: 1023.974
+[GPU1] epochs: [7/800] train_loss_con: 5.950 energy_loss: 1023.987
+[GPU1] epochs: [8/800] train_loss_con: 5.921 energy_loss: 1024.029
+[GPU1] epochs: [9/800] train_loss_con: 5.900 energy_loss: 1023.893
+[GPU1] epochs: [10/800] train_loss_con: 5.875 energy_loss: 1023.863
+[GPU1] epochs: [11/800] train_loss_con: 5.854 energy_loss: 1023.695
