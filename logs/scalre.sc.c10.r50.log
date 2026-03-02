@@ -1,8 +1,3 @@
-2026-03-02 15:58:22.957023: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
-To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2026-03-02 15:58:28.972009: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer.so.7'; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/cuda-12.8/lib64:/usr/local/cuda-12.8/lib64:
-2026-03-02 15:58:28.972284: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer_plugin.so.7'; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/cuda-12.8/lib64:/usr/local/cuda-12.8/lib64:
-2026-03-02 15:58:28.972292: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
 environment: 
 YAML: configs/scalre.yaml
 ==> SEED: 42
@@ -231,7 +226,7 @@ Compose(
     ColorJitter(brightness=(0.6, 1.4), contrast=(0.6, 1.4), saturation=(0.6, 1.4), hue=(-0.1, 0.1))
 )
     RandomGrayscale(p=0.2)
-    <src.data.Solarization object at 0x7fb082727850>
+    <src.data.Solarization object at 0x7f2df96f2650>
     ToTensor()
     Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.2023, 0.1994, 0.201))
 )
@@ -243,14 +238,15 @@ Compose(
     ColorJitter(brightness=(0.6, 1.4), contrast=(0.6, 1.4), saturation=(0.6, 1.4), hue=(-0.1, 0.1))
 )
     RandomGrayscale(p=0.2)
-    <src.data.Solarization object at 0x7fb082727a30>
+    <src.data.Solarization object at 0x7f2df96f1e70>
     ToTensor()
     Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.2023, 0.1994, 0.201))
 )
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
 # of Training Images: 50000
 # of Testing Images: 10000
 using optimizer: AdamW
 ### ScAlRe Training begins
+[GPU0] epochs: [1/800] train_loss_con: 6.780 energy_loss: 1024.547
+[GPU0] epochs: [2/800] train_loss_con: 6.438 energy_loss: 1024.277
+[GPU0] epochs: [3/800] train_loss_con: 6.306 energy_loss: 1024.115
+[GPU0] epochs: [4/800] train_loss_con: 6.188 energy_loss: 1024.023
