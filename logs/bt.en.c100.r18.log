@@ -13,7 +13,7 @@ YAML: configs/bt.sc.yaml
 ==> schedular_params: {'T_max': 800, 'eta_min': 0.001}
 ==> mlp_opt: SGD
 ==> mlp_opt_params: {'lr': 0.01, 'momentum': 0.9}
-==> energy_model_params: {'eta': 0.001, 'steps': 5, 'sigma': 0.1, 'delta': 5.0, 'net_type': 'energy'}
+==> energy_model_params: {'eta': 0.001, 'steps': 10, 'sigma': 0.1, 'delta': 5.0, 'net_type': 'energy'}
 ==> energy_opt: AdamW
 ==> energy_model_opt_params: {'lr': 0.0003}
 ==> warmup_epochs: 0
@@ -136,7 +136,7 @@ Compose(
     ColorJitter(brightness=(0.6, 1.4), contrast=(0.6, 1.4), saturation=(0.6, 1.4), hue=(-0.1, 0.1))
 )
     RandomGrayscale(p=0.2)
-    <src.data.Solarization object at 0x7372b2cd1120>
+    <src.data.Solarization object at 0x7795bcbbd000>
     ToTensor()
     Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761))
 )
@@ -148,7 +148,7 @@ Compose(
     ColorJitter(brightness=(0.6, 1.4), contrast=(0.6, 1.4), saturation=(0.6, 1.4), hue=(-0.1, 0.1))
 )
     RandomGrayscale(p=0.2)
-    <src.data.Solarization object at 0x7372b2cd1180>
+    <src.data.Solarization object at 0x7795bcbbd330>
     ToTensor()
     Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761))
 )
@@ -156,9 +156,7 @@ Compose(
 # of Testing Images: 10000
 using optimizer: AdamW
 ### Barlow Twins with SC-net Training begins
-[GPU0] epochs: [1/800] train_loss_con: 5283.936 energy_loss: 256.121
-[GPU0] epochs: [2/800] train_loss_con: 4029.185 energy_loss: 255.982
-[GPU0] epochs: [3/800] train_loss_con: 3995.608 energy_loss: 256.034
-[GPU0] epochs: [4/800] train_loss_con: 3994.147 energy_loss: 255.998
-[GPU0] epochs: [5/800] train_loss_con: 4026.782 energy_loss: 255.952
-[GPU0] epochs: [6/800] train_loss_con: 3911.768 energy_loss: 256.054
+[GPU0] epochs: [1/800] train_loss_con: 5296.305 energy_loss: 255.963
+[GPU0] epochs: [2/800] train_loss_con: 4048.487 energy_loss: 255.888
+[GPU0] epochs: [3/800] train_loss_con: 3995.339 energy_loss: 256.004
+[GPU0] epochs: [4/800] train_loss_con: 4010.334 energy_loss: 256.016

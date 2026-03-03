@@ -57,7 +57,7 @@ mlp_opt_params:
 #   lr: !!float 1e-3
 energy_model_params:
   eta: !!float 1e-3
-  steps: 5
+  steps: 10
   sigma: !!float 1e-1
   delta: !!float 5.0
   net_type: energy
