@@ -15,6 +15,14 @@ dataset:
       num_workers: 3
       image_size: 32
       algo: test
+  timg:
+    num_classes: 200
+    params: 
+      data_dir: datasets/tinyimagenet/tiny-imagenet-200
+      batch_size: 512
+      num_workers: 1
+      image_size: 64
+      algo: test
 
 lr: [0.1, 1.0]
 wd: [1e-6, 1e-4, 0.0]
