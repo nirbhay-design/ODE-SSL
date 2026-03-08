@@ -1593,3 +1593,57 @@ LR: 1.000 | WD: 0.000100 | test Acc: 0.192%
 [GPU1] epochs: [56/100] train_acc: 0.283 train_loss_sup: 3.461
 [GPU1] epochs: [57/100] train_acc: 0.281 train_loss_sup: 3.453
 [GPU1] epochs: [58/100] train_acc: 0.284 train_loss_sup: 3.448
+[GPU1] epochs: [59/100] train_acc: 0.285 train_loss_sup: 3.442
+[GPU1] epochs: [60/100] train_acc: 0.286 train_loss_sup: 3.438
+[GPU1] Test Accuracy at epoch: 60: 0.294
+[GPU1] epochs: [61/100] train_acc: 0.285 train_loss_sup: 3.433
+[GPU1] epochs: [62/100] train_acc: 0.285 train_loss_sup: 3.432
+[GPU1] epochs: [63/100] train_acc: 0.287 train_loss_sup: 3.426
+[GPU1] epochs: [64/100] train_acc: 0.286 train_loss_sup: 3.422
+[GPU1] epochs: [65/100] train_acc: 0.286 train_loss_sup: 3.423
+[GPU1] epochs: [66/100] train_acc: 0.288 train_loss_sup: 3.417
+[GPU1] epochs: [67/100] train_acc: 0.288 train_loss_sup: 3.413
+[GPU1] epochs: [68/100] train_acc: 0.289 train_loss_sup: 3.407
+[GPU1] epochs: [69/100] train_acc: 0.289 train_loss_sup: 3.406
+[GPU1] epochs: [70/100] train_acc: 0.288 train_loss_sup: 3.405
+[GPU1] Test Accuracy at epoch: 70: 0.297
+[GPU1] epochs: [71/100] train_acc: 0.288 train_loss_sup: 3.404
+[GPU1] epochs: [72/100] train_acc: 0.291 train_loss_sup: 3.401
+[GPU1] epochs: [73/100] train_acc: 0.289 train_loss_sup: 3.399
+[GPU1] epochs: [74/100] train_acc: 0.290 train_loss_sup: 3.395
+[GPU1] epochs: [75/100] train_acc: 0.291 train_loss_sup: 3.394
+[GPU1] epochs: [76/100] train_acc: 0.292 train_loss_sup: 3.392
+[GPU1] epochs: [77/100] train_acc: 0.290 train_loss_sup: 3.395
+[GPU1] epochs: [78/100] train_acc: 0.292 train_loss_sup: 3.392
+[GPU1] epochs: [79/100] train_acc: 0.290 train_loss_sup: 3.389
+[GPU1] epochs: [80/100] train_acc: 0.291 train_loss_sup: 3.388
+[GPU1] Test Accuracy at epoch: 80: 0.298
+[GPU1] epochs: [81/100] train_acc: 0.292 train_loss_sup: 3.383
+[GPU1] epochs: [82/100] train_acc: 0.292 train_loss_sup: 3.383
+[GPU1] epochs: [83/100] train_acc: 0.292 train_loss_sup: 3.385
+[GPU1] epochs: [84/100] train_acc: 0.291 train_loss_sup: 3.386
+[GPU1] epochs: [85/100] train_acc: 0.291 train_loss_sup: 3.387
+[GPU1] epochs: [86/100] train_acc: 0.291 train_loss_sup: 3.382
+[GPU1] epochs: [87/100] train_acc: 0.293 train_loss_sup: 3.382
+[GPU1] epochs: [88/100] train_acc: 0.293 train_loss_sup: 3.381
+[GPU1] epochs: [89/100] train_acc: 0.293 train_loss_sup: 3.379
+[GPU1] epochs: [90/100] train_acc: 0.294 train_loss_sup: 3.383
+[GPU1] Test Accuracy at epoch: 90: 0.299
+[GPU1] epochs: [91/100] train_acc: 0.293 train_loss_sup: 3.381
+[GPU1] epochs: [92/100] train_acc: 0.293 train_loss_sup: 3.380
+[GPU1] epochs: [93/100] train_acc: 0.292 train_loss_sup: 3.378
+[GPU1] epochs: [94/100] train_acc: 0.292 train_loss_sup: 3.379
+[GPU1] epochs: [95/100] train_acc: 0.293 train_loss_sup: 3.377
+[GPU1] epochs: [96/100] train_acc: 0.293 train_loss_sup: 3.379
+[GPU1] epochs: [97/100] train_acc: 0.292 train_loss_sup: 3.378
+[GPU1] epochs: [98/100] train_acc: 0.292 train_loss_sup: 3.380
+[GPU1] epochs: [99/100] train_acc: 0.292 train_loss_sup: 3.380
+[GPU1] epochs: [100/100] train_acc: 0.292 train_loss_sup: 3.375
+[GPU1] Final Test Accuracy: 0.299
+LR: 1.000 | WD: 0.000000 | test Acc: 0.299%
+------------------------------
+Best Test Accuracy: 0.299%
+Optimal Hyperparameters: LR=1.0, WD=0.0
+OpenBLAS warning: precompiled NUM_THREADS exceeded, adding auxiliary array for thread metadata.
+To avoid this warning, please rebuild your copy of OpenBLAS with a larger NUM_THREADS setting
+or set the environment variable OPENBLAS_NUM_THREADS to 64 or lower
