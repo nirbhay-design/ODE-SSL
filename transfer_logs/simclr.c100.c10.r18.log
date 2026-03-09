@@ -1,0 +1,14 @@
+Namespace(dataset='cifar10', saved_path='saved_models/simclr.c100.r18.pth', gpu=1, model='resnet18', verbose=False, epochs=100, eval_every=10, knn=True, lreg=True, linprobe=True, tsne=False, umap=False, cmet=True)
+<All keys matched successfully>
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Starting Hyperparameter Sweep on 1...
+===> using linear mlp
+Scheduler: None
+MLP: MLP(
+  (mlp): Linear(in_features=512, out_features=10, bias=True)
+)
+[GPU1] Test Accuracy at epoch: 0: 0.553
+[GPU1] epochs: [1/100] train_acc: 0.431 train_loss_sup: 2.189
+[GPU1] epochs: [2/100] train_acc: 0.555 train_loss_sup: 1.967
