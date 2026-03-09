@@ -1,0 +1,16 @@
+Namespace(dataset='cifar100', saved_path='saved_models/bt.en.timg.r18.pth', gpu=1, model='resnet18', verbose=False, epochs=100, eval_every=10, knn=True, lreg=True, linprobe=True, tsne=False, umap=False, cmet=True)
+<All keys matched successfully>
+Starting Hyperparameter Sweep on 1...
+===> using linear mlp
+Scheduler: None
+MLP: MLP(
+  (mlp): Linear(in_features=512, out_features=100, bias=True)
+)
+[GPU1] Test Accuracy at epoch: 0: 0.362
+[GPU1] epochs: [1/100] train_acc: 0.289 train_loss_sup: 2.982
+[GPU1] epochs: [2/100] train_acc: 0.390 train_loss_sup: 2.455
+[GPU1] epochs: [3/100] train_acc: 0.410 train_loss_sup: 2.350
+[GPU1] epochs: [4/100] train_acc: 0.420 train_loss_sup: 2.299
+[GPU1] epochs: [5/100] train_acc: 0.429 train_loss_sup: 2.274
+[GPU1] epochs: [6/100] train_acc: 0.435 train_loss_sup: 2.241
+[GPU1] epochs: [7/100] train_acc: 0.437 train_loss_sup: 2.236

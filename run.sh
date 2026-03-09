@@ -214,3 +214,63 @@
 # shopt -u nullglob
 
 # # 
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/bt.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/bt.en.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/bt.sc.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/bt.sc.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/bt.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/bt.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/byol.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/byol.en.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/byol.sc.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/byol.sc.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/byol.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/byol.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/simsiam.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/simsiam.en.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/simsiam.sc.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/simsiam.sc.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/simsiam.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/simsiam.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/scalre.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/scalre.en.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/scalre.sc.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/scalre.sc.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/scalre.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/scalre.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/vicreg.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/vicreg.en.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/vicreg.sc.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/vicreg.sc.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/vicreg.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe > transfer_logs/vicreg.timg.c10.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/bt.en.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/bt.en.timg.c100.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/bt.sc.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/bt.sc.timg.c100.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/bt.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/bt.timg.c100.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/byol.en.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/byol.en.timg.c100.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/byol.sc.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/byol.sc.timg.c100.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/byol.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/byol.timg.c100.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/simsiam.en.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/simsiam.en.timg.c100.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/simsiam.sc.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/simsiam.sc.timg.c100.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/simsiam.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/simsiam.timg.c100.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/scalre.en.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/scalre.en.timg.c100.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/scalre.sc.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/scalre.sc.timg.c100.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/scalre.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/scalre.timg.c100.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/vicreg.en.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/vicreg.en.timg.c100.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/vicreg.sc.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/vicreg.sc.timg.c100.r18.log &
+
+nohup python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/vicreg.timg.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/vicreg.timg.c100.r18.log &

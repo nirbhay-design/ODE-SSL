@@ -1,0 +1,11 @@
+Namespace(dataset='cifar10', saved_path='saved_models/scalre.timg.r18.pth', gpu=0, model='resnet18', verbose=False, epochs=100, eval_every=10, knn=True, lreg=True, linprobe=True, tsne=False, umap=False, cmet=True)
+Traceback (most recent call last):
+  File "/data1/home/nirbhays/ODE-SSL/test.py", line 173, in <module>
+    print(encoder.load_state_dict(torch.load(args.saved_path, map_location=device)))
+  File "/data1/home/nirbhays/envs/mlenv/lib/python3.10/site-packages/torch/serialization.py", line 1500, in load
+    with _open_file_like(f, "rb") as opened_file:
+  File "/data1/home/nirbhays/envs/mlenv/lib/python3.10/site-packages/torch/serialization.py", line 768, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/data1/home/nirbhays/envs/mlenv/lib/python3.10/site-packages/torch/serialization.py", line 749, in __init__
+    super().__init__(open(name, mode))  # noqa: SIM115
+FileNotFoundError: [Errno 2] No such file or directory: 'saved_models/scalre.timg.r18.pth'

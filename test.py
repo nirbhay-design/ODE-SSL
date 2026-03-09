@@ -131,30 +131,36 @@ def train_linear_probe(
     best_hparams = {}
 
     print(f"Starting Hyperparameter Sweep on {device}...")
-    
-    for lr, wd in itertools.product(learning_rates, weight_decays):
-        mlp = MLP(pretrain_model.classifier_infeatures, num_classes, mlp_type = "linear").to(device)
-        optimizer = optim.SGD(mlp.parameters(), lr=lr, momentum=0.9, weight_decay=wd)
-        scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+    for cosine in range(2):
+        for lr, wd in itertools.product(learning_rates, weight_decays):
+            mlp = MLP(pretrain_model.classifier_infeatures, num_classes, mlp_type = "linear").to(device)
+            optimizer = optim.SGD(mlp.parameters(), lr=lr, momentum=0.9, weight_decay=wd)
 
-        mlp, tval = train_mlp(
-            pretrain_model, mlp, train_loader, test_loader, 
-            lossfunction=loss, mlp_optimizer=optimizer, n_epochs=epochs, 
-            eval_every=eval_every, device_id=device, eval_id=device, return_logs=return_logs,
-            mlp_schedular=scheduler
-        )
+            if cosine:
+                scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+            else:
+                scheduler = None
+            print(f"Scheduler: {scheduler}")
+            print(f"MLP: {mlp}")
 
-        best_test_acc = max(tval['testacc'])
+            mlp, tval = train_mlp(
+                pretrain_model, mlp, train_loader, test_loader, 
+                lossfunction=loss, mlp_optimizer=optimizer, n_epochs=epochs, 
+                eval_every=eval_every, device_id=device, eval_id=device, return_logs=return_logs,
+                mlp_schedular=scheduler
+            )
 
-        print(f"LR: {lr:5.3f} | WD: {wd:7.6f} | test Acc: {best_test_acc:.3f}%")
-        
-        if best_test_acc > best_acc:
-            best_acc = best_test_acc
-            best_hparams = {'lr': lr, 'wd': wd}
+            best_test_acc = max(tval['testacc'])
+
+            print(f"LR: {lr:5.3f} | WD: {wd:7.6f} | Cosine: {bool(cosine)} | test Acc: {best_test_acc:.3f}%")
+            
+            if best_test_acc > best_acc:
+                best_acc = best_test_acc
+                best_hparams = {'lr': lr, 'wd': wd, "cosine": cosine}
 
     print("-" * 30)
     print(f"Best Test Accuracy: {best_acc:.3f}%")
-    print(f"Optimal Hyperparameters: LR={best_hparams['lr']}, WD={best_hparams['wd']}")
+    print(f"Optimal Hyperparameters: LR={best_hparams['lr']}, WD={best_hparams['wd']}, Cosine={best_hparams['cosine']}")
 
 if __name__ == "__main__":
     args = get_args()

@@ -1,0 +1,13 @@
+Namespace(dataset='cifar10', saved_path='saved_models/vicreg.en.timg.r18.pth', gpu=0, model='resnet18', verbose=False, epochs=100, eval_every=10, knn=True, lreg=True, linprobe=True, tsne=False, umap=False, cmet=True)
+<All keys matched successfully>
+Starting Hyperparameter Sweep on 0...
+===> using linear mlp
+Scheduler: None
+MLP: MLP(
+  (mlp): Linear(in_features=512, out_features=10, bias=True)
+)
+[GPU0] Test Accuracy at epoch: 0: 0.615
+[GPU0] epochs: [1/100] train_acc: 0.555 train_loss_sup: 1.326
+[GPU0] epochs: [2/100] train_acc: 0.617 train_loss_sup: 1.136
+[GPU0] epochs: [3/100] train_acc: 0.629 train_loss_sup: 1.105
+[GPU0] epochs: [4/100] train_acc: 0.632 train_loss_sup: 1.087
