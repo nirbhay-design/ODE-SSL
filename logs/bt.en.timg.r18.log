@@ -1652,3 +1652,137 @@ ari: 0.083
 nmi: 0.355
 ss: 0.043
 dbs: 3.048
+Namespace(dataset='timg', saved_path='saved_models/bt.en.timg.r18.pth', gpu=0, model='resnet18', verbose=False, epochs=100, eval_every=10, knn=True, lreg=True, linprobe=True, tsne=False, umap=False, cmet=True, nw=4, pf=4, lrs=[1.0, 2.0, 5.0, 10.0])
+<All keys matched successfully>
+sweeping through lr: [1.0, 2.0, 5.0, 10.0]
+sweeping through wd: [1e-06, 0.0001, 0.0]
+Starting Hyperparameter Sweep on 0...
+===> using linear mlp
+linear probe with LR: 1.0, WD: 1e-06, Cosine: False
+===> using linear mlp
+linear probe with LR: 1.0, WD: 0.0001, Cosine: False
+===> using linear mlp
+linear probe with LR: 1.0, WD: 0.0, Cosine: False
+===> using linear mlp
+linear probe with LR: 2.0, WD: 1e-06, Cosine: False
+===> using linear mlp
+linear probe with LR: 2.0, WD: 0.0001, Cosine: False
+===> using linear mlp
+linear probe with LR: 2.0, WD: 0.0, Cosine: False
+===> using linear mlp
+linear probe with LR: 5.0, WD: 1e-06, Cosine: False
+===> using linear mlp
+linear probe with LR: 5.0, WD: 0.0001, Cosine: False
+===> using linear mlp
+linear probe with LR: 5.0, WD: 0.0, Cosine: False
+===> using linear mlp
+linear probe with LR: 10.0, WD: 1e-06, Cosine: False
+===> using linear mlp
+linear probe with LR: 10.0, WD: 0.0001, Cosine: False
+===> using linear mlp
+linear probe with LR: 10.0, WD: 0.0, Cosine: False
+===> using linear mlp
+linear probe with LR: 1.0, WD: 1e-06, Cosine: True
+===> using linear mlp
+linear probe with LR: 1.0, WD: 0.0001, Cosine: True
+===> using linear mlp
+linear probe with LR: 1.0, WD: 0.0, Cosine: True
+===> using linear mlp
+linear probe with LR: 2.0, WD: 1e-06, Cosine: True
+===> using linear mlp
+linear probe with LR: 2.0, WD: 0.0001, Cosine: True
+===> using linear mlp
+linear probe with LR: 2.0, WD: 0.0, Cosine: True
+===> using linear mlp
+linear probe with LR: 5.0, WD: 1e-06, Cosine: True
+===> using linear mlp
+linear probe with LR: 5.0, WD: 0.0001, Cosine: True
+===> using linear mlp
+linear probe with LR: 5.0, WD: 0.0, Cosine: True
+===> using linear mlp
+linear probe with LR: 10.0, WD: 1e-06, Cosine: True
+===> using linear mlp
+linear probe with LR: 10.0, WD: 0.0001, Cosine: True
+===> using linear mlp
+linear probe with LR: 10.0, WD: 0.0, Cosine: True
+Traceback (most recent call last):
+  File "/home/test/nirbhays/ODE-SSL/test.py", line 233, in <module>
+    train_linear_probe(
+  File "/home/test/nirbhays/ODE-SSL/test.py", line 188, in train_linear_probe
+    linear_probes, tval = train_mlp(
+  File "/home/test/nirbhays/ODE-SSL/test.py", line 89, in train_mlp
+    feats = model(data)
+  File "/home/test/nirbhays/envs/mlenv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/test/nirbhays/envs/mlenv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/test/nirbhays/ODE-SSL/src/network.py", line 127, in forward
+    return self.feat_extractor(x).flatten(1)
+  File "/home/test/nirbhays/envs/mlenv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/test/nirbhays/envs/mlenv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/test/nirbhays/envs/mlenv/lib/python3.10/site-packages/torch/nn/modules/container.py", line 244, in forward
+    input = module(input)
+  File "/home/test/nirbhays/envs/mlenv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/test/nirbhays/envs/mlenv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/test/nirbhays/envs/mlenv/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 548, in forward
+    return self._conv_forward(input, self.weight, self.bias)
+  File "/home/test/nirbhays/envs/mlenv/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 543, in _conv_forward
+    return F.conv2d(
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 512.00 MiB. GPU 0 has a total capacity of 23.55 GiB of which 22.56 MiB is free. Process 3599462 has 7.31 GiB memory in use. Process 3599732 has 4.56 GiB memory in use. Process 3599998 has 4.01 GiB memory in use. Process 3600274 has 7.31 GiB memory in use. Including non-PyTorch memory, this process has 300.00 MiB memory in use. Of the allocated memory 76.06 MiB is allocated by PyTorch, and 21.94 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Namespace(dataset='timg', saved_path='saved_models/bt.en.timg.r18.pth', gpu=1, model='resnet18', verbose=False, epochs=100, eval_every=10, knn=True, lreg=True, linprobe=True, tsne=False, umap=False, cmet=True, nw=4, pf=4, lrs=[1.0, 2.0, 5.0, 10.0])
+<All keys matched successfully>
+sweeping through lr: [1.0, 2.0, 5.0, 10.0]
+sweeping through wd: [1e-06, 0.0001, 0.0]
+Starting Hyperparameter Sweep on 1...
+===> using linear mlp
+linear probe with LR: 1.0, WD: 1e-06, Cosine: False
+===> using linear mlp
+linear probe with LR: 1.0, WD: 0.0001, Cosine: False
+===> using linear mlp
+linear probe with LR: 1.0, WD: 0.0, Cosine: False
+===> using linear mlp
+linear probe with LR: 2.0, WD: 1e-06, Cosine: False
+===> using linear mlp
+linear probe with LR: 2.0, WD: 0.0001, Cosine: False
+===> using linear mlp
+linear probe with LR: 2.0, WD: 0.0, Cosine: False
+===> using linear mlp
+linear probe with LR: 5.0, WD: 1e-06, Cosine: False
+===> using linear mlp
+linear probe with LR: 5.0, WD: 0.0001, Cosine: False
+===> using linear mlp
+linear probe with LR: 5.0, WD: 0.0, Cosine: False
+===> using linear mlp
+linear probe with LR: 10.0, WD: 1e-06, Cosine: False
+===> using linear mlp
+linear probe with LR: 10.0, WD: 0.0001, Cosine: False
+===> using linear mlp
+linear probe with LR: 10.0, WD: 0.0, Cosine: False
+===> using linear mlp
+linear probe with LR: 1.0, WD: 1e-06, Cosine: True
+===> using linear mlp
+linear probe with LR: 1.0, WD: 0.0001, Cosine: True
+===> using linear mlp
+linear probe with LR: 1.0, WD: 0.0, Cosine: True
+===> using linear mlp
+linear probe with LR: 2.0, WD: 1e-06, Cosine: True
+===> using linear mlp
+linear probe with LR: 2.0, WD: 0.0001, Cosine: True
+===> using linear mlp
+linear probe with LR: 2.0, WD: 0.0, Cosine: True
+===> using linear mlp
+linear probe with LR: 5.0, WD: 1e-06, Cosine: True
+===> using linear mlp
+linear probe with LR: 5.0, WD: 0.0001, Cosine: True
+===> using linear mlp
+linear probe with LR: 5.0, WD: 0.0, Cosine: True
+===> using linear mlp
+linear probe with LR: 10.0, WD: 1e-06, Cosine: True
+===> using linear mlp
+linear probe with LR: 10.0, WD: 0.0001, Cosine: True
+===> using linear mlp
+linear probe with LR: 10.0, WD: 0.0, Cosine: True
