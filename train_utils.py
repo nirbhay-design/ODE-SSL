@@ -28,6 +28,12 @@ def yaml_loader(yaml_file):
     
     return config_data
 
+def format_time(seconds):
+    hours = int(seconds // 3600)
+    minutes = int((seconds % 3600) // 60)
+    secs = int(seconds % 60)
+    return f"{hours}h {minutes}m {secs}s"
+
 def progress(current, total, **kwargs):
     progress_percent = (current * 50 / total)
     progress_percent_int = int(progress_percent)
@@ -49,11 +55,11 @@ def get_features_labels(model, loader, device, return_logs = False):
         loader_len = len(loader)
         for idx,(x,y) in enumerate(loader):
             x = x.to(device)
-            y = y.to(device)
+            # y = y.to(device)
 
             feats = model(x)
 
-            all_features.append(feats)
+            all_features.append(feats.detach().cpu())
             all_labels.append(y)
 
             if return_logs:

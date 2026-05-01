@@ -305,3 +305,16 @@
 # nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/vicreg.sc.c100.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/vicreg.sc.c100.c10.r18.log &
 
 # nohup python test.py --dataset cifar10 --model resnet18 --saved_path saved_models/vicreg.c100.r18.pth --gpu 1 --knn --lreg --cmet --linprobe > transfer_logs/vicreg.c100.c10.r18.log &
+
+
+########################## Heavy hyperparameter tuning for linear probing #######################
+
+OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/bt.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/bt.en.timg.r18.log &
+
+OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/vicreg.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/vicreg.en.timg.r18.log &
+
+OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/simsiam.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/simsiam.en.timg.r18.log &
+
+OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/byol.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/byol.en.timg.r18.log &
+
+OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/scalre.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/scalre.en.timg.r18.log &

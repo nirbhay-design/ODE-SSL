@@ -6,6 +6,7 @@ dataset:
       batch_size: 512
       num_workers: 3
       image_size: 32
+      prefetch_factor: 4
       algo: test 
   cifar100: 
     num_classes: 100
@@ -14,6 +15,7 @@ dataset:
       batch_size: 512
       num_workers: 3
       image_size: 32
+      prefetch_factor: 4
       algo: test
   timg:
     num_classes: 200
@@ -22,6 +24,7 @@ dataset:
       batch_size: 512
       num_workers: 1
       image_size: 64
+      prefetch_factor: 4
       algo: test
 
 lr: [0.1, 1.0]

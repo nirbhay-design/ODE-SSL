@@ -326,6 +326,7 @@ def tinyimagenet_dataloader(**kwargs):
     image_size = kwargs['image_size']
     data_dir = kwargs['data_dir']
     algo = kwargs['algo']
+    pf = kwargs.get("prefetch_factor", 4)
 
     all_transforms = get_transforms(image_size, data_name = "tinyimagenet", algo=algo)
 
@@ -356,6 +357,8 @@ def tinyimagenet_dataloader(**kwargs):
         shuffle=False if distributed else True,
         pin_memory=True,
         num_workers = num_workers,
+        prefetch_factor = pf,
+        persistent_workers=True,
         sampler = DistributedSampler(train_dataset) if distributed else None 
     )
 
@@ -365,6 +368,8 @@ def tinyimagenet_dataloader(**kwargs):
         shuffle=False if distributed else True,
         pin_memory=True,
         num_workers = num_workers,
+        prefetch_factor = pf,
+        persistent_workers=True,
         sampler = DistributedSampler(train_dataset_mlp) if distributed else None 
     )
 
@@ -373,7 +378,9 @@ def tinyimagenet_dataloader(**kwargs):
         batch_size = 32,
         shuffle=True,
         pin_memory=True,
-        num_workers= num_workers
+        num_workers= num_workers,
+        prefetch_factor = pf,
+        persistent_workers=True
     )
 
     return train_dl, train_dl_mlp, test_dl, train_dataset, test_dataset
