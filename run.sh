@@ -53,7 +53,7 @@ OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/vicreg.yaml --data
 
 OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/vicreg.sc.yaml --dataset img100 --lr 0.2 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --opt LARS --bs 256 --nw 4 --pf 2 --net_type energy --save_path vicreg.en.i100.r18.pth > logs/vicreg.en.i100.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/vicreg.sc.yaml --dataset img100 --lr 0.2 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --opt LARS --bs 256 --nw 4 --pf 2 --net_type score --save_path vicreg.sc.i100.r18.pth > logs/vicreg.sc.i100.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/vicreg.sc.yaml --dataset img100 --lr 0.2 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --opt LARS --bs 256 --nw 4 --pf 2 --net_type score --save_path vicreg.sc.i100.r18.pth > logs/vicreg.sc.i100.r18.log &
 
 
 # simsiam experiments  
