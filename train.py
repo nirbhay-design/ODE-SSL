@@ -50,6 +50,7 @@ def get_args():
     parser.add_argument("--pf", type=int, default = 4, help="prefetch factor for dataloading")
     parser.add_argument("--bs", type=int, default = None, help="batch size per gpu")  
     parser.add_argument("--distributed", action="store_true", help="distributed training")
+    parser.add_argument("--data_path", type=str, default=None, help="path to dataset")
 
     args = parser.parse_args()
     return args
@@ -168,6 +169,8 @@ if __name__ == "__main__":
     config["dataset"][args.dataset]["params"]["num_workers"] = args.nw
     config["dataset"][args.dataset]["params"]["prefetch_factor"] = args.pf
 
+    if args.data_path:
+        config["dataset"][args.dataset]["params"]["data_dir"] = args.data_path
     if args.bs:
         config["dataset"][args.dataset]["params"]["batch_size"] = args.bs
     if args.dataset == "img100":
