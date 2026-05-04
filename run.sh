@@ -25,9 +25,9 @@
 
 # OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/bt.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --lr 0.2 --bs 256 --nw 4 --pf 2 --save_path bt.i100.r18.pth > logs/bt.i100.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/bt.sc.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --lr 0.2 --bs 256 --nw 4 --pf 2 --net_type energy --save_path bt.en.i100.r18.pth > logs/bt.en.i100.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/bt.sc.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --lr 0.2 --bs 256 --nw 4 --pf 2 --net_type energy --save_path bt.en.i100.r18.pth > logs/bt.en.i100.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/bt.sc.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --lr 0.2 --bs 256 --nw 4 --pf 2 --net_type score --save_path bt.sc.i100.r18.pth > logs/bt.sc.i100.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/bt.sc.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --lr 0.2 --bs 256 --nw 4 --pf 2 --net_type score --save_path bt.sc.i100.r18.pth > logs/bt.sc.i100.r18.log &
 
 # vicreg experiments 
 
@@ -49,9 +49,9 @@ OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/bt.sc.yaml --datas
 
 # nohup python train.py --config configs/vicreg.sc.yaml --dataset timg --lr 0.2 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --opt LARS --net_type score --save_path vicreg.sc.timg.r18.pth > logs/vicreg.sc.timg.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/vicreg.yaml --dataset img100 --lr 0.2 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --opt LARS --bs 256 --nw 4 --pf 2 --save_path vicreg.i100.r18.pth > logs/vicreg.i100.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/vicreg.yaml --dataset img100 --lr 0.2 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --opt LARS --bs 256 --nw 4 --pf 2 --save_path vicreg.i100.r18.pth > logs/vicreg.i100.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/vicreg.sc.yaml --dataset img100 --lr 0.2 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --opt LARS --bs 256 --nw 4 --pf 2 --net_type energy --save_path vicreg.en.i100.r18.pth > logs/vicreg.en.i100.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/vicreg.sc.yaml --dataset img100 --lr 0.2 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --opt LARS --bs 256 --nw 4 --pf 2 --net_type energy --save_path vicreg.en.i100.r18.pth > logs/vicreg.en.i100.r18.log &
 
 # OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/vicreg.sc.yaml --dataset img100 --lr 0.2 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --opt LARS --bs 256 --nw 4 --pf 2 --net_type score --save_path vicreg.sc.i100.r18.pth > logs/vicreg.sc.i100.r18.log &
 
