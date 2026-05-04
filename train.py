@@ -5,7 +5,7 @@ import torch.optim as optim
 import numpy as np
 from src.network import Network, EnergyScoreNet, BaseEncoder
 from src.ssl import pred_dict, pretrain_algo 
-from train_utils import yaml_loader, model_optimizer, progress, \
+from train_utils import yaml_loader, model_optimizer, progress, format_time, \
                         loss_function, load_dataset, get_tsne_knn_logreg
 from test import train_linear_probe
 import torch.multiprocessing as mp 
@@ -13,7 +13,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.distributed import init_process_group, destroy_process_group
 import os 
 import argparse
-import json 
+import json, time
 
 def get_args():
     parser = argparse.ArgumentParser(description="Training script")
@@ -46,6 +46,10 @@ def get_args():
     parser.add_argument("--lreg", action="store_true", help="evaluate logistic regression or not")
     parser.add_argument("--linprobe", action="store_true", help="evaluate linear probing or not ")
     parser.add_argument("--tsne", action="store_true", help="get test tsne or not")
+    parser.add_argument("--nw", type=int, default = 4, help="num workers for dataloading")
+    parser.add_argument("--pf", type=int, default = 4, help="prefetch factor for dataloading")
+    parser.add_argument("--bs", type=int, default = None, help="batch size per gpu")  
+    parser.add_argument("--distributed", action="store_true", help="distributed training")
 
     args = parser.parse_args()
     return args
@@ -115,13 +119,16 @@ def main_single():
         param_config["energy_model"] = energy_model
         param_config["energy_optimizer"] = energy_optimizer
 
+    pt1 = time.perf_counter()
     final_model = train_network(**param_config)
+    pt2 = time.perf_counter()
 
     torch.save(final_model.base_encoder.state_dict(), config["model_save_path"])
     print("Model weights saved")
 
     print(model.base_encoder.load_state_dict(torch.load(config["model_save_path"], map_location="cpu")))
-
+    print(f"pretraining time: {format_time(pt2 - pt1)}")
+    lpt1 = time.perf_counter()
     train_linear_probe(
             pretrain_model=model.base_encoder,
             train_loader=train_dl_mlp,
@@ -130,7 +137,8 @@ def main_single():
             device=device,
             epochs=n_epochs_mlp,
             eval_every=eval_every,
-            return_logs=return_logs
+            return_logs=return_logs,
+            learning_rates = [0.1, 1.0, 2.0, 3.0, 5.0]
         )
 
     test_config = {"model": model.base_encoder, "train_loader": train_dl_mlp, "test_loader": test_dl, 
@@ -140,6 +148,10 @@ def main_single():
     output = get_tsne_knn_logreg(**test_config)
     for key, value in output.items():
         print(f"{key}: {value:.3f}")
+    lpt2 = time.perf_counter()
+
+    # print(f"pretraining time: {format_time(pt2 - pt1)}")
+    print(f"linear probing time: {format_time(lpt2 - lpt1)}")
     # print(f"knn_acc: {output['knn_acc']:.3f}, log_reg_acc: {output['lreg_acc']:.3f}")
 
 if __name__ == "__main__":
@@ -153,14 +165,23 @@ if __name__ == "__main__":
     config['model_params']['model_name'] = args.model
     config["return_logs"] = args.verbose
     config["model_save_path"] = os.path.join(config.get("model_save_path", "saved_models"), args.save_path)
+    config["dataset"][args.dataset]["params"]["num_workers"] = args.nw
+    config["dataset"][args.dataset]["params"]["prefetch_factor"] = args.pf
 
+    if args.bs:
+        config["dataset"][args.dataset]["params"]["batch_size"] = args.bs
+    if args.dataset == "img100":
+        config["model_params"]["large"] = True
     if args.opt:
         config["opt"] = args.opt
         if args.opt in ["ADAM", "AdamW"]:
             config["opt_params"].pop("momentum", -1)
             config["opt_params"].pop("nesterov", -1)
     if args.lr:
-        config["opt_params"]["lr"] = args.lr 
+        bs = config["dataset"][args.dataset]["params"]["batch_size"] # batch_size per gpu
+        ws = torch.cuda.device_count() if args.distributed else 1.0
+        config["opt_params"]["lr"] = args.lr * bs * ws / 256.0
+        # config["opt_params"]["lr"] = args.lr 
     if args.wd:
         config["opt_params"]["weight_decay"] = args.wd
     if args.epochs:

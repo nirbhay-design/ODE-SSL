@@ -95,7 +95,7 @@ class EnergyScoreNet(nn.Module):
 # proj_dim = 128, ode_steps = 10, algo_type="nodel", carl_hidden = 4096, byol_hidden=4096, pred_dim = 512, barlow_hidden = 8192, vae_out = 256
 
 class BaseEncoder(nn.Module):
-    def __init__(self, model_name = "resnet18", pretrained = False):
+    def __init__(self, model_name = "resnet18", pretrained = False, **kwargs):
         super().__init__()
         if model_name == 'resnet50':
             model = torchvision.models.resnet50(
@@ -107,11 +107,12 @@ class BaseEncoder(nn.Module):
             print(f"{model_name} model type not supported")
             model = None
 
+        large = kwargs.get("large", False)
         # for smaller image size
         module_keys = list(model._modules.keys())
         self.feat_extractor = nn.Sequential()
         for key in module_keys[:-1]:
-            if key == "maxpool": # don't add maxpool layer
+            if key == "maxpool" and not large: # don't add maxpool layer if not large
                 continue
             module_key = model._modules.get(key, nn.Identity())
             self.feat_extractor.add_module(key, module_key)
@@ -119,7 +120,8 @@ class BaseEncoder(nn.Module):
         if not pretrained:
             in_feat = self.feat_extractor.conv1.in_channels
             out_feat = self.feat_extractor.conv1.out_channels
-            self.feat_extractor.conv1 = nn.Conv2d(in_feat, out_feat, kernel_size=3, stride=1, padding=1, bias=False)
+            if not large:
+                self.feat_extractor.conv1 = nn.Conv2d(in_feat, out_feat, kernel_size=3, stride=1, padding=1, bias=False)
 
         self.classifier_infeatures = model._modules.get(module_keys[-1], nn.Identity()).in_features
 
@@ -129,7 +131,7 @@ class BaseEncoder(nn.Module):
 class Network(nn.Module):
     def __init__(self, **kwargs):
         super().__init__()
-        self.base_encoder = BaseEncoder(model_name = kwargs.get("model_name", "resnet18"), pretrained = kwargs.get("pretrained", False))
+        self.base_encoder = BaseEncoder(model_name = kwargs.get("model_name", "resnet18"), pretrained = kwargs.get("pretrained", False), large = kwargs.get("large", False))
         self.ci = self.base_encoder.classifier_infeatures
         self.algo_type = kwargs.get("algo_type", "-1")
         assert self.algo_type != "-1", "Please specify algo_type for the network"
@@ -177,6 +179,7 @@ if __name__ == "__main__":
     byol_params = {
         "model_name": 'resnet18',
         "pretrained": False,
+        "large": False,
         "proj_dim": 256,
         "algo_type": "byol",
         "byol_hidden": 4096,

@@ -7,6 +7,7 @@ dataset:
       data_dir: datasets/cifar10
       batch_size: 512
       num_workers: 1
+      prefetch_factor: 4
       image_size: 32
       algo: *algo 
   cifar100: 
@@ -15,16 +16,28 @@ dataset:
       data_dir: datasets/cifar100
       batch_size: 512
       num_workers: 1
+      prefetch_factor: 4
       image_size: 32
       algo: *algo
   timg:
     num_classes: 200
     params: 
       data_dir: datasets/tinyimagenet/tiny-imagenet-200
-      batch_size: 512
+      batch_size: 256
       num_workers: 1
+      prefetch_factor: 4
       image_size: 64
       algo: *algo 
+  img100:
+    num_classes: 100
+    params: 
+      data_dir: datasets/imagenet100
+      labels_json: Labels.json
+      batch_size: &imgnt 256
+      num_workers: 6
+      prefetch_factor: 4
+      image_size: 224
+      algo: *algo
 return_logs: False
 eval_every: 10
 n_epochs: &epoch 600
@@ -52,6 +65,7 @@ model_params:
   model_name: 'resnet18' 
   pretrained: False 
   proj_dim: 128
+  large: False
   algo_type: *algo 
 
 mlp_type: "hidden"

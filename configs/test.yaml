@@ -26,6 +26,16 @@ dataset:
       image_size: 64
       prefetch_factor: 4
       algo: test
+  img100:
+    num_classes: 100
+    params: 
+      data_dir: datasets/imagenet100
+      labels_json: Labels.json
+      batch_size: &imgnt 512
+      num_workers: 5
+      image_size: 224
+      prefetch_factor: 4
+      algo: test 
 
 lr: [0.1, 1.0]
 wd: [1e-6, 1e-4, 0.0]

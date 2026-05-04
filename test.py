@@ -13,7 +13,7 @@ def get_args():
     parser = argparse.ArgumentParser(description="Training script for linear probing")
 
     # basic experiment settings
-    parser.add_argument("--dataset", type=str, default = "cifar10", required=True, help="dataset name")
+    parser.add_argument("--dataset", type=str, default = "cifar10/cifar100/timg/img100", required=True, help="dataset name")
     parser.add_argument("--saved_path", type=str, default="model.pth", required=True, help="path for pretrained model")
     parser.add_argument("--gpu", type=int, default = 0, help="gpu_id")
     parser.add_argument("--model", type=str, default="resnet18", help="resnet18/resnet50")
@@ -219,7 +219,7 @@ if __name__ == "__main__":
     config["dataset"][args.dataset]["params"]["num_workers"] = args.nw # set the number of workers for data loading 
     config["dataset"][args.dataset]["params"]["prefetch_factor"] = args.pf
 
-    encoder = BaseEncoder(model_name=args.model, pretrained=False)
+    encoder = BaseEncoder(model_name=args.model, pretrained=False, large = (args.dataset == "img100"))
     device = torch.device(f"cuda:{args.gpu}")
     print(encoder.load_state_dict(torch.load(args.saved_path, map_location=device)))
     encoder = encoder.to(device)

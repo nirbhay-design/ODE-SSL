@@ -23,6 +23,11 @@
 
 # nohup python train.py --config configs/bt.sc.yaml --dataset timg --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --lr 0.2 --net_type score --save_path bt.sc.timg.r18.pth > logs/bt.sc.timg.r18.log &
 
+OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/bt.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --lr 0.2 --bs 256 --nw 4 --pf 2 --save_path bt.i100.r18.pth > logs/bt.i100.r18.log &
+
+OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/bt.sc.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --lr 0.2 --bs 256 --nw 4 --pf 2 --net_type energy --save_path bt.en.i100.r18.pth > logs/bt.en.i100.r18.log &
+
+OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/bt.sc.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --lr 0.2 --bs 256 --nw 4 --pf 2 --net_type score --save_path bt.sc.i100.r18.pth > logs/bt.sc.i100.r18.log &
 
 # vicreg experiments 
 
@@ -43,6 +48,12 @@
 # nohup python train.py --config configs/vicreg.sc.yaml --dataset timg --lr 0.2 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --opt LARS --net_type energy --save_path vicreg.en.timg.r18.pth > logs/vicreg.en.timg.r18.log &
 
 # nohup python train.py --config configs/vicreg.sc.yaml --dataset timg --lr 0.2 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --opt LARS --net_type score --save_path vicreg.sc.timg.r18.pth > logs/vicreg.sc.timg.r18.log &
+
+OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/vicreg.yaml --dataset img100 --lr 0.2 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --opt LARS --bs 256 --nw 4 --pf 2 --save_path vicreg.i100.r18.pth > logs/vicreg.i100.r18.log &
+
+OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/vicreg.sc.yaml --dataset img100 --lr 0.2 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --opt LARS --bs 256 --nw 4 --pf 2 --net_type energy --save_path vicreg.en.i100.r18.pth > logs/vicreg.en.i100.r18.log &
+
+OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/vicreg.sc.yaml --dataset img100 --lr 0.2 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --opt LARS --bs 256 --nw 4 --pf 2 --net_type score --save_path vicreg.sc.i100.r18.pth > logs/vicreg.sc.i100.r18.log &
 
 
 # simsiam experiments  
@@ -65,6 +76,12 @@
 
 # nohup python train.py --config configs/simsiam.sc.yaml --dataset timg --gpu 2 --model resnet18 --lr 0.05 --epochs 800 --epochs_lin 100 --net_type score --save_path simsiam.sc.timg.r18.pth > logs/simsiam.sc.timg.r18.log &
 
+OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/simsiam.yaml --dataset img100 --gpu 2 --model resnet18 --lr 0.05 --epochs 400 --epochs_lin 100 --bs 256 --nw 4 --pf 2 --save_path simsiam.i100.r18.pth > logs/simsiam.i100.r18.log &
+
+OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/simsiam.sc.yaml --dataset img100 --gpu 2 --model resnet18 --lr 0.05 --epochs 400 --epochs_lin 100  --bs 256 --nw 4 --pf 2 --net_type energy --save_path simsiam.en.i100.r18.pth > logs/simsiam.en.i100.r18.log &
+
+OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/simsiam.sc.yaml --dataset img100 --gpu 2 --model resnet18 --lr 0.05 --epochs 400 --epochs_lin 100  --bs 256 --nw 4 --pf 2 --net_type score --save_path simsiam.sc.i100.r18.pth > logs/simsiam.sc.i100.r18.log &
+
 
 # simclr experiments 
 
@@ -85,6 +102,12 @@
 # nohup python train.py --config configs/scalre.yaml --dataset timg --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --net_type energy --save_path scalre.en.timg.r18.pth > logs/scalre.en.timg.r18.log &
 
 # nohup python train.py --config configs/scalre.yaml --dataset timg --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --net_type score --save_path scalre.sc.timg.r18.pth > logs/scalre.sc.timg.r18.log &
+
+OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/simclr.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --bs 512 --lr 0.25 --nw 4 --pf 2 --save_path simclr.i100.r18.pth > logs/simclr.i100.r18.log &
+
+OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/scalre.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --bs 512 --lr 0.25 --nw 4 --pf 2 --net_type energy --save_path scalre.en.i100.r18.pth > logs/scalre.en.i100.r18.log &
+
+OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/scalre.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --bs 512 --lr 0.25 --nw 4 --pf 2 --net_type score --save_path scalre.sc.i100.r18.pth > logs/scalre.sc.i100.r18.log &
 
 # byol experiments 
 
@@ -309,12 +332,12 @@
 
 ########################## Heavy hyperparameter tuning for linear probing #######################
 
-OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/bt.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/bt.en.timg.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/bt.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/bt.en.timg.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/vicreg.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/vicreg.en.timg.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/vicreg.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/vicreg.en.timg.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/simsiam.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/simsiam.en.timg.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/simsiam.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/simsiam.en.timg.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/byol.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/byol.en.timg.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/byol.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/byol.en.timg.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/scalre.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/scalre.en.timg.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/scalre.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/scalre.en.timg.r18.log &
