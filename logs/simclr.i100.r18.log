@@ -618,3 +618,68 @@ linear probe with LR: 5.0, WD: 1e-06, Cosine: True
 linear probe with LR: 5.0, WD: 0.0001, Cosine: True
 ===> using linear mlp
 linear probe with LR: 5.0, WD: 0.0, Cosine: True
+Namespace(dataset='img100', saved_path='saved_models/simclr.i100.r18.pth', gpu=0, model='resnet18', verbose=False, epochs=100, eval_every=10, knn=True, lreg=True, linprobe=True, tsne=False, umap=False, cmet=True, nw=4, pf=4, lrs=[0.1, 1.0, 2.0, 3.0, 1.5])
+<All keys matched successfully>
+sweeping through lr: [0.1, 1.0, 2.0, 3.0, 1.5]
+sweeping through wd: [1e-06, 0.0001, 0.0]
+Starting Hyperparameter Sweep on 0...
+===> using linear mlp
+linear probe with LR: 0.1, WD: 1e-06, Cosine: False
+===> using linear mlp
+linear probe with LR: 0.1, WD: 0.0001, Cosine: False
+===> using linear mlp
+linear probe with LR: 0.1, WD: 0.0, Cosine: False
+===> using linear mlp
+linear probe with LR: 1.0, WD: 1e-06, Cosine: False
+===> using linear mlp
+linear probe with LR: 1.0, WD: 0.0001, Cosine: False
+===> using linear mlp
+linear probe with LR: 1.0, WD: 0.0, Cosine: False
+===> using linear mlp
+linear probe with LR: 2.0, WD: 1e-06, Cosine: False
+===> using linear mlp
+linear probe with LR: 2.0, WD: 0.0001, Cosine: False
+===> using linear mlp
+linear probe with LR: 2.0, WD: 0.0, Cosine: False
+===> using linear mlp
+linear probe with LR: 3.0, WD: 1e-06, Cosine: False
+===> using linear mlp
+linear probe with LR: 3.0, WD: 0.0001, Cosine: False
+===> using linear mlp
+linear probe with LR: 3.0, WD: 0.0, Cosine: False
+===> using linear mlp
+linear probe with LR: 1.5, WD: 1e-06, Cosine: False
+===> using linear mlp
+linear probe with LR: 1.5, WD: 0.0001, Cosine: False
+===> using linear mlp
+linear probe with LR: 1.5, WD: 0.0, Cosine: False
+===> using linear mlp
+linear probe with LR: 0.1, WD: 1e-06, Cosine: True
+===> using linear mlp
+linear probe with LR: 0.1, WD: 0.0001, Cosine: True
+===> using linear mlp
+linear probe with LR: 0.1, WD: 0.0, Cosine: True
+===> using linear mlp
+linear probe with LR: 1.0, WD: 1e-06, Cosine: True
+===> using linear mlp
+linear probe with LR: 1.0, WD: 0.0001, Cosine: True
+===> using linear mlp
+linear probe with LR: 1.0, WD: 0.0, Cosine: True
+===> using linear mlp
+linear probe with LR: 2.0, WD: 1e-06, Cosine: True
+===> using linear mlp
+linear probe with LR: 2.0, WD: 0.0001, Cosine: True
+===> using linear mlp
+linear probe with LR: 2.0, WD: 0.0, Cosine: True
+===> using linear mlp
+linear probe with LR: 3.0, WD: 1e-06, Cosine: True
+===> using linear mlp
+linear probe with LR: 3.0, WD: 0.0001, Cosine: True
+===> using linear mlp
+linear probe with LR: 3.0, WD: 0.0, Cosine: True
+===> using linear mlp
+linear probe with LR: 1.5, WD: 1e-06, Cosine: True
+===> using linear mlp
+linear probe with LR: 1.5, WD: 0.0001, Cosine: True
+===> using linear mlp
+linear probe with LR: 1.5, WD: 0.0, Cosine: True
