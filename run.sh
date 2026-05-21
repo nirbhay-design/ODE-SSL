@@ -76,11 +76,11 @@
 
 # nohup python train.py --config configs/simsiam.sc.yaml --dataset timg --gpu 2 --model resnet18 --lr 0.05 --epochs 800 --epochs_lin 100 --net_type score --save_path simsiam.sc.timg.r18.pth > logs/simsiam.sc.timg.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/simsiam.yaml --dataset img100 --gpu 2 --model resnet18 --lr 0.05 --epochs 400 --epochs_lin 100 --bs 256 --nw 4 --pf 2 --save_path simsiam.i100.r18.pth > logs/simsiam.i100.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/simsiam.yaml --dataset img100 --gpu 2 --model resnet18 --lr 0.05 --epochs 400 --epochs_lin 100 --bs 256 --nw 4 --pf 2 --save_path simsiam.i100.r18.pth > logs/simsiam.i100.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/simsiam.sc.yaml --dataset img100 --gpu 2 --model resnet18 --lr 0.05 --epochs 400 --epochs_lin 100  --bs 256 --nw 4 --pf 2 --net_type energy --save_path simsiam.en.i100.r18.pth > logs/simsiam.en.i100.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/simsiam.sc.yaml --dataset img100 --gpu 2 --model resnet18 --lr 0.05 --epochs 400 --epochs_lin 100  --bs 256 --nw 4 --pf 2 --net_type energy --save_path simsiam.en.i100.r18.pth > logs/simsiam.en.i100.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/simsiam.sc.yaml --dataset img100 --gpu 2 --model resnet18 --lr 0.05 --epochs 400 --epochs_lin 100  --bs 256 --nw 4 --pf 2 --net_type score --save_path simsiam.sc.i100.r18.pth > logs/simsiam.sc.i100.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/simsiam.sc.yaml --dataset img100 --gpu 2 --model resnet18 --lr 0.05 --epochs 400 --epochs_lin 100  --bs 256 --nw 4 --pf 2 --net_type score --save_path simsiam.sc.i100.r18.pth > logs/simsiam.sc.i100.r18.log &
 
 
 # simclr experiments 
@@ -103,11 +103,11 @@ OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/simsiam.sc.yaml --
 
 # nohup python train.py --config configs/scalre.yaml --dataset timg --gpu 0 --model resnet18 --epochs 800 --epochs_lin 100 --net_type score --save_path scalre.sc.timg.r18.pth > logs/scalre.sc.timg.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/simclr.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --bs 512 --lr 0.25 --nw 4 --pf 2 --save_path simclr.i100.r18.pth > logs/simclr.i100.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/simclr.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --bs 512 --lr 0.25 --nw 4 --pf 2 --save_path simclr.i100.r18.pth > logs/simclr.i100.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/scalre.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --bs 512 --lr 0.25 --nw 4 --pf 2 --net_type energy --save_path scalre.en.i100.r18.pth > logs/scalre.en.i100.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/scalre.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --bs 512 --lr 0.25 --nw 4 --pf 2 --net_type energy --save_path scalre.en.i100.r18.pth > logs/scalre.en.i100.r18.log &
 
-OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/scalre.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --bs 512 --lr 0.25 --nw 4 --pf 2 --net_type score --save_path scalre.sc.i100.r18.pth > logs/scalre.sc.i100.r18.log &
+# OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/scalre.yaml --dataset img100 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --bs 512 --lr 0.25 --nw 4 --pf 2 --net_type score --save_path scalre.sc.i100.r18.pth > logs/scalre.sc.i100.r18.log &
 
 # byol experiments 
 
@@ -128,6 +128,13 @@ OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/scalre.yaml --data
 # nohup python train.py --config configs/byol.sc.yaml --dataset timg --lr 0.2 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --wd 1e-6 --opt LARS --net_type energy --save_path byol.en.timg.r18.pth > logs/byol.en.timg.r18.log &
 
 # nohup python train.py --config configs/byol.sc.yaml --dataset timg --lr 0.2 --gpu 1 --model resnet18 --epochs 800 --epochs_lin 100 --wd 1e-6 --opt LARS --net_type score --save_path byol.sc.timg.r18.pth > logs/byol.sc.timg.r18.log &
+
+# OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/byol.yaml --dataset img100 --lr 0.2 --gpu 0 --model resnet18 --epochs 400 --epochs_lin 100 --save_path byol.i100.r18.pth --bs 512 --nw 4 --pf 2 --data_path ../maessl/datasets/imagenet100/ > logs/byol.i100.r18.log &
+
+# OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/byol.sc.yaml --dataset img100 --lr 0.2 --gpu 1 --model resnet18 --epochs 400 --epochs_lin 100 --wd 1e-6 --opt LARS --net_type energy --save_path byol.en.i100.r18.pth --bs 512 --nw 4 --pf 2 --data_path ../maessl/datasets/imagenet100/ > logs/byol.en.i100.r18.log &
+
+# OPENBLAS_NUM_THREADS=1 nohup python train.py --config configs/byol.sc.yaml --dataset img100 --lr 0.2 --gpu 2 --model resnet18 --epochs 400 --epochs_lin 100 --wd 1e-6 --opt LARS --net_type score --save_path byol.sc.i100.r18.pth --bs 512 --nw 4 --pf 2 --data_path ../maessl/datasets/imagenet100/ > logs/byol.sc.i100.r18.log &
+
 
 ######################## 800 epochs updated experiments (r50) ####################### 
 ###############################################################################
