@@ -8,6 +8,8 @@ import argparse
 from functools import partial
 import torch.nn.functional as F
 import time
+import random 
+import numpy as np 
 
 def get_args():
     parser = argparse.ArgumentParser(description="Training script for linear probing")
@@ -29,7 +31,8 @@ def get_args():
     parser.add_argument("--nw", type=int, default = 4, help="num workers for dataloading")
     parser.add_argument("--pf", type=int, default = 4, help="prefetch factor for dataloading")
     parser.add_argument("--lrs", type=float, nargs='+', default = [1.0, 1.5, 2.0, 5.0, 10.0], help="learning rates for grid search")
-
+    parser.add_argument("--k", type=int, nargs='+', default = [5, 10, 20, 50, 100, 200], help="k values for k-nearest neighbors")
+    parser.add_argument("--data_path", type=str, default=None, help="path to dataset")
     args = parser.parse_args()
     return args
 
@@ -219,6 +222,18 @@ if __name__ == "__main__":
     config["dataset"][args.dataset]["params"]["num_workers"] = args.nw # set the number of workers for data loading 
     config["dataset"][args.dataset]["params"]["prefetch_factor"] = args.pf
 
+    if args.data_path:
+        config["dataset"][args.dataset]["params"]["data_dir"] = args.data_path
+
+    random.seed(config["SEED"])
+    np.random.seed(config["SEED"])
+    torch.manual_seed(config["SEED"])
+    torch.cuda.manual_seed(config["SEED"])
+    torch.backends.cudnn.benchmarks = True
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.backends.cudnn.allow_tf32 = True
+
     encoder = BaseEncoder(model_name=args.model, pretrained=False, large = (args.dataset == "img100"))
     device = torch.device(f"cuda:{args.gpu}")
     print(encoder.load_state_dict(torch.load(args.saved_path, map_location=device)))
@@ -244,7 +259,7 @@ if __name__ == "__main__":
     
     tsne_name = ".".join(args.saved_path.split("/")[-1].split('.')[:-1]) + '.png'
     test_config = {"model": encoder, "train_loader": train_dl_mlp, "test_loader": test_dl, 
-                    "device": device, "return_logs": args.verbose, "umap": args.umap, "cmet": args.cmet,
+                    "device": device, "return_logs": args.verbose, "umap": args.umap, "cmet": args.cmet, "k": args.k,
                     "tsne": args.tsne, "knn": args.knn, "log_reg": args.lreg, "tsne_name": tsne_name}
     
     if any([args.tsne, args.knn, args.lreg, args.umap, args.cmet]):

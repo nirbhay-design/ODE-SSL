@@ -37,6 +37,7 @@ dataset:
       prefetch_factor: 4
       algo: test 
 
+SEED: 42
 lr: [0.1, 1.0]
 wd: [1e-6, 1e-4, 0.0]
 

@@ -77,7 +77,7 @@ def make_tsne_for_dataset(model, loader, device, return_logs = False, tsne_name 
     labels = output["labels"]
     make_tsne_plot(features, labels, name = tsne_name)
 
-def get_tsne_knn_logreg(model, train_loader, test_loader, device, return_logs = False, umap = True, tsne = True, knn = True, log_reg = True, cmet=True, tsne_name = None):
+def get_tsne_knn_logreg(model, train_loader, test_loader, device, return_logs = False, umap = True, tsne = True, knn = True, log_reg = True, cmet=True, tsne_name = None, k = [5,10,20,50,100,200]):
     train_output = get_features_labels(model, train_loader, device, return_logs)
     test_output = get_features_labels(model, test_loader, device, return_logs)
     
@@ -95,12 +95,13 @@ def get_tsne_knn_logreg(model, train_loader, test_loader, device, return_logs = 
         make_umap_plot(x_train, y_train, name = f"umap.{tsne_name}")
 
     if knn:
-        print("knn evalution")
-        knnc = KNeighborsClassifier(n_neighbors=200)
-        knnc.fit(x_train, y_train)
-        y_test_pred = knnc.predict(x_test)
-        knn_acc = accuracy_score(y_test, y_test_pred)
-        outputs["knn_acc"] = knn_acc
+        print("knn evaluation")
+        for k_nn in k:
+            knnc = KNeighborsClassifier(n_neighbors=k_nn)
+            knnc.fit(x_train, y_train)
+            y_test_pred = knnc.predict(x_test)
+            knn_acc = accuracy_score(y_test, y_test_pred)
+            outputs[f"knn_acc_{k_nn}"] = knn_acc
 
     if log_reg:
         print("logistic regression evalution")

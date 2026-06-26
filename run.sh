@@ -349,22 +349,45 @@
 
 # OPENBLAS_NUM_THREADS=1 nohup python test.py --dataset timg --model resnet18 --saved_path saved_models/scalre.en.timg.r18.pth --gpu 0 --knn --lreg --cmet --linprobe --nw 4 --lrs 1.0 2.0 5.0 10.0 >> logs/scalre.en.timg.r18.log &
 
-python dim_collapse.py --dataset img100 --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.img100.bt.pdf --saved_path saved_models/bt.i100.r18.pth saved_models/bt.en.i100.r18.pth saved_models/bt.sc.i100.r18.pth --data_path ../maessl/datasets/imagenet100/
+# python dim_collapse.py --dataset img100 --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.img100.bt.pdf --saved_path saved_models/bt.i100.r18.pth saved_models/bt.en.i100.r18.pth saved_models/bt.sc.i100.r18.pth --data_path ../maessl/datasets/imagenet100/
 
-python dim_collapse.py --dataset img100 --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.img100.byol.pdf --saved_path saved_models/byol.i100.r18.pth saved_models/byol.en.i100.r18.pth saved_models/byol.sc.i100.r18.pth --data_path ../maessl/datasets/imagenet100/
+# python dim_collapse.py --dataset img100 --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.img100.byol.pdf --saved_path saved_models/byol.i100.r18.pth saved_models/byol.en.i100.r18.pth saved_models/byol.sc.i100.r18.pth --data_path ../maessl/datasets/imagenet100/
 
-python dim_collapse.py --dataset img100 --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.img100.simsiam.pdf --saved_path saved_models/simsiam.i100.r18.pth saved_models/simsiam.en.i100.r18.pth saved_models/simsiam.sc.i100.r18.pth --data_path ../maessl/datasets/imagenet100/
+# python dim_collapse.py --dataset img100 --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.img100.simsiam.pdf --saved_path saved_models/simsiam.i100.r18.pth saved_models/simsiam.en.i100.r18.pth saved_models/simsiam.sc.i100.r18.pth --data_path ../maessl/datasets/imagenet100/
 
-python dim_collapse.py --dataset img100 --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.img100.vicreg.pdf --saved_path saved_models/vicreg.i100.r18.pth saved_models/vicreg.en.i100.r18.pth saved_models/vicreg.sc.i100.r18.pth --data_path ../maessl/datasets/imagenet100/
+# python dim_collapse.py --dataset img100 --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.img100.vicreg.pdf --saved_path saved_models/vicreg.i100.r18.pth saved_models/vicreg.en.i100.r18.pth saved_models/vicreg.sc.i100.r18.pth --data_path ../maessl/datasets/imagenet100/
 
 ##############
 
-python dim_collapse.py --dataset timg --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.timg.simclr.pdf --saved_path saved_models/simclr.timg.r18.pth saved_models/scalre.en.timg.r18.pth saved_models/scalre.sc.timg.r18.pth
+# python dim_collapse.py --dataset timg --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.timg.simclr.pdf --saved_path saved_models/simclr.timg.r18.pth saved_models/scalre.en.timg.r18.pth saved_models/scalre.sc.timg.r18.pth
 
-python dim_collapse.py --dataset timg --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.timg.bt.pdf --saved_path saved_models/bt.timg.r18.pth saved_models/bt.en.timg.r18.pth saved_models/bt.sc.timg.r18.pth
+# python dim_collapse.py --dataset timg --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.timg.bt.pdf --saved_path saved_models/bt.timg.r18.pth saved_models/bt.en.timg.r18.pth saved_models/bt.sc.timg.r18.pth
 
-python dim_collapse.py --dataset timg --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.timg.byol.pdf --saved_path saved_models/byol.timg.r18.pth saved_models/byol.en.timg.r18.pth saved_models/byol.sc.timg.r18.pth
+# python dim_collapse.py --dataset timg --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.timg.byol.pdf --saved_path saved_models/byol.timg.r18.pth saved_models/byol.en.timg.r18.pth saved_models/byol.sc.timg.r18.pth
 
-python dim_collapse.py --dataset timg --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.timg.simsiam.pdf --saved_path saved_models/simsiam.timg.r18.pth saved_models/simsiam.en.timg.r18.pth saved_models/simsiam.sc.timg.r18.pth
+# python dim_collapse.py --dataset timg --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.timg.simsiam.pdf --saved_path saved_models/simsiam.timg.r18.pth saved_models/simsiam.en.timg.r18.pth saved_models/simsiam.sc.timg.r18.pth
 
-python dim_collapse.py --dataset timg --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.timg.vicreg.pdf --saved_path saved_models/vicreg.timg.r18.pth saved_models/vicreg.en.timg.r18.pth saved_models/vicreg.sc.timg.r18.pth
+# python dim_collapse.py --dataset timg --gpu 0 --model resnet18 --nw 4 --pf 2 --save_plot dc.timg.vicreg.pdf --saved_path saved_models/vicreg.timg.r18.pth saved_models/vicreg.en.timg.r18.pth saved_models/vicreg.sc.timg.r18.pth
+
+# KNN evaluations 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset img100 --model resnet18 --saved_path saved_models/byol.en.i100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 --data_path ../maessl/datasets/imagenet100/ >> logs/byol.en.i100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset img100 --model resnet18 --saved_path saved_models/byol.sc.i100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 --data_path ../maessl/datasets/imagenet100/ >> logs/byol.sc.i100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset img100 --model resnet18 --saved_path saved_models/scalre.en.i100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 --data_path ../maessl/datasets/imagenet100/ >> logs/scalre.en.i100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset img100 --model resnet18 --saved_path saved_models/scalre.sc.i100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 --data_path ../maessl/datasets/imagenet100/ >> logs/scalre.sc.i100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset img100 --model resnet18 --saved_path saved_models/simsiam.en.i100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 --data_path ../maessl/datasets/imagenet100/ >> logs/simsiam.en.i100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset img100 --model resnet18 --saved_path saved_models/simsiam.sc.i100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 --data_path ../maessl/datasets/imagenet100/ >> logs/simsiam.sc.i100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset img100 --model resnet18 --saved_path saved_models/bt.en.i100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 --data_path ../maessl/datasets/imagenet100/ >> logs/bt.en.i100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset img100 --model resnet18 --saved_path saved_models/bt.sc.i100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 --data_path ../maessl/datasets/imagenet100/ >> logs/bt.sc.i100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset img100 --model resnet18 --saved_path saved_models/vicreg.en.i100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 --data_path ../maessl/datasets/imagenet100/ >> logs/vicreg.en.i100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset img100 --model resnet18 --saved_path saved_models/vicreg.sc.i100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 --data_path ../maessl/datasets/imagenet100/ >> logs/vicreg.sc.i100.r18.log 
+
