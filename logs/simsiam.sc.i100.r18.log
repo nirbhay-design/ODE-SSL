@@ -4232,3 +4232,13 @@ nmi: 0.535
 ss: 0.091
 dbs: 2.591
 linear probing time: 1h 4m 39s
+Namespace(dataset='img100', saved_path='saved_models/simsiam.sc.i100.r18.pth', gpu=1, model='resnet18', verbose=False, epochs=100, eval_every=10, knn=True, lreg=False, linprobe=False, tsne=False, umap=False, cmet=False, nw=4, pf=1, lrs=[1.0, 1.5, 2.0, 5.0, 10.0], k=[5, 10, 20, 50, 100, 200], data_path='../maessl/datasets/imagenet100/')
+<All keys matched successfully>
+knn evaluation
+knn_acc_5: 0.634
+knn_acc_10: 0.643
+knn_acc_20: 0.651
+knn_acc_50: 0.638
+knn_acc_100: 0.627
+knn_acc_200: 0.619
+linear probing time: 0h 2m 2s

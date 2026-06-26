@@ -4625,3 +4625,5 @@ nmi: 0.298
 ss: 0.035
 dbs: 2.980
 linear probing time: 2h 9m 16s
+Namespace(dataset='timg', saved_path='saved_models/byol.en.timg.r18.pth', gpu=1, model='resnet18', verbose=False, epochs=100, eval_every=10, knn=True, lreg=False, linprobe=False, tsne=False, umap=False, cmet=False, nw=4, pf=1, lrs=[1.0, 1.5, 2.0, 5.0, 10.0], k=[5, 10, 20, 50, 100, 200], data_path=None)
+<All keys matched successfully>
