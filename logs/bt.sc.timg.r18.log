@@ -1652,3 +1652,13 @@ ari: 0.086
 nmi: 0.358
 ss: 0.044
 dbs: 3.072
+Namespace(dataset='timg', saved_path='saved_models/bt.sc.timg.r18.pth', gpu=1, model='resnet18', verbose=False, epochs=100, eval_every=10, knn=True, lreg=False, linprobe=False, tsne=False, umap=False, cmet=False, nw=4, pf=1, lrs=[1.0, 1.5, 2.0, 5.0, 10.0], k=[5, 10, 20, 50, 100, 200], data_path=None)
+<All keys matched successfully>
+knn evaluation
+knn_acc_5: 0.386
+knn_acc_10: 0.414
+knn_acc_20: 0.429
+knn_acc_50: 0.432
+knn_acc_100: 0.426
+knn_acc_200: 0.418
+linear probing time: 0h 1m 22s
