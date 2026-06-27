@@ -391,23 +391,39 @@
 
 # OPENBLAS_NUM_THREADS=1 python test.py --dataset img100 --model resnet18 --saved_path saved_models/vicreg.sc.i100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 --data_path ../maessl/datasets/imagenet100/ >> logs/vicreg.sc.i100.r18.log 
 
-OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/byol.en.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/byol.en.timg.r18.log 
+# OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/byol.en.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/byol.en.timg.r18.log 
 
-OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/byol.sc.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/byol.sc.timg.r18.log 
+# OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/byol.sc.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/byol.sc.timg.r18.log 
 
-OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/scalre.en.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/scalre.en.timg.r18.log 
+# OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/scalre.en.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/scalre.en.timg.r18.log 
 
-OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/scalre.sc.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/scalre.sc.timg.r18.log 
+# OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/scalre.sc.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/scalre.sc.timg.r18.log 
 
-OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/simsiam.en.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/simsiam.en.timg.r18.log 
+# OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/simsiam.en.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/simsiam.en.timg.r18.log 
 
-OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/simsiam.sc.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/simsiam.sc.timg.r18.log 
+# OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/simsiam.sc.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/simsiam.sc.timg.r18.log 
 
-OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/bt.en.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/bt.en.timg.r18.log 
+# OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/bt.en.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/bt.en.timg.r18.log 
 
-OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/bt.sc.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/bt.sc.timg.r18.log 
+# OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/bt.sc.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/bt.sc.timg.r18.log 
 
-OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/vicreg.en.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/vicreg.en.timg.r18.log 
+# OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/vicreg.en.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/vicreg.en.timg.r18.log 
 
-OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/vicreg.sc.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/vicreg.sc.timg.r18.log 
+# OPENBLAS_NUM_THREADS=1 python test.py --dataset timg --model resnet18 --saved_path saved_models/vicreg.sc.timg.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/vicreg.sc.timg.r18.log 
 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/scalre.en.c100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/scalre.en.c100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/scalre.sc.c100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/scalre.sc.c100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/simsiam.en.c100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/simsiam.en.c100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/simsiam.sc.c100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/simsiam.sc.c100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/bt.en.c100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/bt.en.c100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/bt.sc.c100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/bt.sc.c100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/vicreg.en.c100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/vicreg.en.c100.r18.log 
+
+OPENBLAS_NUM_THREADS=1 python test.py --dataset cifar100 --model resnet18 --saved_path saved_models/vicreg.sc.c100.r18.pth --gpu 1 --nw 4 --pf 1 --knn --k 5 10 20 50 100 200 >> logs/vicreg.sc.c100.r18.log 
